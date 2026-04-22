@@ -139,14 +139,6 @@ app.use(agentRoutes);
 const vitalsRoutes = require("./routes/vitals");
 app.use(vitalsRoutes);
 
-// ── 404 handler ──────────────────────────────────────────────────────────────
-app.use((_req, res) => {
-  res.status(404).json({
-    success: false,
-    error: "Not found. Endpoints: POST /aegis, /aegis/stream, /scribe, /guardian, /compliance, /sentinel, /advocate, /vision, /message — GET /health, /sse",
-  });
-});
-
 // ── MCP Server Setup (For Prompt Opinion Hackathon) ──────────────────────────
 const mcpServer = new Server({
   name: "aegis-mcp-server",
@@ -238,6 +230,14 @@ app.post("/message", async (req, res) => {
     return;
   }
   await transport.handlePostMessage(req, res);
+});
+
+// ── 404 handler ──────────────────────────────────────────────────────────────
+app.use((_req, res) => {
+  res.status(404).json({
+    success: false,
+    error: "Not found. Endpoints: POST /aegis, /aegis/stream, /scribe, /guardian, /compliance, /sentinel, /advocate, /vision, /message — GET /health, /sse",
+  });
 });
 
 // ── Error handler ────────────────────────────────────────────────────────────
