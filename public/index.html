@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="midnight">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AEGIS — Autonomous Healthcare Intelligence</title>
+  <meta name="description" content="Multi-agent clinical intelligence platform powered by AMD MI300X GPUs">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Ambient background particles -->
+  <canvas id="bgCanvas"></canvas>
+
+  <!-- ── TOP BAR ──────────────────────────────────── -->
+  <header id="topbar">
+    <div class="topbar-left">
+      <div class="logo-mark">
+        <div class="logo-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="url(#logoGrad)" stroke-width="2">
+            <defs><linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="var(--accent-primary)"/><stop offset="100%" stop-color="var(--accent-cyan)"/>
+            </linearGradient></defs>
+            <path d="M12 3L2 12l10 9 10-9L12 3z"/><path d="M12 8v8M8 12h8"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="logo-text">AEGIS</h1>
+          <span class="logo-sub">Autonomous Examination Guardian & Intelligence System</span>
+        </div>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <!-- Theme Switcher -->
+      <div class="theme-switcher" id="themeSwitcher">
+        <button class="theme-btn active" data-theme="midnight" title="Midnight">🌙</button>
+        <button class="theme-btn" data-theme="cyberpunk" title="Cyberpunk">⚡</button>
+        <button class="theme-btn" data-theme="clinical" title="Clinical">🏥</button>
+        <button class="theme-btn" data-theme="aurora" title="Aurora">🌌</button>
+        <button class="theme-btn" data-theme="sterile" title="Sterile">🩺</button>
+      </div>
+      <div class="status-chip" id="systemStatus">
+        <span class="status-dot idle"></span>
+        <span>System Ready</span>
+      </div>
+      <div class="amd-badge">
+        <span>Powered by</span>
+        <strong>AMD Instinct™ MI300X</strong>
+      </div>
+    </div>
+  </header>
+
+  <main id="app">
+
+    <!-- ── ANALYTICS DASHBOARD ────────────────────────── -->
+    <section id="analyticsDashboard" class="glass-panel hidden">
+      <div class="section-header">
+        <h2><span class="header-icon">📊</span> AEGIS Intelligence Dashboard</h2>
+        <div class="dashboard-meta">
+          <button class="expand-btn" id="exportPdfBtn" title="Download PDF Report">📄 Export PDF</button>
+          <button class="expand-btn" id="exportFhirBtn" title="Export FHIR R4 Bundle">🔗 FHIR R4</button>
+          <span class="meta-chip" id="dashLlm">LLM: —</span>
+          <span class="meta-chip" id="dashTime">Time: —</span>
+        </div>
+      </div>
+      <div class="dashboard-grid">
+        <!-- Risk Gauge -->
+        <div class="dash-card" id="dashRiskGauge">
+          <div class="dash-card-title">Overall Risk Assessment</div>
+          <canvas id="riskGaugeCanvas" width="240" height="160"></canvas>
+          <div class="gauge-label" id="gaugeRiskLabel">—</div>
+        </div>
+        <!-- Severity Pie Chart -->
+        <div class="dash-card" id="dashSeverityPie">
+          <div class="dash-card-title">Issue Severity Distribution</div>
+          <canvas id="severityPieCanvas" width="220" height="180"></canvas>
+          <div class="pie-legend" id="pieLegend"></div>
+        </div>
+        <!-- Agent Count Stats -->
+        <div class="dash-card" id="dashAgentPerf">
+          <div class="dash-card-title">Agent Response Time</div>
+          <canvas id="agentPerfCanvas" width="320" height="180"></canvas>
+        </div>
+        <!-- NOTE: Detailed latency bars appended by JS in renderAgentTimingBars -->
+        <!-- Risk Radar -->
+        <div class="dash-card" id="dashRiskRadar">
+          <div class="dash-card-title">Multi-Dimensional Risk Profile</div>
+          <canvas id="riskRadarCanvas" width="220" height="200"></canvas>
+        </div>
+        <!-- Pipeline Flow -->
+        <div class="dash-card dash-card-wide" id="dashPipelineFlow">
+          <div class="dash-card-title">Pipeline Execution Flow</div>
+          <canvas id="pipelineFlowCanvas" width="800" height="100"></canvas>
+        </div>
+        <!-- Quick Stats -->
+        <div class="dash-card" id="dashQuickStats">
+          <div class="dash-card-title">Key Metrics</div>
+          <div class="quick-stats-grid" id="quickStatsGrid"></div>
+        </div>
+      </div>
+    </section>
+    <!-- ── VITAL STREAM MONITOR ────────────────────────── -->
+    <section id="vitalsSection" class="glass-panel">
+      <div class="section-header">
+        <h2><span class="header-icon">💓</span> Live Vital Signs Monitor</h2>
+        <div class="dashboard-meta">
+          <select id="vitalScenario" class="select-input" style="width:auto;font-size:0.7rem">
+            <option value="sepsis">🦠 Sepsis Deterioration</option>
+            <option value="cardiac">🫀 Post-MI Monitoring</option>
+            <option value="recovery">📈 Recovery from Critical</option>
+            <option value="stable">✅ Stable Post-Op</option>
+          </select>
+          <button class="expand-btn" id="startVitals">▶ Start Stream</button>
+          <button class="expand-btn" id="stopVitals" style="display:none">⏹ Stop</button>
+          <span class="meta-chip" id="vitalStatus">Idle</span>
+        </div>
+      </div>
+      <div id="vitalsAlertBar" class="hidden" style="padding:6px 12px;border-radius:8px;font-size:0.72rem;font-weight:700;margin-bottom:6px;animation:pulse 1.5s infinite"></div>
+      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:8px" id="vitalCards"></div>
+      <div id="vitalPlaceholder" style="display:flex;align-items:center;justify-content:center;gap:12px;padding:30px;color:var(--text-muted);font-size:0.75rem;opacity:0.5">
+        <span style="font-size:1.5rem">📡</span>
+        <span>Select a clinical scenario and click <strong>Start Stream</strong> to monitor patient vitals in real-time with automatic NEWS2 early warning scoring</span>
+      </div>
+      <canvas id="vitalsChart" width="1200" height="160" style="width:100%;border-radius:8px;background:rgba(0,0,0,0.15);display:none"></canvas>
+    </section>
+
+    <!-- ── INPUT SECTION ──────────────────────────────── -->
+    <section id="inputSection" class="glass-panel">
+      <div class="section-header">
+        <h2><span class="header-icon">📋</span> Clinical Input</h2>
+        <div class="input-actions">
+          <label class="upload-btn" id="imageUploadLabel">
+            <input type="file" id="imageUpload" accept="image/*" hidden>
+            👁️ Attach Image
+          </label>
+          <select id="payerSelect" class="select-input">
+            <option value="medicare">Medicare / CMS</option>
+            <option value="medicaid">Medicaid</option>
+            <option value="commercial">Commercial</option>
+          </select>
+        </div>
+      </div>
+      <div class="input-area">
+        <textarea id="clinicalInput" placeholder="Paste physician's clinical note here...
+
+Example: Patient presenting with chest pain, shortness of breath..."></textarea>
+        <div id="imagePreviewArea" class="image-preview hidden">
+          <img id="imagePreview" alt="Uploaded medical image">
+          <button id="removeImage" class="remove-img-btn">✕</button>
+        </div>
+      </div>
+      <div class="input-footer">
+        <div class="sample-notes">
+          <span>Try: </span>
+          <button class="sample-btn" data-sample="cardiac">🫀 Cardiac</button>
+          <button class="sample-btn" data-sample="sepsis">🦠 Sepsis</button>
+          <button class="sample-btn" data-sample="trauma">🩹 Trauma</button>
+          <button class="sample-btn" data-sample="pediatric">👶 Pediatric</button>
+          <button class="sample-btn" data-sample="geriatric">🧓 Geriatric</button>
+          <button class="sample-btn" data-sample="stroke">🧠 Stroke</button>
+          <button class="sample-btn" data-sample="psychiatric">💊 Psych</button>
+          <button class="sample-btn" data-sample="pneumonia">🫁 Pneumonia</button>
+        </div>
+        <button id="runAegis" class="run-btn">
+          <span class="run-btn-text">Run AEGIS Pipeline</span>
+          <span class="run-btn-icon">⚡</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ── AGENT NETWORK — CANVAS ─────────────────────── -->
+    <section id="agentNetwork" class="glass-panel hidden">
+      <div class="section-header">
+        <h2><span class="header-icon">🔮</span> Agent Consensus Network — Live</h2>
+        <div class="timer-wrap">
+          <div id="pipelineTimer" class="timer">0.0s</div>
+          <div id="agentCounter" class="agent-counter">0 / 7</div>
+        </div>
+      </div>
+      <canvas id="networkCanvas" width="1200" height="260"></canvas>
+    </section>
+
+    <!-- ── RESULTS DASHBOARD ──────────────────────────── -->
+    <section id="resultsDashboard" class="hidden">
+      <!-- Risk Banner -->
+      <div id="riskBanner" class="risk-banner risk-low">
+        <div class="risk-level-display">
+          <div class="risk-pulse-ring"></div>
+          <div class="risk-icon-wrap">
+            <div class="risk-icon" id="riskIcon">●</div>
+          </div>
+          <div>
+            <div class="risk-title" id="riskTitle">LOW RISK</div>
+            <div class="risk-subtitle" id="riskSubtitle">All clear</div>
+          </div>
+        </div>
+        <div class="risk-stats">
+          <div class="risk-stat"><span class="stat-num" id="statTotal">0</span><span class="stat-label">Issues</span></div>
+          <div class="risk-stat"><span class="stat-num" id="statCritical">0</span><span class="stat-label">Critical</span></div>
+          <div class="risk-stat"><span class="stat-num" id="statAgents">7</span><span class="stat-label">Agents</span></div>
+          <div class="risk-stat"><span class="stat-num" id="statTime">0s</span><span class="stat-label">Time</span></div>
+        </div>
+      </div>
+
+      <!-- Clinical Scores -->
+      <div id="clinicalScoresSection" class="glass-panel hidden" style="margin-bottom:1rem">
+        <div class="panel-header" style="background:linear-gradient(90deg,rgba(0,184,148,0.08),rgba(0,206,201,0.04))">
+          <span>🏥 Evidence-Based Clinical Scores</span>
+          <span class="panel-badge pass" id="scoresCount">—</span>
+        </div>
+        <div class="panel-body" id="clinicalScoresBody" style="max-height:none">
+          <div class="panel-placeholder">Calculating...</div>
+        </div>
+      </div>
+
+      <!-- Agent Result Panels Grid -->
+      <div class="results-grid">
+        <div class="result-panel glass-panel" id="panel-scribe">
+          <div class="panel-header"><span>🖊️ Scribe — Entity Extraction</span><span class="panel-badge" id="badge-scribe">—</span></div>
+          <div class="panel-body" id="body-scribe"><div class="panel-placeholder">Waiting...</div></div>
+        </div>
+        <div class="result-panel glass-panel" id="panel-guardian">
+          <div class="panel-header"><span>🛡️ Guardian — Safety Check</span><span class="panel-badge" id="badge-guardian">—</span></div>
+          <div class="panel-body" id="body-guardian"><div class="panel-placeholder">Waiting...</div></div>
+        </div>
+        <div class="result-panel glass-panel" id="panel-compliance">
+          <div class="panel-header"><span>📋 Compliance — Billing</span><span class="panel-badge" id="badge-compliance">—</span></div>
+          <div class="panel-body" id="body-compliance"><div class="panel-placeholder">Waiting...</div></div>
+        </div>
+        <div class="result-panel glass-panel" id="panel-sentinel">
+          <div class="panel-header"><span>🔍 Sentinel — Diagnostics</span><span class="panel-badge" id="badge-sentinel">—</span></div>
+          <div class="panel-body" id="body-sentinel"><div class="panel-placeholder">Waiting...</div></div>
+        </div>
+        <div class="result-panel glass-panel" id="panel-advocate">
+          <div class="panel-header"><span>📄 Advocate — Prior Auth</span><span class="panel-badge" id="badge-advocate">—</span></div>
+          <div class="panel-body" id="body-advocate"><div class="panel-placeholder">Waiting...</div></div>
+        </div>
+        <div class="result-panel glass-panel" id="panel-vision">
+          <div class="panel-header"><span>👁️ Vision — Image Analysis</span><span class="panel-badge" id="badge-vision">—</span></div>
+          <div class="panel-body" id="body-vision"><div class="panel-placeholder">Waiting...</div></div>
+        </div>
+      </div>
+
+      <!-- Arbiter Consensus Panel -->
+      <div class="result-panel glass-panel arbiter-panel" id="panel-arbiter">
+        <div class="panel-header arbiter-header">
+          <span>⚖️ Arbiter — Multi-Agent Consensus Report</span>
+          <div class="arbiter-actions">
+            <span class="panel-badge" id="badge-arbiter">—</span>
+            <button class="expand-btn" id="expandArbiter" title="Open Full Report">⛶ Full Report</button>
+          </div>
+        </div>
+        <div class="panel-body" id="body-arbiter"><div class="panel-placeholder">Waiting for all agents...</div></div>
+      </div>
+
+      <!-- What-If Medication Sandbox -->
+      <section id="whatIfSandbox" class="glass-panel hidden" style="margin-top:1rem">
+        <div class="panel-header" style="background:linear-gradient(90deg,rgba(108,92,231,0.1),rgba(0,206,201,0.05))">
+          <span>💊 What-If Medication Sandbox</span>
+          <div style="display:flex;align-items:center;gap:0.6rem">
+            <span class="panel-badge pass" id="whatIfLatency">—</span>
+            <span class="panel-badge" id="whatIfStatus" style="font-size:0.58rem">Toggle meds to simulate</span>
+          </div>
+        </div>
+        <div class="panel-body" style="max-height:none;padding:1rem 1.2rem">
+          <div style="display:flex;gap:1rem;align-items:flex-start;flex-wrap:wrap">
+            <!-- Medication Toggles -->
+            <div style="flex:1;min-width:280px">
+              <div style="font-size:0.65rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.6rem">
+                Current Medications — Toggle ON/OFF
+              </div>
+              <div id="whatIfMedGrid" style="display:flex;flex-direction:column;gap:0.4rem">
+                <div class="panel-placeholder">Run pipeline first</div>
+              </div>
+            </div>
+            <!-- Live Risk Readout -->
+            <div style="min-width:200px;max-width:280px;flex-shrink:0">
+              <div style="font-size:0.65rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.6rem">
+                Simulated Risk Assessment
+              </div>
+              <div id="whatIfRiskReadout" style="text-align:center;padding:1rem;background:rgba(0,0,0,0.12);border-radius:12px;border:1px solid var(--border-subtle)">
+                <div id="whatIfRiskLevel" style="font-size:1.6rem;font-weight:900;font-family:'JetBrains Mono',monospace;letter-spacing:2px;color:var(--accent-green);transition:color 0.3s">LOW</div>
+                <div style="font-size:0.6rem;color:var(--text-muted);margin:0.3rem 0">GUARDIAN RISK</div>
+                <div id="whatIfFindings" style="font-size:0.75rem;color:var(--text-secondary);margin-top:0.5rem">0 safety issues</div>
+                <div id="whatIfFindingsList" style="margin-top:0.6rem;text-align:left"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <!-- ── ARBITER FULL REPORT MODAL ────────────────────── -->
+  <div class="modal-overlay" id="arbiterModal">
+    <div class="modal-content glass-panel">
+      <div class="modal-header">
+        <h2>⚖️ AEGIS Consensus Intelligence Report</h2>
+        <div class="modal-header-right">
+          <span class="modal-risk-badge" id="modalRiskBadge">—</span>
+          <button class="modal-close" id="closeArbiterModal">✕</button>
+        </div>
+      </div>
+      <div class="modal-body" id="arbiterModalBody">
+        <!-- Content injected by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ── FAILED AGENTS ALERT ── -->
+  <div id="failedAgentsBar" class="hidden" style="position:fixed;top:50px;left:50%;transform:translateX(-50%);z-index:999;background:var(--accent-amber);color:#000;padding:8px 20px;border-radius:10px;font-size:0.72rem;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,0.4);max-width:600px;text-align:center"></div>
+
+  <footer id="footer">
+    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:100%">
+      <span>AEGIS v1.0 — AMD Developer Hackathon 2026 · Built with ❤️ on AMD Instinct™ MI300X · 192GB HBM3</span>
+      <span style="font-size:0.55rem;opacity:0.5;max-width:700px;text-align:center">⚕ Clinical Decision Support Tool — NOT a medical device. For informational purposes only. Does not replace clinical judgment. Not FDA-cleared. All patient data processed locally. HIPAA: No PHI transmitted to external services except configured LLM provider.</span>
+    </div>
+  </footer>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,19 @@
+{
+  "name": "aegis",
+  "version": "1.0.0",
+  "description": "AEGIS — Autonomous Examination Guardian & Intelligence System. Multi-agent clinical intelligence powered by AMD MI300X.",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node tests/test_agents.js",
+    "evaluate": "node evaluate.js"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.1",
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.0",
+    "express": "^5.2.1"
+  }
+}

@@ -1,0 +1,155 @@
+{
+  "total": 37,
+  "passed": 37,
+  "failed": 0,
+  "tests": [
+    {
+      "name": "Guardian: should throw on null input",
+      "status": "PASS"
+    },
+    {
+      "name": "Guardian: should return LOW risk when no meds/allergies",
+      "status": "PASS"
+    },
+    {
+      "name": "Guardian: should detect aspirin + warfarin interaction",
+      "status": "PASS"
+    },
+    {
+      "name": "Guardian: should detect penicillin allergy + amoxicillin cross-reactivity",
+      "status": "PASS"
+    },
+    {
+      "name": "Guardian: should handle multiple simultaneous interactions",
+      "status": "PASS"
+    },
+    {
+      "name": "Guardian: should normalize drug names (case insensitive)",
+      "status": "PASS"
+    },
+    {
+      "name": "Guardian: should be safe with empty medications array",
+      "status": "PASS"
+    },
+    {
+      "name": "Guardian: no false positives - non-interacting drug pair",
+      "status": "PASS"
+    },
+    {
+      "name": "Compliance: should throw on null input",
+      "status": "PASS"
+    },
+    {
+      "name": "Compliance: should PASS with valid ICD-10 codes",
+      "status": "PASS"
+    },
+    {
+      "name": "Compliance: should FAIL with missing ICD-10 code",
+      "status": "PASS"
+    },
+    {
+      "name": "Compliance: should flag malformed ICD-10 code",
+      "status": "PASS"
+    },
+    {
+      "name": "Compliance: should validate E11.9 as unspecified diabetes",
+      "status": "PASS"
+    },
+    {
+      "name": "Compliance: should check billing rules with unspecified codes",
+      "status": "PASS"
+    },
+    {
+      "name": "Compliance: should handle empty diagnoses array",
+      "status": "PASS"
+    },
+    {
+      "name": "HEART Score: should calculate for cardiac case",
+      "status": "PASS"
+    },
+    {
+      "name": "HEART Score: should return null for non-cardiac case",
+      "status": "PASS"
+    },
+    {
+      "name": "qSOFA: should calculate for sepsis case",
+      "status": "PASS"
+    },
+    {
+      "name": "NEWS2: should calculate with vitals data",
+      "status": "PASS"
+    },
+    {
+      "name": "Clinical Scores: should return multiple scores for complex case",
+      "status": "PASS"
+    },
+    {
+      "name": "Guardian: should handle medications with missing name field",
+      "status": "PASS"
+    },
+    {
+      "name": "Guardian: should handle 20+ medications without error",
+      "status": "PASS"
+    },
+    {
+      "name": "Guardian: should handle duplicate medications gracefully",
+      "status": "PASS"
+    },
+    {
+      "name": "Guardian: should handle unicode/special characters in drug names",
+      "status": "PASS"
+    },
+    {
+      "name": "Guardian: should handle allergies as strings and objects",
+      "status": "PASS"
+    },
+    {
+      "name": "Compliance: should handle diagnosis with only name, no ICD-10",
+      "status": "PASS"
+    },
+    {
+      "name": "Compliance: should accept valid 3-character ICD-10 codes",
+      "status": "PASS"
+    },
+    {
+      "name": "Compliance: should accept valid 7-character ICD-10 codes",
+      "status": "PASS"
+    },
+    {
+      "name": "Compliance: should handle very long diagnosis names",
+      "status": "PASS"
+    },
+    {
+      "name": "FHIR: should generate valid bundle structure",
+      "status": "PASS"
+    },
+    {
+      "name": "FHIR: should include Patient resource when patient data exists",
+      "status": "PASS"
+    },
+    {
+      "name": "FHIR: should include Condition resources for diagnoses",
+      "status": "PASS"
+    },
+    {
+      "name": "FHIR: should include RiskAssessment from Arbiter",
+      "status": "PASS"
+    },
+    {
+      "name": "FHIR: should handle empty pipeline result without crashing",
+      "status": "PASS"
+    },
+    {
+      "name": "RxNorm module should export expected functions",
+      "status": "PASS"
+    },
+    {
+      "name": "Guardian should export both sync and async functions",
+      "status": "PASS"
+    },
+    {
+      "name": "FHIR export module should export generateFHIRBundle",
+      "status": "PASS"
+    }
+  ]
+}

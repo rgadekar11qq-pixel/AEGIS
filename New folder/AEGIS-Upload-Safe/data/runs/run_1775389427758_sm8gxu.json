@@ -1,0 +1,824 @@
+{
+  "id": "run_1775389427758_sm8gxu",
+  "timestamp": "2026-04-05T11:43:47.759Z",
+  "summary": {
+    "overallRisk": "MODERATE",
+    "totalIssues": 6,
+    "criticalIssues": 1,
+    "pipelineDurationMs": 19677,
+    "executiveSummary": "The patient presents with a moderate overall risk, primarily driven by concerns for lithium toxicity and acute kidney injury. Key findings include agitation, paranoia, elevated lithium level, elevated creatinine, and hyponatremia. Continuous monitoring and immediate intervention are crucial to prevent further deterioration."
+  },
+  "timings": {
+    "scribe": 3935,
+    "compliance": 0,
+    "guardian": 1989,
+    "sentinel": 6152,
+    "parallelPhase": 8141,
+    "advocate": 3173,
+    "arbiter": 4411,
+    "total": 19677
+  },
+  "agents": {
+    "scribe": {
+      "status": "complete",
+      "diagnosesCount": 3,
+      "medicationsCount": 4,
+      "patient": "Sarah Miller"
+    },
+    "guardian": {
+      "status": "complete",
+      "riskLevel": "LOW",
+      "findingsCount": 0
+    },
+    "compliance": {
+      "status": "complete",
+      "overallStatus": "FAIL",
+      "findingsCount": 0
+    },
+    "sentinel": {
+      "status": "complete",
+      "riskLevel": "MODERATE",
+      "findingsCount": 2
+    },
+    "advocate": {
+      "status": "complete",
+      "urgency": "URGENT",
+      "category": "REFERRAL"
+    },
+    "vision": {
+      "status": "skipped"
+    },
+    "arbiter": {
+      "status": "complete",
+      "overallRisk": "MODERATE",
+      "totalIssues": 6,
+      "votingConfidence": 83,
+      "conflictCount": 0
+    }
+  },
+  "fullResult": {
+    "timestamp": "2026-04-05T11:43:27.988Z",
+    "pipeline": "AEGIS v1.0",
+    "agents": {
+      "scribe": {
+        "status": "complete",
+        "output": {
+          "patient": {
+            "name": "Sarah Miller",
+            "age": 28,
+            "sex": "F"
+          },
+          "symptoms": [
+            "agitation",
+            "paranoia",
+            "self-harm ideation"
+          ],
+          "diagnoses": [
+            {
+              "name": "Bipolar mania with psychotic features",
+              "icd10": null
+            },
+            {
+              "name": "Bipolar disorder",
+              "icd10": null
+            },
+            {
+              "name": "hypothyroidism",
+              "icd10": null
+            }
+          ],
+          "medications": [
+            {
+              "name": "lithium",
+              "dose": "300mg",
+              "route": "oral",
+              "frequency": "TID"
+            },
+            {
+              "name": "levothyroxine",
+              "dose": "100mcg",
+              "route": null,
+              "frequency": null
+            },
+            {
+              "name": "ibuprofen",
+              "dose": "800mg",
+              "route": "oral",
+              "frequency": "TID"
+            },
+            {
+              "name": "haloperidol",
+              "dose": "5mg",
+              "route": "IM",
+              "frequency": "PRN"
+            }
+          ],
+          "allergies": [],
+          "procedures": [],
+          "vitals": {
+            "bp": "138/88",
+            "hr": 102,
+            "temp": "37.1°C",
+            "spo2": null,
+            "rr": null
+          },
+          "labResults": [
+            {
+              "test": "Lithium level",
+              "value": "1.8",
+              "unit": "mEq/L",
+              "flag": "high"
+            },
+            {
+              "test": "Creatinine",
+              "value": "1.6",
+              "unit": null,
+              "flag": "high"
+            },
+            {
+              "test": "TSH",
+              "value": "8.2",
+              "unit": null,
+              "flag": "high"
+            },
+            {
+              "test": "Na",
+              "value": "132",
+              "unit": null,
+              "flag": "low"
+            }
+          ],
+          "labs": [
+            {
+              "test": "Lithium level",
+              "value": "1.8",
+              "unit": "mEq/L",
+              "flag": "high"
+            },
+            {
+              "test": "Creatinine",
+              "value": "1.6",
+              "unit": null,
+              "flag": "high"
+            },
+            {
+              "test": "TSH",
+              "value": "8.2",
+              "unit": null,
+              "flag": "high"
+            },
+            {
+              "test": "Na",
+              "value": "132",
+              "unit": null,
+              "flag": "low"
+            }
+          ],
+          "plan": "increase lithium per psychiatry, add haloperidol 5mg IM PRN agitation",
+          "_rawText": "Patient Sarah Miller, 28F. ED presentation with agitation, paranoia, and self-harm ideation. PMH: Bipolar disorder on lithium 300mg TID, hypothyroidism on levothyroxine 100mcg. Currently also taking ibuprofen 800mg TID for back pain x1 week. Allergies: none. BP 138/88, HR 102, Temp 37.1°C. Labs: Lithium level 1.8 mEq/L (therapeutic 0.6-1.2), Creatinine 1.6, TSH 8.2, Na 132. Assessment: Bipolar mania with psychotic features. Plan: increase lithium per psychiatry, add haloperidol 5mg IM PRN agitation."
+        }
+      },
+      "guardian": {
+        "status": "complete",
+        "output": {
+          "riskLevel": "LOW",
+          "findings": [],
+          "summary": "No drug interactions detected (checked local DB + NLM RxNorm).",
+          "rxnorm": {
+            "resolved": 4,
+            "additionalInteractions": 0,
+            "source": "NLM RxNorm API"
+          }
+        }
+      },
+      "compliance": {
+        "status": "complete",
+        "output": {
+          "icd10Validation": [
+            {
+              "diagnosis": "Bipolar mania with psychotic features",
+              "code": null,
+              "valid": false,
+              "status": "MISSING",
+              "message": "No ICD-10 code provided for \"Bipolar mania with psychotic features\". A code is required for billing."
+            },
+            {
+              "diagnosis": "Bipolar disorder",
+              "code": null,
+              "valid": false,
+              "status": "MISSING",
+              "message": "No ICD-10 code provided for \"Bipolar disorder\". A code is required for billing."
+            },
+            {
+              "diagnosis": "hypothyroidism",
+              "code": null,
+              "valid": false,
+              "status": "MISSING",
+              "message": "No ICD-10 code provided for \"hypothyroidism\". A code is required for billing."
+            }
+          ],
+          "billingFindings": [],
+          "overallStatus": "FAIL",
+          "summary": "3 diagnosis code(s) checked: 0 valid, 3 invalid/missing. 0 billing finding(s). Overall status: FAIL."
+        }
+      },
+      "sentinel": {
+        "status": "complete",
+        "output": {
+          "riskLevel": "MODERATE",
+          "findings": [
+            {
+              "type": "VITAL_ABNORMAL",
+              "severity": "MODERATE",
+              "vital": "heart rate",
+              "value": 102,
+              "message": "Tachycardia HR 102 bpm. Evaluate for pain, anxiety, infection, dehydration, cardiac cause."
+            },
+            {
+              "type": "LAB_ABNORMAL",
+              "severity": "MODERATE",
+              "test": "Creatinine",
+              "value": "1.6 mg/dL",
+              "reference": "Normal: 0.7–1.3 mg/dL",
+              "message": "Elevated Creatinine = 1.6 (normal: 0.7–1.3). Monitor and correlate clinically."
+            }
+          ],
+          "aiReasoning": {
+            "missedConsiderations": [
+              {
+                "condition": "Lithium toxicity",
+                "reasoning": "Patient presents with agitation, paranoia, elevated lithium level (1.8 mEq/L), elevated creatinine (1.6), and hyponatremia (132). These findings are consistent with lithium toxicity.",
+                "urgency": "CRITICAL",
+                "suggestedWorkup": [
+                  "EKG",
+                  "Repeat Lithium level",
+                  "Renal function panel",
+                  "Electrolyte panel"
+                ]
+              },
+              {
+                "condition": "Acute Kidney Injury (AKI)",
+                "reasoning": "Elevated creatinine of 1.6 in the setting of lithium use raises concern for AKI, possibly related to lithium toxicity or dehydration.",
+                "urgency": "HIGH",
+                "suggestedWorkup": [
+                  "Urinalysis",
+                  "Renal ultrasound"
+                ]
+              },
+              {
+                "condition": "Dehydration",
+                "reasoning": "Hyponatremia and elevated creatinine can be indicative of dehydration, especially in the context of lithium use which can cause nephrogenic diabetes insipidus.",
+                "urgency": "MODERATE",
+                "suggestedWorkup": [
+                  "BUN",
+                  "Urine specific gravity"
+                ]
+              },
+              {
+                "condition": "Serotonin Syndrome",
+                "reasoning": "Agitation and elevated heart rate could be early signs of serotonin syndrome, although less likely given the current medication list. Rule out other causes first.",
+                "urgency": "LOW",
+                "suggestedWorkup": [
+                  "Review medication list for potential serotonergic agents"
+                ]
+              }
+            ],
+            "medicationConcerns": [
+              {
+                "medication": "lithium",
+                "concern": "The lithium level is significantly elevated (1.8 mEq/L), increasing the risk of toxicity. The patient is also on ibuprofen, which can increase lithium levels.",
+                "suggestion": "Immediately hold lithium. Consider IV fluids if dehydrated. Monitor lithium levels and renal function closely. Avoid NSAIDs."
+              },
+              {
+                "medication": "ibuprofen",
+                "concern": "Ibuprofen can increase lithium levels, exacerbating the risk of lithium toxicity.",
+                "suggestion": "Discontinue ibuprofen and recommend alternative pain management options (e.g., acetaminophen)."
+              },
+              {
+                "medication": "levothyroxine",
+                "concern": "TSH is elevated despite levothyroxine use, indicating inadequate thyroid hormone replacement. No route or frequency is documented.",
+                "suggestion": "Increase levothyroxine dose based on TSH level and patient symptoms. Clarify route and frequency of administration. Consider checking free T4."
+              },
+              {
+                "medication": "haloperidol",
+                "concern": "PRN haloperidol is being used for agitation, but the underlying cause of the agitation (possible lithium toxicity) needs to be addressed first. Haloperidol can also lower the seizure threshold.",
+                "suggestion": "Use haloperidol cautiously and only if necessary after addressing potential lithium toxicity. Monitor for extrapyramidal symptoms."
+              }
+            ],
+            "deteriorationRisk": {
+              "level": "HIGH",
+              "reasoning": "The patient is at high risk of clinical deterioration due to suspected lithium toxicity, AKI, and uncontrolled hypothyroidism. The elevated lithium level, creatinine, and TSH, combined with agitation and paranoia, indicate a potentially unstable condition.",
+              "monitoringPlan": "Continuous cardiac monitoring, frequent vital sign checks (including orthostatic blood pressures), hourly mental status exams, serial lithium levels, renal function tests, and electrolyte monitoring. Strict I/O monitoring."
+            },
+            "overallAssessment": "This patient is at high risk for clinical deterioration due to suspected lithium toxicity and AKI. Lithium should be held immediately, and further workup is needed to assess renal function and electrolyte imbalances. The levothyroxine dose should also be adjusted to address the elevated TSH."
+          },
+          "findingCounts": {
+            "redFlags": 0,
+            "missedDiagnoses": 0,
+            "vitalAlerts": 1,
+            "labAlerts": 1,
+            "medMismatches": 0
+          },
+          "deteriorationRisk": {
+            "level": "HIGH",
+            "reasoning": "The patient is at high risk of clinical deterioration due to suspected lithium toxicity, AKI, and uncontrolled hypothyroidism. The elevated lithium level, creatinine, and TSH, combined with agitation and paranoia, indicate a potentially unstable condition.",
+            "monitoringPlan": "Continuous cardiac monitoring, frequent vital sign checks (including orthostatic blood pressures), hourly mental status exams, serial lithium levels, renal function tests, and electrolyte monitoring. Strict I/O monitoring."
+          },
+          "summary": "Sentinel identified 10 concern(s) requiring attention. Risk level: MODERATE.",
+          "durationMs": 6152
+        }
+      },
+      "vision": {
+        "status": "skipped",
+        "reason": "No image provided"
+      },
+      "advocate": {
+        "status": "complete",
+        "output": {
+          "status": "GENERATED",
+          "category": "REFERRAL",
+          "urgency": "URGENT",
+          "approvalLikelihood": "MODERATE",
+          "document": {
+            "metadata": {
+              "documentType": "Prior Authorization Request",
+              "generatedAt": "2026-04-05T11:43:43.246Z",
+              "generatedBy": "AEGIS Advocate Agent",
+              "payerType": "Medicare / CMS",
+              "category": "Specialist Referral",
+              "turnaround": {
+                "standard": "3 business days",
+                "urgent": "24 hours"
+              },
+              "cmsCompliance": "CMS-0057-F (FHIR ePA)",
+              "appealWindow": "120 days"
+            },
+            "patientInformation": {
+              "name": "Sarah Miller",
+              "age": 28,
+              "sex": "F",
+              "memberId": "[Member ID — to be filled]",
+              "dateOfService": "2026-04-05"
+            },
+            "requestingProvider": {
+              "name": "[Provider Name — to be filled]",
+              "npi": "[NPI — to be filled]",
+              "specialty": "[Specialty]",
+              "facility": "[Facility Name]",
+              "phone": "[Phone]",
+              "fax": "[Fax]"
+            },
+            "clinicalInformation": {
+              "primaryDiagnosis": {
+                "name": "Bipolar mania with psychotic features",
+                "icd10": null
+              },
+              "allDiagnoses": [
+                {
+                  "name": "Bipolar mania with psychotic features",
+                  "icd10": null
+                },
+                {
+                  "name": "Bipolar disorder",
+                  "icd10": null
+                },
+                {
+                  "name": "hypothyroidism",
+                  "icd10": null
+                }
+              ],
+              "icd10Codes": [],
+              "currentMedications": [
+                {
+                  "name": "lithium",
+                  "dose": "300mg",
+                  "route": "oral",
+                  "frequency": "TID"
+                },
+                {
+                  "name": "levothyroxine",
+                  "dose": "100mcg",
+                  "route": null,
+                  "frequency": null
+                },
+                {
+                  "name": "ibuprofen",
+                  "dose": "800mg",
+                  "route": "oral",
+                  "frequency": "TID"
+                },
+                {
+                  "name": "haloperidol",
+                  "dose": "5mg",
+                  "route": "IM",
+                  "frequency": "PRN"
+                }
+              ],
+              "allergies": [],
+              "relevantVitals": {
+                "bp": "138/88",
+                "hr": 102,
+                "temp": "37.1°C",
+                "spo2": null,
+                "rr": null
+              },
+              "pertinentLabResults": [
+                {
+                  "test": "Lithium level",
+                  "value": "1.8",
+                  "unit": "mEq/L",
+                  "flag": "high"
+                },
+                {
+                  "test": "Creatinine",
+                  "value": "1.6",
+                  "unit": null,
+                  "flag": "high"
+                },
+                {
+                  "test": "TSH",
+                  "value": "8.2",
+                  "unit": null,
+                  "flag": "high"
+                },
+                {
+                  "test": "Na",
+                  "value": "132",
+                  "unit": null,
+                  "flag": "low"
+                }
+              ]
+            },
+            "serviceRequested": {
+              "description": "increase lithium per psychiatry, add haloperidol 5mg IM PRN agitation",
+              "procedures": [],
+              "urgency": "URGENT"
+            },
+            "medicalNecessityJustification": {
+              "clinicalSummary": "Sarah Miller is a 28-year-old female presenting with bipolar mania with psychotic features, including agitation, paranoia, and self-harm ideation. Her current medications include lithium, levothyroxine, ibuprofen, and PRN haloperidol, with recent lab results indicating elevated lithium levels, creatinine, and TSH, as well as hyponatremia.",
+              "justification": "The requested increase in lithium dosage, as determined by psychiatry, is medically necessary to achieve therapeutic lithium levels and effectively manage her acute manic episode. The addition of haloperidol 5mg IM PRN for agitation is crucial to rapidly control her acute agitation and prevent escalation to self-harm or harm to others. Her current lithium level of 1.8 mEq/L is above the therapeutic range and is likely contributing to her elevated creatinine and hyponatremia, necessitating careful monitoring and potential dosage adjustment. The PRN haloperidol is needed to manage breakthrough agitation while the lithium level is addressed.",
+              "alternativesConsidered": [
+                "Lowering the lithium dose",
+                "Initiating a different mood stabilizer such as valproic acid or carbamazepine"
+              ],
+              "riskIfDenied": "Denial of this request could lead to a worsening of Sarah's manic symptoms, increasing her risk of self-harm, hospitalization, and potential harm to others. Delaying treatment could also prolong her psychotic symptoms and negatively impact her long-term prognosis and quality of life.",
+              "supportingGuidelines": [
+                "American Psychiatric Association Practice Guidelines for the Treatment of Patients with Bipolar Disorder",
+                "National Institute for Health and Care Excellence (NICE) guidelines for Bipolar Disorder"
+              ]
+            },
+            "supportingEvidence": [
+              {
+                "type": "Vital Signs",
+                "data": "BP: 138/88, HR: 102, Temp: 37.1°C"
+              },
+              {
+                "type": "Lab Result",
+                "data": "Lithium level: 1.8 mEq/L (high)"
+              },
+              {
+                "type": "Lab Result",
+                "data": "Creatinine: 1.6  (high)"
+              },
+              {
+                "type": "Lab Result",
+                "data": "TSH: 8.2  (high)"
+              },
+              {
+                "type": "Lab Result",
+                "data": "Na: 132  (low)"
+              },
+              {
+                "type": "Diagnosis",
+                "data": "Bipolar mania with psychotic features"
+              },
+              {
+                "type": "Diagnosis",
+                "data": "Bipolar disorder"
+              },
+              {
+                "type": "Diagnosis",
+                "data": "hypothyroidism"
+              },
+              {
+                "type": "Current Medications",
+                "data": "lithium 300mg TID; levothyroxine 100mcg ; ibuprofen 800mg TID; haloperidol 5mg PRN"
+              }
+            ],
+            "payerRequirements": [
+              "Must use CMS-1500 or UB-04 format",
+              "ePA via FHIR API required (CMS-0057-F mandate, effective Jan 2026)",
+              "Standard turnaround: 7 calendar days",
+              "Urgent turnaround: 72 hours",
+              "Peer-to-peer review available on denial"
+            ],
+            "estimatedOutcome": {
+              "approvalLikelihood": "MODERATE",
+              "recommendedActions": [
+                "Submit via FHIR ePA API per CMS-0057-F",
+                "Include all supporting lab results and imaging",
+                "Document failed conservative management if applicable",
+                "Mark as URGENT — expedited review required"
+              ]
+            }
+          },
+          "summary": "Prior authorization request generated for Specialist Referral. Urgency: URGENT. Estimated approval: MODERATE.",
+          "durationMs": 3173
+        }
+      },
+      "arbiter": {
+        "status": "complete",
+        "output": {
+          "overallRisk": "MODERATE",
+          "totalIssues": 6,
+          "criticalIssues": 1,
+          "highIssues": 1,
+          "voting": {
+            "method": "Weighted Majority Vote",
+            "weightedRiskScore": 2.09,
+            "confidence": 83,
+            "voteCount": 4,
+            "votes": [
+              {
+                "agent": "guardian",
+                "domain": "SAFETY",
+                "riskScore": 1,
+                "weight": 1
+              },
+              {
+                "agent": "sentinel",
+                "domain": "CLINICAL",
+                "riskScore": 2,
+                "weight": 0.95
+              },
+              {
+                "agent": "sentinel-deterioration",
+                "domain": "CLINICAL",
+                "riskScore": 3,
+                "weight": 0.7
+              },
+              {
+                "agent": "compliance",
+                "domain": "COMPLIANCE",
+                "riskScore": 3,
+                "weight": 0.6
+              }
+            ]
+          },
+          "scoredIssues": [
+            {
+              "id": "SA:Lithium toxicity",
+              "description": "AI suspects Lithium toxicity: Patient presents with agitation, paranoia, elevated lithium level (1.8 mEq/L), elevated creatinine (1.6), and hyponatremia (132). These findings are consistent with lithium toxicity.",
+              "type": "AI_INSIGHT",
+              "domain": "DIAGNOSTIC",
+              "severity": "CRITICAL",
+              "sources": [
+                "sentinel-ai"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 1,
+              "confidenceLabel": "HIGH",
+              "details": [
+                {
+                  "source": "sentinel-ai",
+                  "severity": "CRITICAL",
+                  "description": "AI suspects Lithium toxicity: Patient presents with agitation, paranoia, elevated lithium level (1.8 mEq/L), elevated creatinine (1.6), and hyponatremia (132). These findings are consistent with lithium toxicity."
+                }
+              ]
+            },
+            {
+              "id": "SA:Acute Kidney Injury (AKI)",
+              "description": "AI suspects Acute Kidney Injury (AKI): Elevated creatinine of 1.6 in the setting of lithium use raises concern for AKI, possibly related to lithium toxicity or dehydration.",
+              "type": "AI_INSIGHT",
+              "domain": "DIAGNOSTIC",
+              "severity": "HIGH",
+              "sources": [
+                "sentinel-ai"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.75,
+              "confidenceLabel": "HIGH",
+              "details": [
+                {
+                  "source": "sentinel-ai",
+                  "severity": "HIGH",
+                  "description": "AI suspects Acute Kidney Injury (AKI): Elevated creatinine of 1.6 in the setting of lithium use raises concern for AKI, possibly related to lithium toxicity or dehydration."
+                }
+              ]
+            },
+            {
+              "id": "SA:Dehydration",
+              "description": "AI suspects Dehydration: Hyponatremia and elevated creatinine can be indicative of dehydration, especially in the context of lithium use which can cause nephrogenic diabetes insipidus.",
+              "type": "AI_INSIGHT",
+              "domain": "DIAGNOSTIC",
+              "severity": "MODERATE",
+              "sources": [
+                "sentinel-ai"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.5,
+              "confidenceLabel": "MODERATE",
+              "details": [
+                {
+                  "source": "sentinel-ai",
+                  "severity": "MODERATE",
+                  "description": "AI suspects Dehydration: Hyponatremia and elevated creatinine can be indicative of dehydration, especially in the context of lithium use which can cause nephrogenic diabetes insipidus."
+                }
+              ]
+            },
+            {
+              "id": "S:VITAL_ABNORMAL:heart rate",
+              "description": "Tachycardia HR 102 bpm. Evaluate for pain, anxiety, infection, dehydration, cardiac cause.",
+              "type": "VITAL_ABNORMAL",
+              "domain": "CLINICAL",
+              "severity": "MODERATE",
+              "sources": [
+                "sentinel"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.45,
+              "confidenceLabel": "MODERATE",
+              "details": [
+                {
+                  "source": "sentinel",
+                  "severity": "MODERATE",
+                  "description": "Tachycardia HR 102 bpm. Evaluate for pain, anxiety, infection, dehydration, cardiac cause."
+                }
+              ]
+            },
+            {
+              "id": "S:LAB_ABNORMAL:Creatinine",
+              "description": "Elevated Creatinine = 1.6 (normal: 0.7–1.3). Monitor and correlate clinically.",
+              "type": "LAB_ABNORMAL",
+              "domain": "CLINICAL",
+              "severity": "MODERATE",
+              "sources": [
+                "sentinel"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.45,
+              "confidenceLabel": "MODERATE",
+              "details": [
+                {
+                  "source": "sentinel",
+                  "severity": "MODERATE",
+                  "description": "Elevated Creatinine = 1.6 (normal: 0.7–1.3). Monitor and correlate clinically."
+                }
+              ]
+            },
+            {
+              "id": "SA:Serotonin Syndrome",
+              "description": "AI suspects Serotonin Syndrome: Agitation and elevated heart rate could be early signs of serotonin syndrome, although less likely given the current medication list. Rule out other causes first.",
+              "type": "AI_INSIGHT",
+              "domain": "DIAGNOSTIC",
+              "severity": "LOW",
+              "sources": [
+                "sentinel-ai"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.25,
+              "confidenceLabel": "LOW",
+              "details": [
+                {
+                  "source": "sentinel-ai",
+                  "severity": "LOW",
+                  "description": "AI suspects Serotonin Syndrome: Agitation and elevated heart rate could be early signs of serotonin syndrome, although less likely given the current medication list. Rule out other causes first."
+                }
+              ]
+            }
+          ],
+          "evidenceMethod": "Dempster-Shafer Belief Accumulation",
+          "conflicts": [],
+          "conflictCount": 0,
+          "consensus": {
+            "executiveSummary": "The patient presents with a moderate overall risk, primarily driven by concerns for lithium toxicity and acute kidney injury. Key findings include agitation, paranoia, elevated lithium level, elevated creatinine, and hyponatremia. Continuous monitoring and immediate intervention are crucial to prevent further deterioration.",
+            "criticalAlerts": [
+              "Suspect Lithium Toxicity: Agitation, paranoia, elevated lithium level (1.8 mEq/L), elevated creatinine (1.6), and hyponatremia (132) are concerning. Initiate treatment for lithium toxicity immediately."
+            ],
+            "clinicalRecommendations": [
+              {
+                "priority": 1,
+                "action": "Discontinue lithium immediately.",
+                "rationale": "The patient's elevated lithium level and associated symptoms strongly suggest lithium toxicity. Immediate cessation is crucial to prevent further neurological and renal damage.",
+                "timeframe": "IMMEDIATE"
+              },
+              {
+                "priority": 1,
+                "action": "Initiate aggressive intravenous fluid resuscitation.",
+                "rationale": "Elevated creatinine and hyponatremia suggest dehydration, which can exacerbate lithium toxicity and AKI. IV fluids will help improve renal perfusion and lithium clearance.",
+                "timeframe": "IMMEDIATE"
+              },
+              {
+                "priority": 1,
+                "action": "Obtain serial lithium levels, renal function tests (including electrolytes), and EKG.",
+                "rationale": "Monitoring lithium levels is essential to track the effectiveness of treatment. Renal function tests will assess the severity of AKI. EKG to evaluate for cardiac effects of lithium.",
+                "timeframe": "IMMEDIATE"
+              },
+              {
+                "priority": 2,
+                "action": "Consult nephrology for possible dialysis if renal function does not improve with fluid resuscitation.",
+                "rationale": "Severe AKI secondary to lithium toxicity may require dialysis to remove lithium and support renal function.",
+                "timeframe": "WITHIN_1_HOUR"
+              },
+              {
+                "priority": 2,
+                "action": "Monitor mental status and vital signs closely, including continuous cardiac monitoring.",
+                "rationale": "Agitation, paranoia, and tachycardia require close monitoring to detect any worsening of lithium toxicity or development of other complications such as serotonin syndrome.",
+                "timeframe": "WITHIN_1_HOUR"
+              },
+              {
+                "priority": 3,
+                "action": "Evaluate and manage uncontrolled hypothyroidism.",
+                "rationale": "Uncontrolled hypothyroidism can contribute to mental status changes and electrolyte imbalances, potentially worsening the patient's condition.",
+                "timeframe": "WITHIN_24_HOURS"
+              }
+            ],
+            "qualityMetrics": {
+              "documentationCompleteness": "PARTIAL",
+              "codingAccuracy": "NEEDS_REVIEW",
+              "safetyVerification": "CONCERNS_NOTED"
+            },
+            "agentConsensus": {
+              "overallConfidence": "HIGH",
+              "areasOfAgreement": [],
+              "areasOfConflict": []
+            }
+          },
+          "agentStatuses": {
+            "scribe": "✅ Complete",
+            "guardian": "✅ LOW",
+            "compliance": "⚠️ FAIL",
+            "sentinel": "🔴 MODERATE",
+            "advocate": "📄 GENERATED",
+            "vision": "⏭️ No image"
+          },
+          "summary": "AEGIS consensus: 6 issues (1 critical). Risk: MODERATE (confidence: 83%). 0 inter-agent conflicts resolved. The patient presents with a moderate overall risk, primarily driven by concerns for lithium toxicity and acute kidney injury. Key findings include agitation, paranoia, elevated lithium level, elevated creatinine, and hyponatremia. Continuous monitoring and immediate intervention are crucial to prevent further deterioration.",
+          "durationMs": 4411
+        }
+      }
+    },
+    "timings": {
+      "scribe": 3935,
+      "compliance": 0,
+      "guardian": 1989,
+      "sentinel": 6152,
+      "parallelPhase": 8141,
+      "advocate": 3173,
+      "arbiter": 4411,
+      "total": 19677
+    },
+    "clinicalScores": [
+      {
+        "name": "NEWS2",
+        "score": 1,
+        "maxScore": 20,
+        "risk": "LOW",
+        "recommendation": "Ward-based care. Reassess within 4-6 hours.",
+        "breakdown": [
+          {
+            "param": "Systolic BP",
+            "value": 0,
+            "note": "138mmHg"
+          },
+          {
+            "param": "Heart Rate",
+            "value": 1,
+            "note": "102bpm"
+          },
+          {
+            "param": "Temperature",
+            "value": 0,
+            "note": "37.1°C"
+          },
+          {
+            "param": "Consciousness",
+            "value": 0,
+            "note": "Alert"
+          }
+        ]
+      }
+    ],
+    "failedAgents": [],
+    "summary": {
+      "overallRisk": "MODERATE",
+      "totalIssues": 6,
+      "criticalIssues": 1,
+      "agentStatuses": {
+        "scribe": "✅ Complete",
+        "guardian": "✅ LOW",
+        "compliance": "⚠️ FAIL",
+        "sentinel": "🔴 MODERATE",
+        "advocate": "📄 GENERATED",
+        "vision": "⏭️ No image"
+      },
+      "executiveSummary": "The patient presents with a moderate overall risk, primarily driven by concerns for lithium toxicity and acute kidney injury. Key findings include agitation, paranoia, elevated lithium level, elevated creatinine, and hyponatremia. Continuous monitoring and immediate intervention are crucial to prevent further deterioration.",
+      "pipelineDurationMs": 19677
+    }
+  }
+}

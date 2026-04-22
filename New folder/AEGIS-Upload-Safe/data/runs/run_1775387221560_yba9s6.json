@@ -1,0 +1,747 @@
+{
+  "id": "run_1775387221560_yba9s6",
+  "timestamp": "2026-04-05T11:07:01.560Z",
+  "summary": {
+    "overallRisk": "HIGH",
+    "totalIssues": 6,
+    "criticalIssues": 2,
+    "pipelineDurationMs": 17250,
+    "executiveSummary": "The AI consensus identifies a HIGH overall risk for this 8-year-old female presenting with headache, vomiting, blurred vision, and papilledema. Critical concerns include potential missed diagnoses such as subarachnoid hemorrhage, increased intracranial pressure, and brain tumor. Immediate investigation and intervention are warranted to prevent potential deterioration."
+  },
+  "timings": {
+    "scribe": 3140,
+    "compliance": 1,
+    "guardian": 1470,
+    "sentinel": 5683,
+    "parallelPhase": 7153,
+    "advocate": 3317,
+    "arbiter": 3631,
+    "total": 17250
+  },
+  "agents": {
+    "scribe": {
+      "status": "complete",
+      "diagnosesCount": 1,
+      "medicationsCount": 2,
+      "patient": "Emma Wilson"
+    },
+    "guardian": {
+      "status": "complete",
+      "riskLevel": "HIGH",
+      "findingsCount": 1
+    },
+    "compliance": {
+      "status": "complete",
+      "overallStatus": "FAIL",
+      "findingsCount": 0
+    },
+    "sentinel": {
+      "status": "complete",
+      "riskLevel": "CRITICAL",
+      "findingsCount": 4
+    },
+    "advocate": {
+      "status": "complete",
+      "urgency": "ROUTINE",
+      "category": "REFERRAL"
+    },
+    "vision": {
+      "status": "skipped"
+    },
+    "arbiter": {
+      "status": "complete",
+      "overallRisk": "HIGH",
+      "totalIssues": 6,
+      "votingConfidence": 95,
+      "conflictCount": 0
+    }
+  },
+  "fullResult": {
+    "timestamp": "2026-04-05T11:06:44.271Z",
+    "pipeline": "AEGIS v1.0",
+    "agents": {
+      "scribe": {
+        "status": "complete",
+        "output": {
+          "patient": {
+            "name": "Emma Wilson",
+            "age": 8,
+            "sex": "F"
+          },
+          "symptoms": [
+            "headache",
+            "vomiting",
+            "blurred vision",
+            "papilledema"
+          ],
+          "diagnoses": [
+            {
+              "name": "Viral headache",
+              "icd10": null
+            }
+          ],
+          "medications": [
+            {
+              "name": "amoxicillin",
+              "dose": "250mg",
+              "route": "oral",
+              "frequency": "TID"
+            },
+            {
+              "name": "ibuprofen",
+              "dose": "200mg",
+              "route": "oral",
+              "frequency": "q6h PRN"
+            }
+          ],
+          "allergies": [
+            "penicillin"
+          ],
+          "procedures": [],
+          "vitals": {
+            "bp": "118/78",
+            "hr": 64,
+            "temp": "37.5°C",
+            "spo2": "99%",
+            "rr": null
+          },
+          "labResults": [],
+          "labs": [],
+          "plan": "ibuprofen 200mg q6h PRN, rest, f/u if no improvement in 48h",
+          "_rawText": "Patient Emma Wilson, 8F. Brought by mother with headache x3 days, worsening today. Also reports vomiting x2, blurred vision. No trauma history. PMH: none. Allergies: penicillin. Currently on amoxicillin 250mg TID started by PCP 2 days ago for ear infection. BP 118/78, HR 64, Temp 37.5°C, SpO2 99%. Neuro exam: mild papilledema noted. Assessment: Viral headache. Plan: ibuprofen 200mg q6h PRN, rest, f/u if no improvement in 48h."
+        }
+      },
+      "guardian": {
+        "status": "complete",
+        "output": {
+          "riskLevel": "HIGH",
+          "findings": [
+            {
+              "type": "ALLERGY_CROSS_REACTIVITY",
+              "severity": "HIGH",
+              "allergen": "penicillin",
+              "drug": "amoxicillin",
+              "message": "Patient has documented penicillin allergy. All beta-lactam penicillins carry cross-reactivity risk (~1-10 % with cephalosporins)."
+            }
+          ],
+          "summary": "1 potential safety issue(s) identified (local DB + NLM RxNorm). Review before proceeding.",
+          "rxnorm": {
+            "resolved": 2,
+            "additionalInteractions": 0,
+            "source": "NLM RxNorm API"
+          }
+        }
+      },
+      "compliance": {
+        "status": "complete",
+        "output": {
+          "icd10Validation": [
+            {
+              "diagnosis": "Viral headache",
+              "code": null,
+              "valid": false,
+              "status": "MISSING",
+              "message": "No ICD-10 code provided for \"Viral headache\". A code is required for billing."
+            }
+          ],
+          "billingFindings": [],
+          "overallStatus": "FAIL",
+          "summary": "1 diagnosis code(s) checked: 0 valid, 1 invalid/missing. 0 billing finding(s). Overall status: FAIL."
+        }
+      },
+      "sentinel": {
+        "status": "complete",
+        "output": {
+          "riskLevel": "CRITICAL",
+          "findings": [
+            {
+              "type": "MISSED_DIAGNOSIS",
+              "severity": "CRITICAL",
+              "symptom": "headache",
+              "possibleCondition": "Subarachnoid hemorrhage",
+              "requiredWorkup": [
+                "CT head",
+                "lumbar puncture"
+              ],
+              "message": "Symptom \"headache\" may indicate Subarachnoid hemorrhage (CRITICAL). Consider workup: CT head, lumbar puncture."
+            },
+            {
+              "type": "MISSED_DIAGNOSIS",
+              "severity": "CRITICAL",
+              "symptom": "headache",
+              "possibleCondition": "Meningitis",
+              "requiredWorkup": [
+                "lumbar puncture",
+                "blood cultures"
+              ],
+              "message": "Symptom \"headache\" may indicate Meningitis (CRITICAL). Consider workup: lumbar puncture, blood cultures."
+            },
+            {
+              "type": "MISSED_DIAGNOSIS",
+              "severity": "HIGH",
+              "symptom": "headache",
+              "possibleCondition": "Intracranial mass",
+              "requiredWorkup": [
+                "MRI brain"
+              ],
+              "message": "Symptom \"headache\" may indicate Intracranial mass (HIGH). Consider workup: MRI brain."
+            },
+            {
+              "type": "MISSED_DIAGNOSIS",
+              "severity": "HIGH",
+              "symptom": "headache",
+              "possibleCondition": "Temporal arteritis",
+              "requiredWorkup": [
+                "ESR",
+                "CRP",
+                "temporal artery biopsy"
+              ],
+              "message": "Symptom \"headache\" may indicate Temporal arteritis (HIGH). Consider workup: ESR, CRP, temporal artery biopsy."
+            }
+          ],
+          "aiReasoning": {
+            "missedConsiderations": [
+              {
+                "condition": "Increased Intracranial Pressure (ICP)",
+                "reasoning": "The combination of headache, vomiting, blurred vision, and papilledema is highly concerning for increased ICP. While a viral headache is possible, these symptoms warrant investigation for more serious etiologies.",
+                "urgency": "CRITICAL",
+                "suggestedWorkup": [
+                  "Neurological exam",
+                  "CT scan of the head",
+                  "MRI of the brain",
+                  "Lumbar puncture (if imaging is negative and no contraindications)"
+                ]
+              },
+              {
+                "condition": "Brain Tumor",
+                "reasoning": "Headache, vomiting, blurred vision, and papilledema can be indicative of a space-occupying lesion such as a brain tumor.",
+                "urgency": "HIGH",
+                "suggestedWorkup": [
+                  "MRI of the brain with and without contrast"
+                ]
+              },
+              {
+                "condition": "Hydrocephalus",
+                "reasoning": "Obstructive hydrocephalus can present with headache, vomiting, blurred vision, and papilledema.",
+                "urgency": "HIGH",
+                "suggestedWorkup": [
+                  "CT scan of the head",
+                  "MRI of the brain"
+                ]
+              },
+              {
+                "condition": "Meningitis/Encephalitis",
+                "reasoning": "Although less likely given the lack of fever, meningitis or encephalitis should be considered in the differential diagnosis of headache, vomiting, and neurological symptoms.",
+                "urgency": "MODERATE",
+                "suggestedWorkup": [
+                  "Lumbar puncture",
+                  "Viral PCR panel"
+                ]
+              },
+              {
+                "condition": "Pseudotumor Cerebri (Idiopathic Intracranial Hypertension)",
+                "reasoning": "This is a consideration in an 8-year-old female presenting with headache, papilledema, and visual changes.",
+                "urgency": "MODERATE",
+                "suggestedWorkup": [
+                  "MRI of the brain with and without contrast",
+                  "Lumbar puncture with opening pressure measurement",
+                  "Ophthalmology consult"
+                ]
+              }
+            ],
+            "medicationConcerns": [
+              {
+                "medication": "amoxicillin",
+                "concern": "The patient has a documented penicillin allergy, and amoxicillin is a penicillin derivative. This poses a significant risk of an allergic reaction.",
+                "suggestion": "Discontinue amoxicillin immediately and switch to an alternative antibiotic that is safe for patients with penicillin allergies. Document the allergy and the change in medication clearly."
+              }
+            ],
+            "deteriorationRisk": {
+              "level": "HIGH",
+              "reasoning": "The patient's symptoms (headache, vomiting, blurred vision, papilledema) are concerning for a serious underlying condition such as increased intracranial pressure or a space-occupying lesion. Without further investigation and treatment, the patient's condition could rapidly deteriorate.",
+              "monitoringPlan": "Frequent neurological assessments (including mental status, pupillary response, and motor function) every 2-4 hours, monitoring for worsening headache, vomiting, or visual changes. Continuous monitoring of vital signs, including blood pressure, heart rate, respiratory rate, and oxygen saturation. Repeat imaging if there is any clinical deterioration."
+            },
+            "overallAssessment": "This 8-year-old female presents with symptoms suggestive of increased intracranial pressure, necessitating urgent investigation to rule out serious etiologies such as a brain tumor, hydrocephalus, or pseudotumor cerebri. The current treatment plan is inadequate, and the patient is at high risk for clinical deterioration. Amoxicillin should be discontinued immediately due to penicillin allergy."
+          },
+          "findingCounts": {
+            "redFlags": 0,
+            "missedDiagnoses": 4,
+            "vitalAlerts": 0,
+            "labAlerts": 0,
+            "medMismatches": 0
+          },
+          "deteriorationRisk": {
+            "level": "HIGH",
+            "reasoning": "The patient's symptoms (headache, vomiting, blurred vision, papilledema) are concerning for a serious underlying condition such as increased intracranial pressure or a space-occupying lesion. Without further investigation and treatment, the patient's condition could rapidly deteriorate.",
+            "monitoringPlan": "Frequent neurological assessments (including mental status, pupillary response, and motor function) every 2-4 hours, monitoring for worsening headache, vomiting, or visual changes. Continuous monitoring of vital signs, including blood pressure, heart rate, respiratory rate, and oxygen saturation. Repeat imaging if there is any clinical deterioration."
+          },
+          "summary": "Sentinel identified 10 concern(s) requiring attention. Risk level: CRITICAL.",
+          "durationMs": 5683
+        }
+      },
+      "vision": {
+        "status": "skipped",
+        "reason": "No image provided"
+      },
+      "advocate": {
+        "status": "complete",
+        "output": {
+          "status": "GENERATED",
+          "category": "REFERRAL",
+          "urgency": "ROUTINE",
+          "approvalLikelihood": "HIGH",
+          "document": {
+            "metadata": {
+              "documentType": "Prior Authorization Request",
+              "generatedAt": "2026-04-05T11:06:57.889Z",
+              "generatedBy": "AEGIS Advocate Agent",
+              "payerType": "Medicare / CMS",
+              "category": "Specialist Referral",
+              "turnaround": {
+                "standard": "3 business days",
+                "urgent": "24 hours"
+              },
+              "cmsCompliance": "CMS-0057-F (FHIR ePA)",
+              "appealWindow": "120 days"
+            },
+            "patientInformation": {
+              "name": "Emma Wilson",
+              "age": 8,
+              "sex": "F",
+              "memberId": "[Member ID — to be filled]",
+              "dateOfService": "2026-04-05"
+            },
+            "requestingProvider": {
+              "name": "[Provider Name — to be filled]",
+              "npi": "[NPI — to be filled]",
+              "specialty": "[Specialty]",
+              "facility": "[Facility Name]",
+              "phone": "[Phone]",
+              "fax": "[Fax]"
+            },
+            "clinicalInformation": {
+              "primaryDiagnosis": {
+                "name": "Viral headache",
+                "icd10": null
+              },
+              "allDiagnoses": [
+                {
+                  "name": "Viral headache",
+                  "icd10": null
+                }
+              ],
+              "icd10Codes": [],
+              "currentMedications": [
+                {
+                  "name": "amoxicillin",
+                  "dose": "250mg",
+                  "route": "oral",
+                  "frequency": "TID"
+                },
+                {
+                  "name": "ibuprofen",
+                  "dose": "200mg",
+                  "route": "oral",
+                  "frequency": "q6h PRN"
+                }
+              ],
+              "allergies": [
+                "penicillin"
+              ],
+              "relevantVitals": {
+                "bp": "118/78",
+                "hr": 64,
+                "temp": "37.5°C",
+                "spo2": "99%",
+                "rr": null
+              },
+              "pertinentLabResults": []
+            },
+            "serviceRequested": {
+              "description": "ibuprofen 200mg q6h PRN, rest, f/u if no improvement in 48h",
+              "procedures": [],
+              "urgency": "ROUTINE"
+            },
+            "medicalNecessityJustification": {
+              "clinicalSummary": "Emma Wilson is an 8-year-old female presenting with headache, vomiting, blurred vision, and papilledema. She has been diagnosed with a viral headache and is currently taking amoxicillin for an unrelated infection.",
+              "justification": "The requested ibuprofen 200mg q6h PRN, rest, and follow-up are medically necessary to manage Emma's headache symptoms. While a viral etiology is suspected, the presence of blurred vision and papilledema warrants careful monitoring and symptomatic relief. Ibuprofen is a first-line treatment for headache management, and close follow-up is crucial to assess treatment response and rule out other potential underlying causes of her symptoms, especially given the concerning finding of papilledema.",
+              "alternativesConsidered": [
+                "Acetaminophen",
+                "Observation without intervention"
+              ],
+              "riskIfDenied": "Denial of this request could lead to prolonged pain and discomfort for the patient. More importantly, delaying appropriate management and follow-up could result in a missed diagnosis of a more serious underlying condition causing the headache and papilledema, potentially leading to significant morbidity.",
+              "supportingGuidelines": [
+                "American Academy of Pediatrics Clinical Practice Guideline: Diagnosis and Management of Acute Bacterial Sinusitis in Children",
+                "National Headache Foundation Guidelines for the Management of Pediatric Headache"
+              ]
+            },
+            "supportingEvidence": [
+              {
+                "type": "Vital Signs",
+                "data": "BP: 118/78, HR: 64, Temp: 37.5°C, SpO2: 99%"
+              },
+              {
+                "type": "Diagnosis",
+                "data": "Viral headache"
+              },
+              {
+                "type": "Current Medications",
+                "data": "amoxicillin 250mg TID; ibuprofen 200mg q6h PRN"
+              }
+            ],
+            "payerRequirements": [
+              "Must use CMS-1500 or UB-04 format",
+              "ePA via FHIR API required (CMS-0057-F mandate, effective Jan 2026)",
+              "Standard turnaround: 7 calendar days",
+              "Urgent turnaround: 72 hours",
+              "Peer-to-peer review available on denial"
+            ],
+            "estimatedOutcome": {
+              "approvalLikelihood": "HIGH",
+              "recommendedActions": [
+                "Submit via FHIR ePA API per CMS-0057-F",
+                "Include all supporting lab results and imaging",
+                "Document failed conservative management if applicable",
+                "Standard review timeline applies"
+              ]
+            }
+          },
+          "summary": "Prior authorization request generated for Specialist Referral. Urgency: ROUTINE. Estimated approval: HIGH.",
+          "durationMs": 3317
+        }
+      },
+      "arbiter": {
+        "status": "complete",
+        "output": {
+          "overallRisk": "HIGH",
+          "totalIssues": 6,
+          "criticalIssues": 2,
+          "highIssues": 2,
+          "voting": {
+            "method": "Weighted Majority Vote",
+            "weightedRiskScore": 3.29,
+            "confidence": 95,
+            "voteCount": 4,
+            "votes": [
+              {
+                "agent": "guardian",
+                "domain": "SAFETY",
+                "riskScore": 3,
+                "weight": 1
+              },
+              {
+                "agent": "sentinel",
+                "domain": "CLINICAL",
+                "riskScore": 4,
+                "weight": 0.95
+              },
+              {
+                "agent": "sentinel-deterioration",
+                "domain": "CLINICAL",
+                "riskScore": 3,
+                "weight": 0.7
+              },
+              {
+                "agent": "compliance",
+                "domain": "COMPLIANCE",
+                "riskScore": 3,
+                "weight": 0.6
+              }
+            ]
+          },
+          "scoredIssues": [
+            {
+              "id": "S:MISSED_DIAGNOSIS:Subarachnoid hemorrhage",
+              "description": "Symptom \"headache\" may indicate Subarachnoid hemorrhage (CRITICAL). Consider workup: CT head, lumbar puncture.",
+              "type": "MISSED_DIAGNOSIS",
+              "domain": "DIAGNOSTIC",
+              "severity": "CRITICAL",
+              "sources": [
+                "sentinel"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 4,
+              "beliefMass": 1,
+              "confidenceLabel": "HIGH",
+              "details": [
+                {
+                  "source": "sentinel",
+                  "severity": "CRITICAL",
+                  "description": "Symptom \"headache\" may indicate Subarachnoid hemorrhage (CRITICAL). Consider workup: CT head, lumbar puncture."
+                },
+                {
+                  "source": "sentinel",
+                  "severity": "CRITICAL",
+                  "description": "Symptom \"headache\" may indicate Meningitis (CRITICAL). Consider workup: lumbar puncture, blood cultures."
+                },
+                {
+                  "source": "sentinel",
+                  "severity": "HIGH",
+                  "description": "Symptom \"headache\" may indicate Intracranial mass (HIGH). Consider workup: MRI brain."
+                },
+                {
+                  "source": "sentinel",
+                  "severity": "HIGH",
+                  "description": "Symptom \"headache\" may indicate Temporal arteritis (HIGH). Consider workup: ESR, CRP, temporal artery biopsy."
+                }
+              ]
+            },
+            {
+              "id": "SA:Increased Intracranial Pressure (ICP)",
+              "description": "AI suspects Increased Intracranial Pressure (ICP): The combination of headache, vomiting, blurred vision, and papilledema is highly concerning for increased ICP. While a viral headache is possible, these symptoms warrant investigation for more serious etiologies.",
+              "type": "AI_INSIGHT",
+              "domain": "DIAGNOSTIC",
+              "severity": "CRITICAL",
+              "sources": [
+                "sentinel-ai"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 1,
+              "confidenceLabel": "HIGH",
+              "details": [
+                {
+                  "source": "sentinel-ai",
+                  "severity": "CRITICAL",
+                  "description": "AI suspects Increased Intracranial Pressure (ICP): The combination of headache, vomiting, blurred vision, and papilledema is highly concerning for increased ICP. While a viral headache is possible, these symptoms warrant investigation for more serious etiologies."
+                }
+              ]
+            },
+            {
+              "id": "SA:Brain Tumor",
+              "description": "AI suspects Brain Tumor: Headache, vomiting, blurred vision, and papilledema can be indicative of a space-occupying lesion such as a brain tumor.",
+              "type": "AI_INSIGHT",
+              "domain": "DIAGNOSTIC",
+              "severity": "HIGH",
+              "sources": [
+                "sentinel-ai"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 2,
+              "beliefMass": 0.94,
+              "confidenceLabel": "HIGH",
+              "details": [
+                {
+                  "source": "sentinel-ai",
+                  "severity": "HIGH",
+                  "description": "AI suspects Brain Tumor: Headache, vomiting, blurred vision, and papilledema can be indicative of a space-occupying lesion such as a brain tumor."
+                },
+                {
+                  "source": "sentinel-ai",
+                  "severity": "HIGH",
+                  "description": "AI suspects Hydrocephalus: Obstructive hydrocephalus can present with headache, vomiting, blurred vision, and papilledema."
+                }
+              ]
+            },
+            {
+              "id": "G:ALLERGY_CROSS_REACTIVITY:penicillin",
+              "description": "Patient has documented penicillin allergy. All beta-lactam penicillins carry cross-reactivity risk (~1-10 % with cephalosporins).",
+              "type": "ALLERGY_CROSS_REACTIVITY",
+              "domain": "SAFETY",
+              "severity": "HIGH",
+              "sources": [
+                "guardian"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.75,
+              "confidenceLabel": "HIGH",
+              "details": [
+                {
+                  "source": "guardian",
+                  "severity": "HIGH",
+                  "description": "Patient has documented penicillin allergy. All beta-lactam penicillins carry cross-reactivity risk (~1-10 % with cephalosporins)."
+                }
+              ]
+            },
+            {
+              "id": "SA:Meningitis/Encephalitis",
+              "description": "AI suspects Meningitis/Encephalitis: Although less likely given the lack of fever, meningitis or encephalitis should be considered in the differential diagnosis of headache, vomiting, and neurological symptoms.",
+              "type": "AI_INSIGHT",
+              "domain": "DIAGNOSTIC",
+              "severity": "MODERATE",
+              "sources": [
+                "sentinel-ai"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.5,
+              "confidenceLabel": "MODERATE",
+              "details": [
+                {
+                  "source": "sentinel-ai",
+                  "severity": "MODERATE",
+                  "description": "AI suspects Meningitis/Encephalitis: Although less likely given the lack of fever, meningitis or encephalitis should be considered in the differential diagnosis of headache, vomiting, and neurological symptoms."
+                }
+              ]
+            },
+            {
+              "id": "SA:Pseudotumor Cerebri (Idiopathic Intracranial Hypertension)",
+              "description": "AI suspects Pseudotumor Cerebri (Idiopathic Intracranial Hypertension): This is a consideration in an 8-year-old female presenting with headache, papilledema, and visual changes.",
+              "type": "AI_INSIGHT",
+              "domain": "DIAGNOSTIC",
+              "severity": "MODERATE",
+              "sources": [
+                "sentinel-ai"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.5,
+              "confidenceLabel": "MODERATE",
+              "details": [
+                {
+                  "source": "sentinel-ai",
+                  "severity": "MODERATE",
+                  "description": "AI suspects Pseudotumor Cerebri (Idiopathic Intracranial Hypertension): This is a consideration in an 8-year-old female presenting with headache, papilledema, and visual changes."
+                }
+              ]
+            }
+          ],
+          "evidenceMethod": "Dempster-Shafer Belief Accumulation",
+          "conflicts": [],
+          "conflictCount": 0,
+          "consensus": {
+            "executiveSummary": "The AI consensus identifies a HIGH overall risk for this 8-year-old female presenting with headache, vomiting, blurred vision, and papilledema. Critical concerns include potential missed diagnoses such as subarachnoid hemorrhage, increased intracranial pressure, and brain tumor. Immediate investigation and intervention are warranted to prevent potential deterioration.",
+            "criticalAlerts": [
+              "Symptom \"headache\" may indicate Subarachnoid hemorrhage (CRITICAL).",
+              "AI suspects Increased Intracranial Pressure (ICP): The combination of headache, vomiting, blurred vision, and papilledema is highly concerning for increased ICP.",
+              "Patient has documented penicillin allergy. All beta-lactam penicillins carry cross-reactivity risk (~1-10 % with cephalosporins)."
+            ],
+            "clinicalRecommendations": [
+              {
+                "priority": 1,
+                "action": "Order STAT CT head without contrast followed by lumbar puncture if CT is negative.",
+                "rationale": "To rule out subarachnoid hemorrhage and other structural causes of increased intracranial pressure.",
+                "timeframe": "IMMEDIATE"
+              },
+              {
+                "priority": 1,
+                "action": "Initiate frequent neurological assessments (including mental status, pupillary response, and motor function) every 2-4 hours.",
+                "rationale": "To monitor for signs of clinical deterioration related to increased intracranial pressure or other neurological compromise.",
+                "timeframe": "IMMEDIATE"
+              },
+              {
+                "priority": 2,
+                "action": "Consult Neurology and Neurosurgery.",
+                "rationale": "Given the high suspicion for serious intracranial pathology, specialist consultation is essential for further management.",
+                "timeframe": "WITHIN_1_HOUR"
+              },
+              {
+                "priority": 3,
+                "action": "If antibiotics are indicated, avoid beta-lactam penicillins due to documented penicillin allergy. Consider alternative antibiotic classes.",
+                "rationale": "To prevent potential allergic reaction and ensure appropriate antibiotic coverage.",
+                "timeframe": "ROUTINE"
+              }
+            ],
+            "qualityMetrics": {
+              "documentationCompleteness": "PARTIAL",
+              "codingAccuracy": "NEEDS_REVIEW",
+              "safetyVerification": "CONCERNS_NOTED"
+            },
+            "agentConsensus": {
+              "overallConfidence": "HIGH",
+              "areasOfAgreement": [],
+              "areasOfConflict": []
+            }
+          },
+          "agentStatuses": {
+            "scribe": "✅ Complete",
+            "guardian": "⚠️ HIGH",
+            "compliance": "⚠️ FAIL",
+            "sentinel": "🔴 CRITICAL",
+            "advocate": "📄 GENERATED",
+            "vision": "⏭️ No image"
+          },
+          "summary": "AEGIS consensus: 6 issues (2 critical). Risk: HIGH (confidence: 95%). 0 inter-agent conflicts resolved. The AI consensus identifies a HIGH overall risk for this 8-year-old female presenting with headache, vomiting, blurred vision, and papilledema. Critical concerns include potential missed diagnoses such as subarachnoid hemorrhage, increased intracranial pressure, and brain tumor. Immediate investigation and intervention are warranted to prevent potential deterioration.",
+          "durationMs": 3630
+        }
+      }
+    },
+    "timings": {
+      "scribe": 3140,
+      "compliance": 1,
+      "guardian": 1470,
+      "sentinel": 5683,
+      "parallelPhase": 7153,
+      "advocate": 3317,
+      "arbiter": 3631,
+      "total": 17250
+    },
+    "clinicalScores": [
+      {
+        "name": "qSOFA",
+        "score": 0,
+        "maxScore": 3,
+        "risk": "LOW",
+        "recommendation": "Low sepsis risk by qSOFA. Continue clinical assessment.",
+        "breakdown": [
+          {
+            "param": "Respiratory Rate",
+            "value": 0,
+            "note": "Not documented"
+          },
+          {
+            "param": "Systolic BP",
+            "value": 0,
+            "note": "118 (>100)"
+          },
+          {
+            "param": "Mental Status",
+            "value": 0,
+            "note": "Alert and oriented"
+          }
+        ]
+      },
+      {
+        "name": "NEWS2",
+        "score": 0,
+        "maxScore": 20,
+        "risk": "LOW",
+        "recommendation": "Routine monitoring. Reassess within 12 hours.",
+        "breakdown": [
+          {
+            "param": "SpO2",
+            "value": 0,
+            "note": "99%"
+          },
+          {
+            "param": "Systolic BP",
+            "value": 0,
+            "note": "118mmHg"
+          },
+          {
+            "param": "Heart Rate",
+            "value": 0,
+            "note": "64bpm"
+          },
+          {
+            "param": "Temperature",
+            "value": 0,
+            "note": "37.5°C"
+          },
+          {
+            "param": "Consciousness",
+            "value": 0,
+            "note": "Alert"
+          }
+        ]
+      }
+    ],
+    "failedAgents": [],
+    "summary": {
+      "overallRisk": "HIGH",
+      "totalIssues": 6,
+      "criticalIssues": 2,
+      "agentStatuses": {
+        "scribe": "✅ Complete",
+        "guardian": "⚠️ HIGH",
+        "compliance": "⚠️ FAIL",
+        "sentinel": "🔴 CRITICAL",
+        "advocate": "📄 GENERATED",
+        "vision": "⏭️ No image"
+      },
+      "executiveSummary": "The AI consensus identifies a HIGH overall risk for this 8-year-old female presenting with headache, vomiting, blurred vision, and papilledema. Critical concerns include potential missed diagnoses such as subarachnoid hemorrhage, increased intracranial pressure, and brain tumor. Immediate investigation and intervention are warranted to prevent potential deterioration.",
+      "pipelineDurationMs": 17250
+    }
+  }
+}

@@ -1,0 +1,20 @@
+﻿{
+    "status":  "ok",
+    "system":  "AEGIS v1.0",
+    "uptime":  3423.513977,
+    "agents":  [
+                   "scribe",
+                   "guardian",
+                   "compliance",
+                   "sentinel",
+                   "advocate",
+                   "vision",
+                   "arbiter"
+               ],
+    "llm":  {
+                "provider":  "gemini",
+                "name":  "Gemini 2.0 Flash",
+                "status":  "connected"
+            },
+    "timestamp":  "2026-04-06T08:14:16.002Z"
+}

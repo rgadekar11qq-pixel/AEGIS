@@ -1,0 +1,1288 @@
+{
+  "id": "run_1775373046963_5c7jzs",
+  "timestamp": "2026-04-05T07:10:46.963Z",
+  "summary": {
+    "overallRisk": "HIGH",
+    "totalIssues": 13,
+    "criticalIssues": 5,
+    "pipelineDurationMs": 19136,
+    "executiveSummary": "This patient presents with a HIGH overall risk due to septic shock, likely complicated by hypoglycemia and warfarin-induced coagulopathy. Immediate interventions are required to address hypoxemia, hypotension, and potential bleeding. A thorough workup for stroke and endocarditis should be initiated."
+  },
+  "timings": {
+    "scribe": 4692,
+    "guardian": 1,
+    "compliance": 3,
+    "sentinel": 6283,
+    "parallelPhase": 6288,
+    "advocate": 3228,
+    "arbiter": 4920,
+    "total": 19136
+  },
+  "agents": {
+    "scribe": {
+      "status": "complete",
+      "diagnosesCount": 6,
+      "medicationsCount": 2,
+      "patient": "Jane Smith"
+    },
+    "guardian": {
+      "status": "complete",
+      "riskLevel": "LOW",
+      "findingsCount": 0
+    },
+    "compliance": {
+      "status": "complete",
+      "overallStatus": "FAIL",
+      "findingsCount": 1
+    },
+    "sentinel": {
+      "status": "complete",
+      "riskLevel": "CRITICAL",
+      "findingsCount": 15
+    },
+    "advocate": {
+      "status": "complete",
+      "urgency": "EMERGENT",
+      "category": "REFERRAL"
+    },
+    "vision": {
+      "status": "skipped"
+    },
+    "arbiter": {
+      "status": "complete",
+      "overallRisk": "HIGH",
+      "totalIssues": 13,
+      "votingConfidence": 70,
+      "conflictCount": 1
+    }
+  },
+  "fullResult": {
+    "timestamp": "2026-04-05T07:10:27.756Z",
+    "pipeline": "AEGIS v1.0",
+    "agents": {
+      "scribe": {
+        "status": "complete",
+        "output": {
+          "patient": {
+            "name": "Jane Smith",
+            "age": 72,
+            "sex": "F"
+          },
+          "symptoms": [
+            "altered mental status",
+            "fever"
+          ],
+          "diagnoses": [
+            {
+              "name": "septic shock",
+              "icd10": "A41.9"
+            },
+            {
+              "name": "urinary source",
+              "icd10": null
+            },
+            {
+              "name": "pneumonia",
+              "icd10": "J18.9"
+            },
+            {
+              "name": "COPD",
+              "icd10": "J44.9"
+            },
+            {
+              "name": "CKD Stage 3",
+              "icd10": "N18.3"
+            },
+            {
+              "name": "atrial fibrillation",
+              "icd10": "I48.91"
+            }
+          ],
+          "medications": [
+            {
+              "name": "albuterol",
+              "dose": null,
+              "route": "inhaled",
+              "frequency": null
+            },
+            {
+              "name": "warfarin",
+              "dose": "5mg",
+              "route": "oral",
+              "frequency": "daily"
+            }
+          ],
+          "allergies": [
+            "codeine"
+          ],
+          "procedures": [],
+          "vitals": {
+            "bp": "82/50",
+            "hr": 118,
+            "temp": "39.8°C",
+            "spo2": "89%",
+            "rr": 28
+          },
+          "labResults": [
+            {
+              "test": "WBC",
+              "value": "22.4",
+              "unit": null,
+              "flag": "high"
+            },
+            {
+              "test": "Lactate",
+              "value": "4.8",
+              "unit": null,
+              "flag": "high"
+            },
+            {
+              "test": "Creatinine",
+              "value": "3.2",
+              "unit": null,
+              "flag": "high"
+            },
+            {
+              "test": "INR",
+              "value": "3.8",
+              "unit": null,
+              "flag": "high"
+            },
+            {
+              "test": "Glucose",
+              "value": "48",
+              "unit": null,
+              "flag": "low"
+            },
+            {
+              "test": "Hemoglobin",
+              "value": "7.2",
+              "unit": null,
+              "flag": "low"
+            }
+          ],
+          "plan": "aggressive IV fluids, broad-spectrum antibiotics, vasopressors, ICU admission",
+          "_rawText": "Patient Jane Smith, 72F. Brought to ED by ambulance with altered mental status, fever x2 days. PMH: COPD on albuterol, CKD Stage 3, atrial fibrillation on warfarin 5mg daily. Allergies: codeine. Vitals: BP 82/50, HR 118, Temp 39.8°C, SpO2 89%, RR 28. Labs: WBC 22.4, Lactate 4.8, Creatinine 3.2, INR 3.8, Glucose 48, Hemoglobin 7.2. UA positive for nitrites and leukocytes. CXR: bilateral infiltrates. Assessment: Septic shock, likely urinary source with possible pneumonia. Plan: aggressive IV fluids, broad-spectrum antibiotics, vasopressors, ICU admission."
+        }
+      },
+      "guardian": {
+        "status": "complete",
+        "output": {
+          "riskLevel": "LOW",
+          "findings": [],
+          "summary": "No drug interactions or allergy cross-reactivity issues detected."
+        }
+      },
+      "compliance": {
+        "status": "complete",
+        "output": {
+          "icd10Validation": [
+            {
+              "diagnosis": "septic shock",
+              "code": "A41.9",
+              "valid": false,
+              "status": "UNRECOGNIZED",
+              "message": "Code \"A41.9\" has valid ICD-10 format but is not in the reference database. Verify against the full CMS ICD-10-CM table."
+            },
+            {
+              "diagnosis": "urinary source",
+              "code": null,
+              "valid": false,
+              "status": "MISSING",
+              "message": "No ICD-10 code provided for \"urinary source\". A code is required for billing."
+            },
+            {
+              "diagnosis": "pneumonia",
+              "code": "J18.9",
+              "valid": true,
+              "status": "VALID",
+              "description": "Pneumonia, unspecified organism",
+              "category": "Respiratory",
+              "message": "Code J18.9 is valid: Pneumonia, unspecified organism."
+            },
+            {
+              "diagnosis": "COPD",
+              "code": "J44.9",
+              "valid": false,
+              "status": "UNRECOGNIZED",
+              "message": "Code \"J44.9\" has valid ICD-10 format but is not in the reference database. Verify against the full CMS ICD-10-CM table."
+            },
+            {
+              "diagnosis": "CKD Stage 3",
+              "code": "N18.3",
+              "valid": true,
+              "status": "VALID",
+              "description": "Chronic kidney disease, stage 3",
+              "category": "Renal",
+              "message": "Code N18.3 is valid: Chronic kidney disease, stage 3."
+            },
+            {
+              "diagnosis": "atrial fibrillation",
+              "code": "I48.91",
+              "valid": true,
+              "status": "VALID",
+              "description": "Unspecified atrial fibrillation",
+              "category": "Circulatory",
+              "message": "Code I48.91 is valid: Unspecified atrial fibrillation."
+            }
+          ],
+          "billingFindings": [
+            {
+              "code": "J18.9",
+              "rule": "BILL-001",
+              "message": "\"J18.9\" is an unspecified code. Consider using a more specific code (e.g. J13, J14, J15.0, J15.1) to reduce claim denials.",
+              "severity": "WARNING"
+            }
+          ],
+          "overallStatus": "FAIL",
+          "summary": "6 diagnosis code(s) checked: 3 valid, 3 invalid/missing. 1 billing finding(s). Overall status: FAIL."
+        }
+      },
+      "sentinel": {
+        "status": "complete",
+        "output": {
+          "riskLevel": "CRITICAL",
+          "findings": [
+            {
+              "type": "RED_FLAG_CLUSTER",
+              "severity": "CRITICAL",
+              "cluster": "Sepsis triad",
+              "condition": "Sepsis / Septic Shock",
+              "matchedMarkers": [
+                "fever",
+                "tachycardia",
+                "hypotension"
+              ],
+              "missingMarkers": [],
+              "action": "Initiate sepsis bundle: blood cultures, lactate, broad-spectrum antibiotics within 1 hour",
+              "message": "⚠️ RED FLAG: Sepsis triad — 3/3 markers present for Sepsis / Septic Shock. Initiate sepsis bundle: blood cultures, lactate, broad-spectrum antibiotics within 1 hour"
+            },
+            {
+              "type": "RED_FLAG_CLUSTER",
+              "severity": "HIGH",
+              "cluster": "Bleeding risk",
+              "condition": "Active / Occult Hemorrhage",
+              "matchedMarkers": [
+                "anticoagulant use",
+                "elevated INR",
+                "anemia"
+              ],
+              "missingMarkers": [],
+              "action": "Type and crossmatch, GI consult if GI bleed suspected, hold anticoagulation",
+              "message": "⚠️ RED FLAG: Bleeding risk — 3/3 markers present for Active / Occult Hemorrhage. Type and crossmatch, GI consult if GI bleed suspected, hold anticoagulation"
+            },
+            {
+              "type": "MISSED_DIAGNOSIS",
+              "severity": "CRITICAL",
+              "symptom": "altered mental status",
+              "possibleCondition": "Stroke",
+              "requiredWorkup": [
+                "CT head",
+                "MRI brain"
+              ],
+              "message": "Symptom \"altered mental status\" may indicate Stroke (CRITICAL). Consider workup: CT head, MRI brain."
+            },
+            {
+              "type": "MISSED_DIAGNOSIS",
+              "severity": "CRITICAL",
+              "symptom": "altered mental status",
+              "possibleCondition": "Hypoglycemia",
+              "requiredWorkup": [
+                "glucose"
+              ],
+              "message": "Symptom \"altered mental status\" may indicate Hypoglycemia (CRITICAL). Consider workup: glucose."
+            },
+            {
+              "type": "MISSED_DIAGNOSIS",
+              "severity": "CRITICAL",
+              "symptom": "altered mental status",
+              "possibleCondition": "Sepsis / infection",
+              "requiredWorkup": [
+                "blood cultures",
+                "UA",
+                "chest X-ray"
+              ],
+              "message": "Symptom \"altered mental status\" may indicate Sepsis / infection (CRITICAL). Consider workup: blood cultures, UA, chest X-ray."
+            },
+            {
+              "type": "MISSED_DIAGNOSIS",
+              "severity": "HIGH",
+              "symptom": "altered mental status",
+              "possibleCondition": "Drug toxicity",
+              "requiredWorkup": [
+                "drug levels",
+                "tox screen"
+              ],
+              "message": "Symptom \"altered mental status\" may indicate Drug toxicity (HIGH). Consider workup: drug levels, tox screen."
+            },
+            {
+              "type": "MISSED_DIAGNOSIS",
+              "severity": "HIGH",
+              "symptom": "altered mental status",
+              "possibleCondition": "Hepatic encephalopathy",
+              "requiredWorkup": [
+                "ammonia",
+                "LFTs"
+              ],
+              "message": "Symptom \"altered mental status\" may indicate Hepatic encephalopathy (HIGH). Consider workup: ammonia, LFTs."
+            },
+            {
+              "type": "MISSED_DIAGNOSIS",
+              "severity": "CRITICAL",
+              "symptom": "fever",
+              "possibleCondition": "Sepsis",
+              "requiredWorkup": [
+                "blood cultures",
+                "lactate",
+                "CBC"
+              ],
+              "message": "Symptom \"fever\" may indicate Sepsis (CRITICAL). Consider workup: blood cultures, lactate, CBC."
+            },
+            {
+              "type": "MISSED_DIAGNOSIS",
+              "severity": "HIGH",
+              "symptom": "fever",
+              "possibleCondition": "Endocarditis",
+              "requiredWorkup": [
+                "blood cultures",
+                "echocardiogram"
+              ],
+              "message": "Symptom \"fever\" may indicate Endocarditis (HIGH). Consider workup: blood cultures, echocardiogram."
+            },
+            {
+              "type": "VITAL_ABNORMAL",
+              "severity": "MODERATE",
+              "vital": "heart rate",
+              "value": 118,
+              "message": "Tachycardia HR 118 bpm. Evaluate for pain, anxiety, infection, dehydration, cardiac cause."
+            },
+            {
+              "type": "VITAL_CRITICAL",
+              "severity": "CRITICAL",
+              "vital": "SpO2",
+              "value": 89,
+              "message": "CRITICAL: Hypoxemia SpO2 89%. Supplemental O2, ABG, assess for respiratory failure. Intubation standby."
+            },
+            {
+              "type": "LAB_ABNORMAL",
+              "severity": "MODERATE",
+              "test": "WBC",
+              "value": "22.4 K/uL",
+              "reference": "Normal: 4.5–11 K/uL",
+              "message": "Elevated WBC = 22.4 (normal: 4.5–11). Monitor and correlate clinically."
+            },
+            {
+              "type": "LAB_CRITICAL",
+              "severity": "CRITICAL",
+              "test": "Lactate",
+              "value": "4.8 mmol/L",
+              "reference": "Normal: 0.5–2 mmol/L",
+              "message": "CRITICAL VALUE: Lactate = 4.8 (critical threshold: 4). Immediate clinical action required."
+            },
+            {
+              "type": "LAB_ABNORMAL",
+              "severity": "MODERATE",
+              "test": "Creatinine",
+              "value": "3.2 mg/dL",
+              "reference": "Normal: 0.7–1.3 mg/dL",
+              "message": "Elevated Creatinine = 3.2 (normal: 0.7–1.3). Monitor and correlate clinically."
+            },
+            {
+              "type": "LAB_ABNORMAL",
+              "severity": "MODERATE",
+              "test": "INR",
+              "value": "3.8 ",
+              "reference": "Normal: 0.8–1.1 ",
+              "message": "Elevated INR = 3.8 (normal: 0.8–1.1). Monitor and correlate clinically."
+            }
+          ],
+          "aiReasoning": {
+            "missedConsiderations": [
+              {
+                "condition": "Hypoglycemic encephalopathy",
+                "reasoning": "Patient has altered mental status and a very low glucose level (48). While sepsis can contribute to altered mental status, hypoglycemia needs to be ruled out as the primary or contributing cause.",
+                "urgency": "CRITICAL",
+                "suggestedWorkup": [
+                  "Repeat glucose measurement",
+                  "Administer IV dextrose and reassess mental status"
+                ]
+              },
+              {
+                "condition": "Anemia of chronic disease vs. acute blood loss",
+                "reasoning": "Patient has CKD which can cause anemia, but the hemoglobin of 7.2 is quite low and could be due to acute blood loss, especially given the elevated INR on warfarin. The source of the urinary infection should be investigated for hematuria.",
+                "urgency": "HIGH",
+                "suggestedWorkup": [
+                  "Stool guaiac",
+                  "Urinalysis with microscopy",
+                  "Consider GI source of bleeding"
+                ]
+              },
+              {
+                "condition": "Adrenal insufficiency",
+                "reasoning": "Patient is hypotensive despite aggressive IV fluids and vasopressors are being considered. This, in combination with septic shock, raises concern for relative adrenal insufficiency. The patient's history of COPD may also suggest prior steroid use.",
+                "urgency": "MODERATE",
+                "suggestedWorkup": [
+                  "Cortisol level",
+                  "ACTH stimulation test"
+                ]
+              },
+              {
+                "condition": "Warfarin-induced coagulopathy",
+                "reasoning": "The patient's INR is significantly elevated at 3.8, increasing the risk of bleeding complications, especially in the setting of sepsis and potential for invasive procedures.",
+                "urgency": "HIGH",
+                "suggestedWorkup": [
+                  "Assess for signs of bleeding",
+                  "Consider administering Vitamin K and/or prothrombin complex concentrate (PCC)"
+                ]
+              }
+            ],
+            "medicationConcerns": [
+              {
+                "medication": "warfarin",
+                "concern": "The INR is significantly elevated, increasing the risk of bleeding. The patient is also hypotensive and may require invasive procedures, further increasing bleeding risk.",
+                "suggestion": "Hold warfarin immediately. Administer Vitamin K and/or prothrombin complex concentrate (PCC) to reverse anticoagulation. Monitor INR frequently."
+              },
+              {
+                "medication": "albuterol",
+                "concern": "The patient's COPD may be exacerbated by the pneumonia and sepsis, but the albuterol dose and frequency are not specified. This makes it difficult to assess the adequacy of bronchodilator therapy.",
+                "suggestion": "Specify the dose and frequency of albuterol administration. Consider adding ipratropium if not already included. Assess response to bronchodilators."
+              }
+            ],
+            "deteriorationRisk": {
+              "level": "HIGH",
+              "reasoning": "The patient has septic shock with multiple organ dysfunction (hypotension, hypoxemia, altered mental status, acute kidney injury, anemia, coagulopathy, hypoglycemia). The elevated lactate and WBC count indicate a significant inflammatory response. The patient's age and comorbidities (COPD, CKD, atrial fibrillation) further increase the risk of deterioration.",
+              "monitoringPlan": "Continuous vital sign monitoring, frequent neurological assessments, serial lactate measurements, close monitoring of urine output, and assessment of response to interventions."
+            },
+            "overallAssessment": "This is a critically ill 72-year-old female with septic shock secondary to a likely urinary source and pneumonia. She has multiple comorbidities and is at high risk for clinical deterioration. Immediate interventions are needed to address the hypoglycemia, coagulopathy, and optimize hemodynamic support."
+          },
+          "findingCounts": {
+            "redFlags": 2,
+            "missedDiagnoses": 7,
+            "vitalAlerts": 2,
+            "labAlerts": 4,
+            "medMismatches": 0
+          },
+          "deteriorationRisk": {
+            "level": "HIGH",
+            "reasoning": "The patient has septic shock with multiple organ dysfunction (hypotension, hypoxemia, altered mental status, acute kidney injury, anemia, coagulopathy, hypoglycemia). The elevated lactate and WBC count indicate a significant inflammatory response. The patient's age and comorbidities (COPD, CKD, atrial fibrillation) further increase the risk of deterioration.",
+            "monitoringPlan": "Continuous vital sign monitoring, frequent neurological assessments, serial lactate measurements, close monitoring of urine output, and assessment of response to interventions."
+          },
+          "summary": "Sentinel identified 21 concern(s) requiring attention. Risk level: CRITICAL.",
+          "durationMs": 6283
+        }
+      },
+      "vision": {
+        "status": "skipped",
+        "reason": "No image provided"
+      },
+      "advocate": {
+        "status": "complete",
+        "output": {
+          "status": "GENERATED",
+          "category": "REFERRAL",
+          "urgency": "EMERGENT",
+          "approvalLikelihood": "HIGH",
+          "document": {
+            "metadata": {
+              "documentType": "Prior Authorization Request",
+              "generatedAt": "2026-04-05T07:10:41.971Z",
+              "generatedBy": "AEGIS Advocate Agent",
+              "payerType": "Medicare / CMS",
+              "category": "Specialist Referral",
+              "turnaround": {
+                "standard": "3 business days",
+                "urgent": "24 hours"
+              },
+              "cmsCompliance": "CMS-0057-F (FHIR ePA)",
+              "appealWindow": "120 days"
+            },
+            "patientInformation": {
+              "name": "Jane Smith",
+              "age": 72,
+              "sex": "F",
+              "memberId": "[Member ID — to be filled]",
+              "dateOfService": "2026-04-05"
+            },
+            "requestingProvider": {
+              "name": "[Provider Name — to be filled]",
+              "npi": "[NPI — to be filled]",
+              "specialty": "[Specialty]",
+              "facility": "[Facility Name]",
+              "phone": "[Phone]",
+              "fax": "[Fax]"
+            },
+            "clinicalInformation": {
+              "primaryDiagnosis": {
+                "name": "septic shock",
+                "icd10": "A41.9"
+              },
+              "allDiagnoses": [
+                {
+                  "name": "septic shock",
+                  "icd10": "A41.9"
+                },
+                {
+                  "name": "urinary source",
+                  "icd10": null
+                },
+                {
+                  "name": "pneumonia",
+                  "icd10": "J18.9"
+                },
+                {
+                  "name": "COPD",
+                  "icd10": "J44.9"
+                },
+                {
+                  "name": "CKD Stage 3",
+                  "icd10": "N18.3"
+                },
+                {
+                  "name": "atrial fibrillation",
+                  "icd10": "I48.91"
+                }
+              ],
+              "icd10Codes": [
+                {
+                  "code": "A41.9",
+                  "description": "septic shock"
+                },
+                {
+                  "code": "J18.9",
+                  "description": "pneumonia"
+                },
+                {
+                  "code": "J44.9",
+                  "description": "COPD"
+                },
+                {
+                  "code": "N18.3",
+                  "description": "CKD Stage 3"
+                },
+                {
+                  "code": "I48.91",
+                  "description": "atrial fibrillation"
+                }
+              ],
+              "currentMedications": [
+                {
+                  "name": "albuterol",
+                  "dose": null,
+                  "route": "inhaled",
+                  "frequency": null
+                },
+                {
+                  "name": "warfarin",
+                  "dose": "5mg",
+                  "route": "oral",
+                  "frequency": "daily"
+                }
+              ],
+              "allergies": [
+                "codeine"
+              ],
+              "relevantVitals": {
+                "bp": "82/50",
+                "hr": 118,
+                "temp": "39.8°C",
+                "spo2": "89%",
+                "rr": 28
+              },
+              "pertinentLabResults": [
+                {
+                  "test": "WBC",
+                  "value": "22.4",
+                  "unit": null,
+                  "flag": "high"
+                },
+                {
+                  "test": "Lactate",
+                  "value": "4.8",
+                  "unit": null,
+                  "flag": "high"
+                },
+                {
+                  "test": "Creatinine",
+                  "value": "3.2",
+                  "unit": null,
+                  "flag": "high"
+                },
+                {
+                  "test": "INR",
+                  "value": "3.8",
+                  "unit": null,
+                  "flag": "high"
+                },
+                {
+                  "test": "Glucose",
+                  "value": "48",
+                  "unit": null,
+                  "flag": "low"
+                },
+                {
+                  "test": "Hemoglobin",
+                  "value": "7.2",
+                  "unit": null,
+                  "flag": "low"
+                }
+              ]
+            },
+            "serviceRequested": {
+              "description": "aggressive IV fluids, broad-spectrum antibiotics, vasopressors, ICU admission",
+              "procedures": [],
+              "urgency": "EMERGENT"
+            },
+            "medicalNecessityJustification": {
+              "clinicalSummary": "Jane Smith is a 72-year-old female presenting with altered mental status, fever, hypotension (82/50), tachycardia (118 bpm), tachypnea (28 bpm), and hypoxia (SpO2 89%). She has a history of COPD, CKD stage 3, atrial fibrillation, and is currently on warfarin. Labs are significant for leukocytosis, elevated lactate and creatinine, elevated INR, hypoglycemia, and anemia.",
+              "justification": "The patient is exhibiting signs and symptoms consistent with septic shock, likely secondary to a urinary source and pneumonia. Her elevated lactate, hypotension, tachycardia, tachypnea, and leukocytosis meet the criteria for sepsis and septic shock. Aggressive IV fluids are necessary to restore intravascular volume and improve blood pressure. Broad-spectrum antibiotics are crucial to combat the presumed bacterial infection, and vasopressors are required to maintain adequate perfusion pressure given her persistent hypotension despite initial fluid resuscitation. ICU admission is necessary for close monitoring and management of her critical condition, including respiratory support and titration of vasopressors.",
+              "alternativesConsidered": [
+                "Less aggressive fluid resuscitation",
+                "Oral antibiotics"
+              ],
+              "riskIfDenied": "Delaying or denying aggressive IV fluids, broad-spectrum antibiotics, vasopressors, and ICU admission will likely lead to further hemodynamic instability, worsening organ dysfunction, and increased risk of mortality. The patient's septic shock could progress to multi-organ failure and death if not treated promptly and aggressively.",
+              "supportingGuidelines": [
+                "Surviving Sepsis Campaign Guidelines",
+                "IDSA Guidelines for the Management of Community-Acquired Pneumonia"
+              ]
+            },
+            "supportingEvidence": [
+              {
+                "type": "Vital Signs",
+                "data": "BP: 82/50, HR: 118, Temp: 39.8°C, SpO2: 89%, RR: 28"
+              },
+              {
+                "type": "Lab Result",
+                "data": "WBC: 22.4  (high)"
+              },
+              {
+                "type": "Lab Result",
+                "data": "Lactate: 4.8  (high)"
+              },
+              {
+                "type": "Lab Result",
+                "data": "Creatinine: 3.2  (high)"
+              },
+              {
+                "type": "Lab Result",
+                "data": "INR: 3.8  (high)"
+              },
+              {
+                "type": "Lab Result",
+                "data": "Glucose: 48  (low)"
+              },
+              {
+                "type": "Lab Result",
+                "data": "Hemoglobin: 7.2  (low)"
+              },
+              {
+                "type": "Diagnosis",
+                "data": "septic shock (A41.9)"
+              },
+              {
+                "type": "Diagnosis",
+                "data": "urinary source"
+              },
+              {
+                "type": "Diagnosis",
+                "data": "pneumonia (J18.9)"
+              },
+              {
+                "type": "Diagnosis",
+                "data": "COPD (J44.9)"
+              },
+              {
+                "type": "Diagnosis",
+                "data": "CKD Stage 3 (N18.3)"
+              },
+              {
+                "type": "Diagnosis",
+                "data": "atrial fibrillation (I48.91)"
+              },
+              {
+                "type": "Current Medications",
+                "data": "albuterol  ; warfarin 5mg daily"
+              }
+            ],
+            "payerRequirements": [
+              "Must use CMS-1500 or UB-04 format",
+              "ePA via FHIR API required (CMS-0057-F mandate, effective Jan 2026)",
+              "Standard turnaround: 7 calendar days",
+              "Urgent turnaround: 72 hours",
+              "Peer-to-peer review available on denial"
+            ],
+            "estimatedOutcome": {
+              "approvalLikelihood": "HIGH",
+              "recommendedActions": [
+                "Submit via FHIR ePA API per CMS-0057-F",
+                "Include all supporting lab results and imaging",
+                "Document failed conservative management if applicable",
+                "Mark as URGENT — expedited review required"
+              ]
+            }
+          },
+          "summary": "Prior authorization request generated for Specialist Referral. Urgency: EMERGENT. Estimated approval: HIGH.",
+          "durationMs": 3228
+        }
+      },
+      "arbiter": {
+        "status": "complete",
+        "output": {
+          "overallRisk": "HIGH",
+          "totalIssues": 13,
+          "criticalIssues": 5,
+          "highIssues": 4,
+          "voting": {
+            "method": "Weighted Majority Vote",
+            "weightedRiskScore": 2.68,
+            "confidence": 70,
+            "voteCount": 4,
+            "votes": [
+              {
+                "agent": "guardian",
+                "domain": "SAFETY",
+                "riskScore": 1,
+                "weight": 1
+              },
+              {
+                "agent": "sentinel",
+                "domain": "CLINICAL",
+                "riskScore": 4,
+                "weight": 0.95
+              },
+              {
+                "agent": "sentinel-deterioration",
+                "domain": "CLINICAL",
+                "riskScore": 3,
+                "weight": 0.7
+              },
+              {
+                "agent": "compliance",
+                "domain": "COMPLIANCE",
+                "riskScore": 3,
+                "weight": 0.6
+              }
+            ]
+          },
+          "scoredIssues": [
+            {
+              "id": "S:MISSED_DIAGNOSIS:Stroke",
+              "description": "Symptom \"altered mental status\" may indicate Stroke (CRITICAL). Consider workup: CT head, MRI brain.",
+              "type": "MISSED_DIAGNOSIS",
+              "domain": "DIAGNOSTIC",
+              "severity": "CRITICAL",
+              "sources": [
+                "sentinel"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 6,
+              "beliefMass": 1,
+              "confidenceLabel": "HIGH",
+              "details": [
+                {
+                  "source": "sentinel",
+                  "severity": "CRITICAL",
+                  "description": "Symptom \"altered mental status\" may indicate Stroke (CRITICAL). Consider workup: CT head, MRI brain."
+                },
+                {
+                  "source": "sentinel",
+                  "severity": "CRITICAL",
+                  "description": "Symptom \"altered mental status\" may indicate Hypoglycemia (CRITICAL). Consider workup: glucose."
+                },
+                {
+                  "source": "sentinel",
+                  "severity": "CRITICAL",
+                  "description": "Symptom \"altered mental status\" may indicate Sepsis / infection (CRITICAL). Consider workup: blood cultures, UA, chest X-ray."
+                },
+                {
+                  "source": "sentinel",
+                  "severity": "HIGH",
+                  "description": "Symptom \"altered mental status\" may indicate Drug toxicity (HIGH). Consider workup: drug levels, tox screen."
+                },
+                {
+                  "source": "sentinel",
+                  "severity": "HIGH",
+                  "description": "Symptom \"altered mental status\" may indicate Hepatic encephalopathy (HIGH). Consider workup: ammonia, LFTs."
+                },
+                {
+                  "source": "sentinel",
+                  "severity": "CRITICAL",
+                  "description": "Symptom \"fever\" may indicate Sepsis (CRITICAL). Consider workup: blood cultures, lactate, CBC."
+                }
+              ]
+            },
+            {
+              "id": "SA:Hypoglycemic encephalopathy",
+              "description": "AI suspects Hypoglycemic encephalopathy: Patient has altered mental status and a very low glucose level (48). While sepsis can contribute to altered mental status, hypoglycemia needs to be ruled out as the primary or contributing cause.",
+              "type": "AI_INSIGHT",
+              "domain": "DIAGNOSTIC",
+              "severity": "CRITICAL",
+              "sources": [
+                "sentinel-ai"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 1,
+              "confidenceLabel": "HIGH",
+              "details": [
+                {
+                  "source": "sentinel-ai",
+                  "severity": "CRITICAL",
+                  "description": "AI suspects Hypoglycemic encephalopathy: Patient has altered mental status and a very low glucose level (48). While sepsis can contribute to altered mental status, hypoglycemia needs to be ruled out as the primary or contributing cause."
+                }
+              ]
+            },
+            {
+              "id": "S:RED_FLAG_CLUSTER:Sepsis triad",
+              "description": "⚠️ RED FLAG: Sepsis triad — 3/3 markers present for Sepsis / Septic Shock. Initiate sepsis bundle: blood cultures, lactate, broad-spectrum antibiotics within 1 hour",
+              "type": "RED_FLAG_CLUSTER",
+              "domain": "CLINICAL",
+              "severity": "CRITICAL",
+              "sources": [
+                "sentinel"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.9,
+              "confidenceLabel": "HIGH",
+              "details": [
+                {
+                  "source": "sentinel",
+                  "severity": "CRITICAL",
+                  "description": "⚠️ RED FLAG: Sepsis triad — 3/3 markers present for Sepsis / Septic Shock. Initiate sepsis bundle: blood cultures, lactate, broad-spectrum antibiotics within 1 hour"
+                }
+              ]
+            },
+            {
+              "id": "S:VITAL_CRITICAL:SpO2",
+              "description": "CRITICAL: Hypoxemia SpO2 89%. Supplemental O2, ABG, assess for respiratory failure. Intubation standby.",
+              "type": "VITAL_CRITICAL",
+              "domain": "CLINICAL",
+              "severity": "CRITICAL",
+              "sources": [
+                "sentinel"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.9,
+              "confidenceLabel": "HIGH",
+              "details": [
+                {
+                  "source": "sentinel",
+                  "severity": "CRITICAL",
+                  "description": "CRITICAL: Hypoxemia SpO2 89%. Supplemental O2, ABG, assess for respiratory failure. Intubation standby."
+                }
+              ]
+            },
+            {
+              "id": "S:LAB_CRITICAL:Lactate",
+              "description": "CRITICAL VALUE: Lactate = 4.8 (critical threshold: 4). Immediate clinical action required.",
+              "type": "LAB_CRITICAL",
+              "domain": "CLINICAL",
+              "severity": "CRITICAL",
+              "sources": [
+                "sentinel"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.9,
+              "confidenceLabel": "HIGH",
+              "details": [
+                {
+                  "source": "sentinel",
+                  "severity": "CRITICAL",
+                  "description": "CRITICAL VALUE: Lactate = 4.8 (critical threshold: 4). Immediate clinical action required."
+                }
+              ]
+            },
+            {
+              "id": "S:LAB_ABNORMAL:WBC",
+              "description": "Elevated WBC = 22.4 (normal: 4.5–11). Monitor and correlate clinically.",
+              "type": "LAB_ABNORMAL",
+              "domain": "CLINICAL",
+              "severity": "MODERATE",
+              "sources": [
+                "sentinel"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 3,
+              "beliefMass": 0.83,
+              "confidenceLabel": "HIGH",
+              "details": [
+                {
+                  "source": "sentinel",
+                  "severity": "MODERATE",
+                  "description": "Elevated WBC = 22.4 (normal: 4.5–11). Monitor and correlate clinically."
+                },
+                {
+                  "source": "sentinel",
+                  "severity": "MODERATE",
+                  "description": "Elevated Creatinine = 3.2 (normal: 0.7–1.3). Monitor and correlate clinically."
+                },
+                {
+                  "source": "sentinel",
+                  "severity": "MODERATE",
+                  "description": "Elevated INR = 3.8 (normal: 0.8–1.1). Monitor and correlate clinically."
+                }
+              ]
+            },
+            {
+              "id": "S:MISSED_DIAGNOSIS:Endocarditis",
+              "description": "Symptom \"fever\" may indicate Endocarditis (HIGH). Consider workup: blood cultures, echocardiogram.",
+              "type": "MISSED_DIAGNOSIS",
+              "domain": "DIAGNOSTIC",
+              "severity": "HIGH",
+              "sources": [
+                "sentinel"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.75,
+              "confidenceLabel": "HIGH",
+              "details": [
+                {
+                  "source": "sentinel",
+                  "severity": "HIGH",
+                  "description": "Symptom \"fever\" may indicate Endocarditis (HIGH). Consider workup: blood cultures, echocardiogram."
+                }
+              ]
+            },
+            {
+              "id": "SA:Anemia of chronic disease vs. acute blood loss",
+              "description": "AI suspects Anemia of chronic disease vs. acute blood loss: Patient has CKD which can cause anemia, but the hemoglobin of 7.2 is quite low and could be due to acute blood loss, especially given the elevated INR on warfarin. The source of the urinary infection should be investigated for hematuria.",
+              "type": "AI_INSIGHT",
+              "domain": "DIAGNOSTIC",
+              "severity": "HIGH",
+              "sources": [
+                "sentinel-ai"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.75,
+              "confidenceLabel": "HIGH",
+              "details": [
+                {
+                  "source": "sentinel-ai",
+                  "severity": "HIGH",
+                  "description": "AI suspects Anemia of chronic disease vs. acute blood loss: Patient has CKD which can cause anemia, but the hemoglobin of 7.2 is quite low and could be due to acute blood loss, especially given the elevated INR on warfarin. The source of the urinary infection should be investigated for hematuria."
+                }
+              ]
+            },
+            {
+              "id": "SA:Warfarin-induced coagulopathy",
+              "description": "AI suspects Warfarin-induced coagulopathy: The patient's INR is significantly elevated at 3.8, increasing the risk of bleeding complications, especially in the setting of sepsis and potential for invasive procedures.",
+              "type": "AI_INSIGHT",
+              "domain": "DIAGNOSTIC",
+              "severity": "HIGH",
+              "sources": [
+                "sentinel-ai"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.75,
+              "confidenceLabel": "HIGH",
+              "details": [
+                {
+                  "source": "sentinel-ai",
+                  "severity": "HIGH",
+                  "description": "AI suspects Warfarin-induced coagulopathy: The patient's INR is significantly elevated at 3.8, increasing the risk of bleeding complications, especially in the setting of sepsis and potential for invasive procedures."
+                }
+              ]
+            },
+            {
+              "id": "S:RED_FLAG_CLUSTER:Bleeding risk",
+              "description": "⚠️ RED FLAG: Bleeding risk — 3/3 markers present for Active / Occult Hemorrhage. Type and crossmatch, GI consult if GI bleed suspected, hold anticoagulation",
+              "type": "RED_FLAG_CLUSTER",
+              "domain": "CLINICAL",
+              "severity": "HIGH",
+              "sources": [
+                "sentinel"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.68,
+              "confidenceLabel": "MODERATE",
+              "details": [
+                {
+                  "source": "sentinel",
+                  "severity": "HIGH",
+                  "description": "⚠️ RED FLAG: Bleeding risk — 3/3 markers present for Active / Occult Hemorrhage. Type and crossmatch, GI consult if GI bleed suspected, hold anticoagulation"
+                }
+              ]
+            },
+            {
+              "id": "SA:Adrenal insufficiency",
+              "description": "AI suspects Adrenal insufficiency: Patient is hypotensive despite aggressive IV fluids and vasopressors are being considered. This, in combination with septic shock, raises concern for relative adrenal insufficiency. The patient's history of COPD may also suggest prior steroid use.",
+              "type": "AI_INSIGHT",
+              "domain": "DIAGNOSTIC",
+              "severity": "MODERATE",
+              "sources": [
+                "sentinel-ai"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.5,
+              "confidenceLabel": "MODERATE",
+              "details": [
+                {
+                  "source": "sentinel-ai",
+                  "severity": "MODERATE",
+                  "description": "AI suspects Adrenal insufficiency: Patient is hypotensive despite aggressive IV fluids and vasopressors are being considered. This, in combination with septic shock, raises concern for relative adrenal insufficiency. The patient's history of COPD may also suggest prior steroid use."
+                }
+              ]
+            },
+            {
+              "id": "C:BILL-001:J18.9",
+              "description": "\"J18.9\" is an unspecified code. Consider using a more specific code (e.g. J13, J14, J15.0, J15.1) to reduce claim denials.",
+              "type": "BILL-001",
+              "domain": "COMPLIANCE",
+              "severity": "MODERATE",
+              "sources": [
+                "compliance"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.5,
+              "confidenceLabel": "MODERATE",
+              "details": [
+                {
+                  "source": "compliance",
+                  "severity": "MODERATE",
+                  "description": "\"J18.9\" is an unspecified code. Consider using a more specific code (e.g. J13, J14, J15.0, J15.1) to reduce claim denials."
+                }
+              ]
+            },
+            {
+              "id": "S:VITAL_ABNORMAL:heart rate",
+              "description": "Tachycardia HR 118 bpm. Evaluate for pain, anxiety, infection, dehydration, cardiac cause.",
+              "type": "VITAL_ABNORMAL",
+              "domain": "CLINICAL",
+              "severity": "MODERATE",
+              "sources": [
+                "sentinel"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.45,
+              "confidenceLabel": "MODERATE",
+              "details": [
+                {
+                  "source": "sentinel",
+                  "severity": "MODERATE",
+                  "description": "Tachycardia HR 118 bpm. Evaluate for pain, anxiety, infection, dehydration, cardiac cause."
+                }
+              ]
+            }
+          ],
+          "evidenceMethod": "Dempster-Shafer Belief Accumulation",
+          "conflicts": [
+            {
+              "type": "RISK_DISAGREEMENT",
+              "agents": [
+                "guardian",
+                "sentinel"
+              ],
+              "description": "Guardian assessed LOW risk, but Sentinel assessed CRITICAL risk.",
+              "resolution": "Escalating to higher risk level — Sentinel's clinical analysis takes precedence for diagnostic concerns.",
+              "resolvedRisk": "CRITICAL"
+            }
+          ],
+          "conflictCount": 1,
+          "consensus": {
+            "executiveSummary": "This patient presents with a HIGH overall risk due to septic shock, likely complicated by hypoglycemia and warfarin-induced coagulopathy. Immediate interventions are required to address hypoxemia, hypotension, and potential bleeding. A thorough workup for stroke and endocarditis should be initiated.",
+            "criticalAlerts": [
+              "Initiate sepsis bundle immediately.",
+              "Rule out hypoglycemia as primary or contributing cause of altered mental status.",
+              "Address hypoxemia with supplemental oxygen and assess for respiratory failure."
+            ],
+            "clinicalRecommendations": [
+              {
+                "priority": 1,
+                "action": "Administer broad-spectrum antibiotics, obtain blood cultures and lactate level.",
+                "rationale": "Patient meets sepsis criteria with elevated lactate and WBC count.",
+                "timeframe": "IMMEDIATE"
+              },
+              {
+                "priority": 1,
+                "action": "Administer supplemental oxygen and obtain arterial blood gas (ABG).",
+                "rationale": "Patient is hypoxemic with SpO2 of 89%.",
+                "timeframe": "IMMEDIATE"
+              },
+              {
+                "priority": 1,
+                "action": "Check blood glucose and administer dextrose if indicated.",
+                "rationale": "Patient has altered mental status and a low glucose level of 48, raising suspicion for hypoglycemic encephalopathy.",
+                "timeframe": "IMMEDIATE"
+              },
+              {
+                "priority": 1,
+                "action": "Hold warfarin and administer Vitamin K or other reversal agents as indicated.",
+                "rationale": "Patient has elevated INR of 3.8, increasing bleeding risk, especially in the setting of sepsis.",
+                "timeframe": "IMMEDIATE"
+              },
+              {
+                "priority": 2,
+                "action": "Order CT head and MRI brain.",
+                "rationale": "Altered mental status may indicate stroke.",
+                "timeframe": "WITHIN_1_HOUR"
+              },
+              {
+                "priority": 2,
+                "action": "Order blood cultures and echocardiogram.",
+                "rationale": "Fever may indicate endocarditis.",
+                "timeframe": "WITHIN_1_HOUR"
+              },
+              {
+                "priority": 2,
+                "action": "Investigate source of urinary infection for hematuria and evaluate for acute blood loss.",
+                "rationale": "Patient has anemia and elevated INR, suggesting potential bleeding.",
+                "timeframe": "WITHIN_1_HOUR"
+              },
+              {
+                "priority": 3,
+                "action": "Obtain type and crossmatch and consult GI if GI bleed suspected.",
+                "rationale": "Patient has multiple markers for active/occult hemorrhage.",
+                "timeframe": "WITHIN_24_HOURS"
+              }
+            ],
+            "qualityMetrics": {
+              "documentationCompleteness": "PARTIAL",
+              "codingAccuracy": "NEEDS_REVIEW",
+              "safetyVerification": "CONCERNS_NOTED"
+            },
+            "agentConsensus": {
+              "overallConfidence": "MODERATE",
+              "areasOfAgreement": [],
+              "areasOfConflict": [
+                "Guardian assessed LOW risk, but Sentinel assessed CRITICAL risk."
+              ]
+            }
+          },
+          "agentStatuses": {
+            "scribe": "✅ Complete",
+            "guardian": "✅ LOW",
+            "compliance": "⚠️ FAIL",
+            "sentinel": "🔴 CRITICAL",
+            "advocate": "📄 GENERATED",
+            "vision": "⏭️ No image"
+          },
+          "summary": "AEGIS consensus: 13 issues (5 critical). Risk: HIGH (confidence: 70%). 1 inter-agent conflicts resolved. This patient presents with a HIGH overall risk due to septic shock, likely complicated by hypoglycemia and warfarin-induced coagulopathy. Immediate interventions are required to address hypoxemia, hypotension, and potential bleeding. A thorough workup for stroke and endocarditis should be initiated.",
+          "durationMs": 4920
+        }
+      }
+    },
+    "timings": {
+      "scribe": 4692,
+      "guardian": 1,
+      "compliance": 3,
+      "sentinel": 6283,
+      "parallelPhase": 6288,
+      "advocate": 3228,
+      "arbiter": 4920,
+      "total": 19136
+    },
+    "clinicalScores": [
+      {
+        "name": "qSOFA",
+        "score": 3,
+        "maxScore": 3,
+        "risk": "HIGH",
+        "recommendation": "High sepsis risk. Initiate Sepsis-3 bundle: blood cultures, lactate, broad-spectrum antibiotics within 1 hour.",
+        "breakdown": [
+          {
+            "param": "Respiratory Rate",
+            "value": 1,
+            "note": "28 (≥22)"
+          },
+          {
+            "param": "Systolic BP",
+            "value": 1,
+            "note": "82 (≤100)"
+          },
+          {
+            "param": "Mental Status",
+            "value": 1,
+            "note": "Altered"
+          }
+        ]
+      },
+      {
+        "name": "NEWS2",
+        "score": 16,
+        "maxScore": 20,
+        "risk": "HIGH",
+        "recommendation": "Urgent — continuous monitoring, senior clinical review, consider ICU transfer.",
+        "breakdown": [
+          {
+            "param": "Resp Rate",
+            "value": 3,
+            "note": "28/min"
+          },
+          {
+            "param": "SpO2",
+            "value": 3,
+            "note": "89%"
+          },
+          {
+            "param": "Systolic BP",
+            "value": 3,
+            "note": "82mmHg"
+          },
+          {
+            "param": "Heart Rate",
+            "value": 2,
+            "note": "118bpm"
+          },
+          {
+            "param": "Temperature",
+            "value": 2,
+            "note": "39.8°C"
+          },
+          {
+            "param": "Consciousness",
+            "value": 3,
+            "note": "Not alert (AVPU)"
+          }
+        ]
+      },
+      {
+        "name": "CHA₂DS₂-VASc",
+        "score": 3,
+        "maxScore": 9,
+        "risk": "HIGH",
+        "recommendation": "Anticoagulation recommended (DOACs preferred over warfarin). Annual stroke risk: 2.2-3.2%",
+        "breakdown": [
+          {
+            "param": "Age 65-74",
+            "value": 1,
+            "note": "72 years"
+          },
+          {
+            "param": "Diabetes",
+            "value": 1,
+            "note": "Present"
+          },
+          {
+            "param": "Sex (Female)",
+            "value": 1,
+            "note": "Female"
+          }
+        ]
+      }
+    ],
+    "summary": {
+      "overallRisk": "HIGH",
+      "totalIssues": 13,
+      "criticalIssues": 5,
+      "agentStatuses": {
+        "scribe": "✅ Complete",
+        "guardian": "✅ LOW",
+        "compliance": "⚠️ FAIL",
+        "sentinel": "🔴 CRITICAL",
+        "advocate": "📄 GENERATED",
+        "vision": "⏭️ No image"
+      },
+      "executiveSummary": "This patient presents with a HIGH overall risk due to septic shock, likely complicated by hypoglycemia and warfarin-induced coagulopathy. Immediate interventions are required to address hypoxemia, hypotension, and potential bleeding. A thorough workup for stroke and endocarditis should be initiated.",
+      "pipelineDurationMs": 19136
+    }
+  }
+}

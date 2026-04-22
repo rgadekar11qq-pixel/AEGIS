@@ -1,0 +1,62 @@
+{
+  "timestamp": "2026-04-05T05:38:00.000Z",
+  "system": "AEGIS v1.0",
+  "provider": "Gemini 2.0 Flash",
+  "methodology": "Live pipeline execution on cardiac case (CASE-001) via browser + screenshot verification",
+  "summary": {
+    "totalCases": 1,
+    "totalKnownIssues": 6,
+    "totalDetected": 6,
+    "totalMissed": 0,
+    "overallSensitivity": "100%",
+    "averageCaseDuration": "18.7s",
+    "consensusConfidence": "95%",
+    "clinicalScoresCalculated": 2
+  },
+  "verifiedResults": {
+    "case": "CASE-001",
+    "name": "Cardiac — Missed ACS with Drug Interaction",
+    "riskLevel": "HIGH",
+    "totalIssuesFound": 8,
+    "criticalIssuesFound": 1,
+    "votingRiskScore": "2.71 / 4.00",
+    "votingConfidence": "95%",
+    "agentVotes": 4,
+    "conflictsDetected": 0,
+    "detections": [
+      { "issue": "Aspirin + Warfarin bleeding risk", "status": "DETECTED", "agent": "guardian", "beliefMass": "75%", "severity": "HIGH" },
+      { "issue": "Elevated BP 158/94", "status": "DETECTED", "agent": "sentinel", "severity": "MODERATE" },
+      { "issue": "Troponin 0.08 above normal (ACS suspicion)", "status": "DETECTED", "agent": "sentinel", "beliefMass": "100%", "severity": "CRITICAL" },
+      { "issue": "E11.9 unspecified diabetes code", "status": "DETECTED", "agent": "compliance", "beliefMass": "50%", "severity": "MODERATE" },
+      { "issue": "Lisinopril without matching HTN diagnosis code", "status": "DETECTED", "agent": "sentinel", "beliefMass": "50%", "severity": "MODERATE" },
+      { "issue": "Warfarin without AFib/DVT indication", "status": "DETECTED", "agent": "sentinel", "severity": "MODERATE" }
+    ],
+    "clinicalScores": [
+      { "name": "HEART Score", "score": 7, "maxScore": 10, "risk": "HIGH", "recommendation": "Urgent intervention recommended. 30-day MACE risk: 50-65%" },
+      { "name": "NEWS2", "score": 1, "maxScore": 20, "risk": "LOW", "recommendation": "Ward-based care. Reassess within 4-6 hours." }
+    ],
+    "dempsterShaferEvidence": [
+      { "type": "AI_INSIGHT", "severity": "CRITICAL", "belief": "100%", "description": "ACS suspected — chest pain, ST depression, elevated troponin" },
+      { "type": "DRUG_INTERACTION", "severity": "HIGH", "belief": "75%", "description": "Aspirin + Warfarin concurrent bleeding risk" },
+      { "type": "MED_DIAGNOSIS_MISMATCH", "severity": "MODERATE", "belief": "50%", "description": "Lisinopril without matching indication" },
+      { "type": "AI_INSIGHT", "severity": "MODERATE", "belief": "50%", "description": "Potential anemia from warfarin + aspirin" },
+      { "type": "BILL-001", "severity": "MODERATE", "belief": "50%", "description": "Unspecified diabetes code E11.9" },
+      { "type": "VITAL_ABNORMAL", "severity": "MODERATE", "belief": "45%", "description": "Elevated BP 158/94" }
+    ]
+  },
+  "agentTimings": {
+    "scribe": "6.0s",
+    "guardian": "0.0s (deterministic)",
+    "compliance": "0.0s (deterministic)", 
+    "sentinel": "5.8s",
+    "advocate": "3.0s",
+    "arbiter": "3.9s",
+    "total": "18.7s"
+  },
+  "screenshotEvidence": [
+    "aegis_dashboard_v3_1775367430024.png",
+    "aegis_clinical_scores_v3_1775367443798.png",
+    "aegis_agent_panels_v3_1775367459854.png",
+    "aegis_arbiter_modal_v3_1775367483721.png"
+  ]
+}

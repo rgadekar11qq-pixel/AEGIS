@@ -1,0 +1,881 @@
+{
+  "id": "run_1776153910854_zyio9w",
+  "timestamp": "2026-04-14T08:05:10.854Z",
+  "summary": {
+    "overallRisk": "HIGH",
+    "totalIssues": 8,
+    "criticalIssues": 1,
+    "pipelineDurationMs": 21868,
+    "executiveSummary": "This patient presents a HIGH overall risk (weighted score 2.71, 95% confidence) due to suspected Acute Coronary Syndrome (ACS), uncontrolled hypertension, and potential drug interactions. Elevated troponin levels and chest pain warrant immediate investigation for ACS. Address the identified drug interaction and optimize blood pressure control to mitigate further cardiovascular risk."
+  },
+  "timings": {
+    "scribe": 5424,
+    "compliance": 4,
+    "guardian": 1984,
+    "sentinel": 6072,
+    "parallelPhase": 8057,
+    "advocate": 3632,
+    "arbiter": 4737,
+    "total": 21868
+  },
+  "agents": {
+    "scribe": {
+      "status": "complete",
+      "diagnosesCount": 3,
+      "medicationsCount": 5,
+      "patient": "John Doe"
+    },
+    "guardian": {
+      "status": "complete",
+      "riskLevel": "HIGH",
+      "findingsCount": 1
+    },
+    "compliance": {
+      "status": "complete",
+      "overallStatus": "FAIL",
+      "findingsCount": 1
+    },
+    "sentinel": {
+      "status": "complete",
+      "riskLevel": "MODERATE",
+      "findingsCount": 3
+    },
+    "advocate": {
+      "status": "complete",
+      "urgency": "URGENT",
+      "category": "SURGERY"
+    },
+    "vision": {
+      "status": "skipped"
+    },
+    "arbiter": {
+      "status": "complete",
+      "overallRisk": "HIGH",
+      "totalIssues": 8,
+      "votingConfidence": 95,
+      "conflictCount": 0
+    }
+  },
+  "fullResult": {
+    "timestamp": "2026-04-14T08:04:48.145Z",
+    "pipeline": "AEGIS v1.0",
+    "agents": {
+      "scribe": {
+        "status": "complete",
+        "output": {
+          "patient": {
+            "name": "John Doe",
+            "age": 58,
+            "sex": "M"
+          },
+          "symptoms": [
+            "chest pain radiating to left arm"
+          ],
+          "diagnoses": [
+            {
+              "name": "Unstable angina",
+              "icd10": "I20.0"
+            },
+            {
+              "name": "Type 2 DM",
+              "icd10": "E11.9"
+            },
+            {
+              "name": "HTN",
+              "icd10": null
+            }
+          ],
+          "medications": [
+            {
+              "name": "metformin",
+              "dose": "1000mg",
+              "route": "oral",
+              "frequency": "BID"
+            },
+            {
+              "name": "lisinopril",
+              "dose": "20mg",
+              "route": "oral",
+              "frequency": "daily"
+            },
+            {
+              "name": "aspirin",
+              "dose": "325mg",
+              "route": "oral",
+              "frequency": null
+            },
+            {
+              "name": "nitroglycerin",
+              "dose": null,
+              "route": "SL",
+              "frequency": null
+            },
+            {
+              "name": "warfarin",
+              "dose": "5mg",
+              "route": "oral",
+              "frequency": "daily"
+            }
+          ],
+          "allergies": [
+            "penicillin",
+            "sulfa"
+          ],
+          "procedures": [
+            "cardiac catheterization"
+          ],
+          "vitals": {
+            "bp": "158/94",
+            "hr": 92,
+            "temp": null,
+            "spo2": "96%",
+            "rr": null
+          },
+          "labResults": [
+            {
+              "test": "Troponin",
+              "value": "0.08",
+              "unit": null,
+              "flag": "high"
+            }
+          ],
+          "labs": [
+            {
+              "test": "Troponin",
+              "value": "0.08",
+              "unit": null,
+              "flag": "high"
+            }
+          ],
+          "plan": "admit to CCU, cardiology consult, serial troponins",
+          "_rawText": "Patient John Doe, 58M. Chief complaint: chest pain radiating to left arm for 2 hours. History of Type 2 DM on metformin 1000mg BID, HTN on lisinopril 20mg daily. Allergies: penicillin, sulfa. BP 158/94, HR 92, SpO2 96%. ECG shows ST depression V3-V5. Troponin 0.08 (normal <0.04). Started aspirin 325mg, nitroglycerin SL, warfarin 5mg daily. Assessment: Unstable angina. Plan: admit to CCU, cardiology consult, serial troponins, cardiac catheterization."
+        }
+      },
+      "guardian": {
+        "status": "complete",
+        "output": {
+          "riskLevel": "HIGH",
+          "findings": [
+            {
+              "type": "DRUG_INTERACTION",
+              "severity": "HIGH",
+              "drugs": [
+                "aspirin",
+                "warfarin"
+              ],
+              "message": "Concurrent use increases bleeding risk significantly. Monitor INR closely or consider alternative antiplatelet therapy."
+            }
+          ],
+          "summary": "1 potential safety issue(s) identified (local DB + NLM RxNorm). Review before proceeding.",
+          "rxnorm": {
+            "resolved": 5,
+            "additionalInteractions": 0,
+            "source": "NLM RxNorm API"
+          }
+        }
+      },
+      "compliance": {
+        "status": "complete",
+        "output": {
+          "icd10Validation": [
+            {
+              "diagnosis": "Unstable angina",
+              "code": "I20.0",
+              "valid": false,
+              "status": "UNRECOGNIZED",
+              "message": "Code \"I20.0\" has valid ICD-10 format but is not in the reference database. Verify against the full CMS ICD-10-CM table."
+            },
+            {
+              "diagnosis": "Type 2 DM",
+              "code": "E11.9",
+              "valid": true,
+              "status": "VALID",
+              "description": "Type 2 diabetes mellitus without complications",
+              "category": "Endocrine",
+              "message": "Code E11.9 is valid: Type 2 diabetes mellitus without complications."
+            },
+            {
+              "diagnosis": "HTN",
+              "code": null,
+              "valid": false,
+              "status": "MISSING",
+              "message": "No ICD-10 code provided for \"HTN\". A code is required for billing."
+            }
+          ],
+          "billingFindings": [
+            {
+              "code": "E11.9",
+              "rule": "BILL-001",
+              "message": "\"E11.9\" is an unspecified code. Consider using a more specific code (e.g. E11.65, E11.21, E11.22) to reduce claim denials.",
+              "severity": "WARNING"
+            }
+          ],
+          "overallStatus": "FAIL",
+          "summary": "3 diagnosis code(s) checked: 1 valid, 2 invalid/missing. 1 billing finding(s). Overall status: FAIL."
+        }
+      },
+      "sentinel": {
+        "status": "complete",
+        "output": {
+          "riskLevel": "MODERATE",
+          "findings": [
+            {
+              "type": "VITAL_ABNORMAL",
+              "severity": "MODERATE",
+              "vital": "blood pressure",
+              "value": "158/94",
+              "message": "Elevated BP 158/94. Assess for end-organ damage. Consider antihypertensive adjustment."
+            },
+            {
+              "type": "LAB_ABNORMAL",
+              "severity": "MODERATE",
+              "test": "Troponin",
+              "value": "0.08 ng/mL",
+              "reference": "Normal: 0–0.04 ng/mL",
+              "message": "Elevated Troponin = 0.08 (normal: 0–0.04). Monitor and correlate clinically."
+            },
+            {
+              "type": "MED_DIAGNOSIS_MISMATCH",
+              "severity": "MODERATE",
+              "medication": "lisinopril",
+              "expectedDiagnoses": [
+                "hypertension",
+                "heart failure",
+                "diabetic nephropathy",
+                "ckd"
+              ],
+              "message": "\"lisinopril\" is prescribed but no matching diagnosis found. Expected: hypertension, heart failure, diabetic nephropathy. Verify indication or add diagnosis."
+            }
+          ],
+          "aiReasoning": {
+            "missedConsiderations": [
+              {
+                "condition": "Acute Coronary Syndrome (ACS)",
+                "reasoning": "Patient presents with chest pain radiating to the left arm, elevated troponin, and a history of HTN and Type 2 DM. Unstable angina is already listed, but ACS encompasses a broader range of conditions including NSTEMI.",
+                "urgency": "CRITICAL",
+                "suggestedWorkup": [
+                  "EKG",
+                  "Serial Troponins",
+                  "CMP",
+                  "CBC",
+                  "Lipid Panel"
+                ]
+              },
+              {
+                "condition": "Anemia",
+                "reasoning": "Patient is on both aspirin and warfarin, increasing the risk of bleeding. Anemia should be ruled out as a contributing factor to chest pain and potential bleeding.",
+                "urgency": "MODERATE",
+                "suggestedWorkup": [
+                  "CBC",
+                  "Iron studies"
+                ]
+              },
+              {
+                "condition": "Hyperlipidemia",
+                "reasoning": "Patient has a history of HTN, Type 2 DM, and is presenting with chest pain. Hyperlipidemia is a common comorbidity and a major risk factor for cardiovascular disease.",
+                "urgency": "MODERATE",
+                "suggestedWorkup": [
+                  "Lipid Panel"
+                ]
+              }
+            ],
+            "medicationConcerns": [
+              {
+                "medication": "aspirin",
+                "concern": "Concurrent use with warfarin significantly increases the risk of bleeding. The aspirin dose is also quite high (325mg).",
+                "suggestion": "Consult cardiology regarding the need for dual antiplatelet therapy. If antiplatelet therapy is required, consider switching aspirin to a lower dose (e.g., 81mg) or using an alternative antiplatelet agent like clopidogrel. Monitor INR closely."
+              },
+              {
+                "medication": "nitroglycerin",
+                "concern": "The dose and frequency of nitroglycerin are not specified. This makes it difficult to assess its effectiveness and safety.",
+                "suggestion": "Clarify the nitroglycerin prescription (dose and frequency) and ensure the patient understands how to use it for chest pain."
+              },
+              {
+                "medication": "metformin",
+                "concern": "Given the patient's presentation with chest pain and potential for cardiac catheterization, assess renal function. Metformin should be held if there is significant renal impairment or if contrast is used during the catheterization.",
+                "suggestion": "Check creatinine and eGFR. Hold metformin if renal function is impaired or if contrast is used during cardiac catheterization."
+              }
+            ],
+            "deteriorationRisk": {
+              "level": "HIGH",
+              "reasoning": "Patient presents with unstable angina, elevated troponin, uncontrolled hypertension (158/94), and a history of diabetes. These factors indicate a high risk of progression to MI or other adverse cardiac events.",
+              "monitoringPlan": "Continuous cardiac monitoring, serial EKGs, serial troponins, frequent blood pressure monitoring, and close observation for any changes in symptoms."
+            },
+            "overallAssessment": "The patient is a 58-year-old male presenting with unstable angina, elevated troponin, and uncontrolled hypertension, placing him at high risk for acute coronary syndrome. The concurrent use of aspirin and warfarin poses a significant bleeding risk, and the patient's diabetes and hypertension require careful management. Close monitoring and prompt intervention are crucial to prevent further clinical deterioration."
+          },
+          "findingCounts": {
+            "redFlags": 0,
+            "missedDiagnoses": 0,
+            "vitalAlerts": 1,
+            "labAlerts": 1,
+            "medMismatches": 1
+          },
+          "deteriorationRisk": {
+            "level": "HIGH",
+            "reasoning": "Patient presents with unstable angina, elevated troponin, uncontrolled hypertension (158/94), and a history of diabetes. These factors indicate a high risk of progression to MI or other adverse cardiac events.",
+            "monitoringPlan": "Continuous cardiac monitoring, serial EKGs, serial troponins, frequent blood pressure monitoring, and close observation for any changes in symptoms."
+          },
+          "summary": "Sentinel identified 9 concern(s) requiring attention. Risk level: MODERATE.",
+          "durationMs": 6066
+        }
+      },
+      "vision": {
+        "status": "skipped",
+        "reason": "No image provided"
+      },
+      "advocate": {
+        "status": "complete",
+        "output": {
+          "status": "GENERATED",
+          "category": "SURGERY",
+          "urgency": "URGENT",
+          "approvalLikelihood": "HIGH",
+          "document": {
+            "metadata": {
+              "documentType": "Prior Authorization Request",
+              "generatedAt": "2026-04-14T08:05:05.274Z",
+              "generatedBy": "AEGIS Advocate Agent",
+              "payerType": "Medicare / CMS",
+              "category": "Surgical Procedures",
+              "turnaround": {
+                "standard": "15 business days",
+                "urgent": "72 hours"
+              },
+              "cmsCompliance": "CMS-0057-F (FHIR ePA)",
+              "appealWindow": "120 days"
+            },
+            "patientInformation": {
+              "name": "John Doe",
+              "age": 58,
+              "sex": "M",
+              "memberId": "[Member ID — to be filled]",
+              "dateOfService": "2026-04-14"
+            },
+            "requestingProvider": {
+              "name": "[Provider Name — to be filled]",
+              "npi": "[NPI — to be filled]",
+              "specialty": "[Specialty]",
+              "facility": "[Facility Name]",
+              "phone": "[Phone]",
+              "fax": "[Fax]"
+            },
+            "clinicalInformation": {
+              "primaryDiagnosis": {
+                "name": "Unstable angina",
+                "icd10": "I20.0"
+              },
+              "allDiagnoses": [
+                {
+                  "name": "Unstable angina",
+                  "icd10": "I20.0"
+                },
+                {
+                  "name": "Type 2 DM",
+                  "icd10": "E11.9"
+                },
+                {
+                  "name": "HTN",
+                  "icd10": null
+                }
+              ],
+              "icd10Codes": [
+                {
+                  "code": "I20.0",
+                  "description": "Unstable angina"
+                },
+                {
+                  "code": "E11.9",
+                  "description": "Type 2 DM"
+                }
+              ],
+              "currentMedications": [
+                {
+                  "name": "metformin",
+                  "dose": "1000mg",
+                  "route": "oral",
+                  "frequency": "BID"
+                },
+                {
+                  "name": "lisinopril",
+                  "dose": "20mg",
+                  "route": "oral",
+                  "frequency": "daily"
+                },
+                {
+                  "name": "aspirin",
+                  "dose": "325mg",
+                  "route": "oral",
+                  "frequency": null
+                },
+                {
+                  "name": "nitroglycerin",
+                  "dose": null,
+                  "route": "SL",
+                  "frequency": null
+                },
+                {
+                  "name": "warfarin",
+                  "dose": "5mg",
+                  "route": "oral",
+                  "frequency": "daily"
+                }
+              ],
+              "allergies": [
+                "penicillin",
+                "sulfa"
+              ],
+              "relevantVitals": {
+                "bp": "158/94",
+                "hr": 92,
+                "temp": null,
+                "spo2": "96%",
+                "rr": null
+              },
+              "pertinentLabResults": [
+                {
+                  "test": "Troponin",
+                  "value": "0.08",
+                  "unit": null,
+                  "flag": "high"
+                }
+              ]
+            },
+            "serviceRequested": {
+              "description": "admit to CCU, cardiology consult, serial troponins",
+              "procedures": [
+                "cardiac catheterization"
+              ],
+              "urgency": "URGENT"
+            },
+            "medicalNecessityJustification": {
+              "clinicalSummary": "John Doe is a 58-year-old male with a history of unstable angina, type 2 diabetes mellitus, and hypertension presenting with chest pain radiating to the left arm. His blood pressure is elevated at 158/94, heart rate is 92, and troponin level is elevated at 0.08.",
+              "justification": "Admission to the CCU is medically necessary for continuous cardiac monitoring and management of unstable angina. The elevated troponin level suggests myocardial damage, necessitating serial troponin measurements to assess the extent of injury. A cardiology consult is crucial for determining the optimal treatment strategy, including potential interventions such as cardiac catheterization, to prevent further cardiac events and improve patient outcomes. Given the patient's risk factors and presentation, aggressive management is warranted.",
+              "alternativesConsidered": [
+                "Outpatient management with close follow-up",
+                "Observation unit admission"
+              ],
+              "riskIfDenied": "Delaying or denying admission to the CCU and cardiology consultation could result in further myocardial damage, progression to myocardial infarction, life-threatening arrhythmias, or even death. The patient's unstable angina requires immediate and intensive management to prevent adverse cardiac events.",
+              "supportingGuidelines": [
+                "American Heart Association/American College of Cardiology guidelines for the management of acute coronary syndromes",
+                "National Institute for Health and Care Excellence (NICE) guidelines for chest pain of recent onset"
+              ]
+            },
+            "supportingEvidence": [
+              {
+                "type": "Vital Signs",
+                "data": "BP: 158/94, HR: 92, SpO2: 96%"
+              },
+              {
+                "type": "Lab Result",
+                "data": "Troponin: 0.08  (high)"
+              },
+              {
+                "type": "Diagnosis",
+                "data": "Unstable angina (I20.0)"
+              },
+              {
+                "type": "Diagnosis",
+                "data": "Type 2 DM (E11.9)"
+              },
+              {
+                "type": "Diagnosis",
+                "data": "HTN"
+              },
+              {
+                "type": "Current Medications",
+                "data": "metformin 1000mg BID; lisinopril 20mg daily; aspirin 325mg ; nitroglycerin  ; warfarin 5mg daily"
+              }
+            ],
+            "payerRequirements": [
+              "Must use CMS-1500 or UB-04 format",
+              "ePA via FHIR API required (CMS-0057-F mandate, effective Jan 2026)",
+              "Standard turnaround: 7 calendar days",
+              "Urgent turnaround: 72 hours",
+              "Peer-to-peer review available on denial"
+            ],
+            "estimatedOutcome": {
+              "approvalLikelihood": "HIGH",
+              "recommendedActions": [
+                "Submit via FHIR ePA API per CMS-0057-F",
+                "Include all supporting lab results and imaging",
+                "Document failed conservative management if applicable",
+                "Mark as URGENT — expedited review required"
+              ]
+            }
+          },
+          "summary": "Prior authorization request generated for Surgical Procedures. Urgency: URGENT. Estimated approval: HIGH.",
+          "durationMs": 3632
+        }
+      },
+      "arbiter": {
+        "status": "complete",
+        "output": {
+          "overallRisk": "HIGH",
+          "totalIssues": 8,
+          "criticalIssues": 1,
+          "highIssues": 1,
+          "voting": {
+            "method": "Weighted Majority Vote",
+            "weightedRiskScore": 2.71,
+            "confidence": 95,
+            "voteCount": 4,
+            "votes": [
+              {
+                "agent": "guardian",
+                "domain": "SAFETY",
+                "riskScore": 3,
+                "weight": 1
+              },
+              {
+                "agent": "sentinel",
+                "domain": "CLINICAL",
+                "riskScore": 2,
+                "weight": 0.95
+              },
+              {
+                "agent": "sentinel-deterioration",
+                "domain": "CLINICAL",
+                "riskScore": 3,
+                "weight": 0.7
+              },
+              {
+                "agent": "compliance",
+                "domain": "COMPLIANCE",
+                "riskScore": 3,
+                "weight": 0.6
+              }
+            ]
+          },
+          "scoredIssues": [
+            {
+              "id": "SA:Acute Coronary Syndrome (ACS)",
+              "description": "AI suspects Acute Coronary Syndrome (ACS): Patient presents with chest pain radiating to the left arm, elevated troponin, and a history of HTN and Type 2 DM. Unstable angina is already listed, but ACS encompasses a broader range of conditions including NSTEMI.",
+              "type": "AI_INSIGHT",
+              "domain": "DIAGNOSTIC",
+              "severity": "CRITICAL",
+              "sources": [
+                "sentinel-ai"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 1,
+              "confidenceLabel": "HIGH",
+              "details": [
+                {
+                  "source": "sentinel-ai",
+                  "severity": "CRITICAL",
+                  "description": "AI suspects Acute Coronary Syndrome (ACS): Patient presents with chest pain radiating to the left arm, elevated troponin, and a history of HTN and Type 2 DM. Unstable angina is already listed, but ACS encompasses a broader range of conditions including NSTEMI."
+                }
+              ]
+            },
+            {
+              "id": "G:DRUG_INTERACTION:aspirin+warfarin",
+              "description": "Concurrent use increases bleeding risk significantly. Monitor INR closely or consider alternative antiplatelet therapy.",
+              "type": "DRUG_INTERACTION",
+              "domain": "SAFETY",
+              "severity": "HIGH",
+              "sources": [
+                "guardian"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.75,
+              "confidenceLabel": "HIGH",
+              "details": [
+                {
+                  "source": "guardian",
+                  "severity": "HIGH",
+                  "description": "Concurrent use increases bleeding risk significantly. Monitor INR closely or consider alternative antiplatelet therapy."
+                }
+              ]
+            },
+            {
+              "id": "S:MED_DIAGNOSIS_MISMATCH:lisinopril",
+              "description": "\"lisinopril\" is prescribed but no matching diagnosis found. Expected: hypertension, heart failure, diabetic nephropathy. Verify indication or add diagnosis.",
+              "type": "MED_DIAGNOSIS_MISMATCH",
+              "domain": "DIAGNOSTIC",
+              "severity": "MODERATE",
+              "sources": [
+                "sentinel"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.5,
+              "confidenceLabel": "MODERATE",
+              "details": [
+                {
+                  "source": "sentinel",
+                  "severity": "MODERATE",
+                  "description": "\"lisinopril\" is prescribed but no matching diagnosis found. Expected: hypertension, heart failure, diabetic nephropathy. Verify indication or add diagnosis."
+                }
+              ]
+            },
+            {
+              "id": "SA:Anemia",
+              "description": "AI suspects Anemia: Patient is on both aspirin and warfarin, increasing the risk of bleeding. Anemia should be ruled out as a contributing factor to chest pain and potential bleeding.",
+              "type": "AI_INSIGHT",
+              "domain": "DIAGNOSTIC",
+              "severity": "MODERATE",
+              "sources": [
+                "sentinel-ai"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.5,
+              "confidenceLabel": "MODERATE",
+              "details": [
+                {
+                  "source": "sentinel-ai",
+                  "severity": "MODERATE",
+                  "description": "AI suspects Anemia: Patient is on both aspirin and warfarin, increasing the risk of bleeding. Anemia should be ruled out as a contributing factor to chest pain and potential bleeding."
+                }
+              ]
+            },
+            {
+              "id": "SA:Hyperlipidemia",
+              "description": "AI suspects Hyperlipidemia: Patient has a history of HTN, Type 2 DM, and is presenting with chest pain. Hyperlipidemia is a common comorbidity and a major risk factor for cardiovascular disease.",
+              "type": "AI_INSIGHT",
+              "domain": "DIAGNOSTIC",
+              "severity": "MODERATE",
+              "sources": [
+                "sentinel-ai"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.5,
+              "confidenceLabel": "MODERATE",
+              "details": [
+                {
+                  "source": "sentinel-ai",
+                  "severity": "MODERATE",
+                  "description": "AI suspects Hyperlipidemia: Patient has a history of HTN, Type 2 DM, and is presenting with chest pain. Hyperlipidemia is a common comorbidity and a major risk factor for cardiovascular disease."
+                }
+              ]
+            },
+            {
+              "id": "C:BILL-001:E11.9",
+              "description": "\"E11.9\" is an unspecified code. Consider using a more specific code (e.g. E11.65, E11.21, E11.22) to reduce claim denials.",
+              "type": "BILL-001",
+              "domain": "COMPLIANCE",
+              "severity": "MODERATE",
+              "sources": [
+                "compliance"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.5,
+              "confidenceLabel": "MODERATE",
+              "details": [
+                {
+                  "source": "compliance",
+                  "severity": "MODERATE",
+                  "description": "\"E11.9\" is an unspecified code. Consider using a more specific code (e.g. E11.65, E11.21, E11.22) to reduce claim denials."
+                }
+              ]
+            },
+            {
+              "id": "S:VITAL_ABNORMAL:blood pressure",
+              "description": "Elevated BP 158/94. Assess for end-organ damage. Consider antihypertensive adjustment.",
+              "type": "VITAL_ABNORMAL",
+              "domain": "CLINICAL",
+              "severity": "MODERATE",
+              "sources": [
+                "sentinel"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.45,
+              "confidenceLabel": "MODERATE",
+              "details": [
+                {
+                  "source": "sentinel",
+                  "severity": "MODERATE",
+                  "description": "Elevated BP 158/94. Assess for end-organ damage. Consider antihypertensive adjustment."
+                }
+              ]
+            },
+            {
+              "id": "S:LAB_ABNORMAL:Troponin",
+              "description": "Elevated Troponin = 0.08 (normal: 0–0.04). Monitor and correlate clinically.",
+              "type": "LAB_ABNORMAL",
+              "domain": "CLINICAL",
+              "severity": "MODERATE",
+              "sources": [
+                "sentinel"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.45,
+              "confidenceLabel": "MODERATE",
+              "details": [
+                {
+                  "source": "sentinel",
+                  "severity": "MODERATE",
+                  "description": "Elevated Troponin = 0.08 (normal: 0–0.04). Monitor and correlate clinically."
+                }
+              ]
+            }
+          ],
+          "evidenceMethod": "Dempster-Shafer Belief Accumulation",
+          "conflicts": [],
+          "conflictCount": 0,
+          "consensus": {
+            "executiveSummary": "This patient presents a HIGH overall risk (weighted score 2.71, 95% confidence) due to suspected Acute Coronary Syndrome (ACS), uncontrolled hypertension, and potential drug interactions. Elevated troponin levels and chest pain warrant immediate investigation for ACS. Address the identified drug interaction and optimize blood pressure control to mitigate further cardiovascular risk.",
+            "criticalAlerts": [
+              "Initiate immediate workup for Acute Coronary Syndrome (ACS) given chest pain, elevated troponin, and risk factors."
+            ],
+            "clinicalRecommendations": [
+              {
+                "priority": 1,
+                "action": "Perform serial EKGs and troponin measurements to rule out NSTEMI.",
+                "rationale": "Elevated troponin and chest pain are highly suggestive of myocardial injury.",
+                "timeframe": "IMMEDIATE"
+              },
+              {
+                "priority": 1,
+                "action": "Evaluate and manage potential drug interaction between aspirin and warfarin.",
+                "rationale": "Concurrent use significantly increases bleeding risk.",
+                "timeframe": "WITHIN_1_HOUR"
+              },
+              {
+                "priority": 2,
+                "action": "Adjust antihypertensive medication to achieve blood pressure control below 140/90 mmHg.",
+                "rationale": "Current BP of 158/94 increases risk of end-organ damage and cardiovascular events.",
+                "timeframe": "WITHIN_24_HOURS"
+              },
+              {
+                "priority": 2,
+                "action": "Verify the indication for lisinopril and ensure it aligns with a documented diagnosis (e.g., hypertension, heart failure, diabetic nephropathy).",
+                "rationale": "Lack of a matching diagnosis raises concerns about appropriateness of medication.",
+                "timeframe": "WITHIN_24_HOURS"
+              },
+              {
+                "priority": 3,
+                "action": "Investigate for anemia as a contributing factor to chest pain and bleeding risk.",
+                "rationale": "Patient is on antiplatelet and anticoagulant therapy, increasing bleeding risk. Anemia can exacerbate symptoms.",
+                "timeframe": "ROUTINE"
+              },
+              {
+                "priority": 3,
+                "action": "Assess for hyperlipidemia and initiate appropriate management if indicated.",
+                "rationale": "Patient has multiple risk factors for cardiovascular disease, including HTN and Type 2 DM.",
+                "timeframe": "ROUTINE"
+              }
+            ],
+            "qualityMetrics": {
+              "documentationCompleteness": "PARTIAL",
+              "codingAccuracy": "NEEDS_REVIEW",
+              "safetyVerification": "CONCERNS_NOTED"
+            },
+            "agentConsensus": {
+              "overallConfidence": "HIGH",
+              "areasOfAgreement": [],
+              "areasOfConflict": []
+            }
+          },
+          "agentStatuses": {
+            "scribe": "✅ Complete",
+            "guardian": "⚠️ HIGH",
+            "compliance": "⚠️ FAIL",
+            "sentinel": "🔴 MODERATE",
+            "advocate": "📄 GENERATED",
+            "vision": "⏭️ No image"
+          },
+          "summary": "AEGIS consensus: 8 issues (1 critical). Risk: HIGH (confidence: 95%). 0 inter-agent conflicts resolved. This patient presents a HIGH overall risk (weighted score 2.71, 95% confidence) due to suspected Acute Coronary Syndrome (ACS), uncontrolled hypertension, and potential drug interactions. Elevated troponin levels and chest pain warrant immediate investigation for ACS. Address the identified drug interaction and optimize blood pressure control to mitigate further cardiovascular risk.",
+          "durationMs": 4735
+        }
+      }
+    },
+    "timings": {
+      "scribe": 5424,
+      "compliance": 4,
+      "guardian": 1984,
+      "sentinel": 6072,
+      "parallelPhase": 8057,
+      "advocate": 3632,
+      "arbiter": 4737,
+      "total": 21868
+    },
+    "clinicalScores": [
+      {
+        "name": "HEART Score",
+        "score": 7,
+        "maxScore": 10,
+        "risk": "HIGH",
+        "recommendation": "Urgent intervention recommended. 30-day MACE risk: 50-65%",
+        "breakdown": [
+          {
+            "param": "History",
+            "value": 2,
+            "note": "Highly suspicious"
+          },
+          {
+            "param": "ECG",
+            "value": 2,
+            "note": "ST deviation"
+          },
+          {
+            "param": "Age",
+            "value": 1,
+            "note": "58 years (45-64)"
+          },
+          {
+            "param": "Risk Factors",
+            "value": 1,
+            "note": "2 factor(s)"
+          },
+          {
+            "param": "Troponin",
+            "value": 1,
+            "note": "0.08 (1-3× normal)"
+          }
+        ]
+      },
+      {
+        "name": "NEWS2",
+        "score": 1,
+        "maxScore": 20,
+        "risk": "LOW",
+        "recommendation": "Ward-based care. Reassess within 4-6 hours.",
+        "breakdown": [
+          {
+            "param": "SpO2",
+            "value": 0,
+            "note": "96%"
+          },
+          {
+            "param": "Systolic BP",
+            "value": 0,
+            "note": "158mmHg"
+          },
+          {
+            "param": "Heart Rate",
+            "value": 1,
+            "note": "92bpm"
+          },
+          {
+            "param": "Consciousness",
+            "value": 0,
+            "note": "Alert"
+          }
+        ]
+      }
+    ],
+    "failedAgents": [],
+    "summary": {
+      "overallRisk": "HIGH",
+      "totalIssues": 8,
+      "criticalIssues": 1,
+      "agentStatuses": {
+        "scribe": "✅ Complete",
+        "guardian": "⚠️ HIGH",
+        "compliance": "⚠️ FAIL",
+        "sentinel": "🔴 MODERATE",
+        "advocate": "📄 GENERATED",
+        "vision": "⏭️ No image"
+      },
+      "executiveSummary": "This patient presents a HIGH overall risk (weighted score 2.71, 95% confidence) due to suspected Acute Coronary Syndrome (ACS), uncontrolled hypertension, and potential drug interactions. Elevated troponin levels and chest pain warrant immediate investigation for ACS. Address the identified drug interaction and optimize blood pressure control to mitigate further cardiovascular risk.",
+      "pipelineDurationMs": 21868
+    }
+  }
+}

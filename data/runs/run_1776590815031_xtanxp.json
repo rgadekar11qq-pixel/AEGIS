@@ -1,0 +1,1024 @@
+{
+  "id": "run_1776590815031_xtanxp",
+  "timestamp": "2026-04-19T09:26:55.031Z",
+  "summary": {
+    "overallRisk": "MODERATE",
+    "totalIssues": 8,
+    "criticalIssues": 3,
+    "pipelineDurationMs": 25211,
+    "executiveSummary": "The patient presents with moderate overall risk, primarily driven by concerns for missed diagnoses including sepsis and heart failure exacerbation. Red flag clusters for sepsis and pulmonary embolism are present. Consider COPD exacerbation given the patient's history and presentation. Immediate action is required to rule out critical conditions."
+  },
+  "timings": {
+    "scribe": 4247,
+    "compliance": 0,
+    "guardian": 1399,
+    "sentinel": 5875,
+    "parallelPhase": 7274,
+    "vision": 5307,
+    "advocate": 3650,
+    "arbiter": 4731,
+    "total": 25211
+  },
+  "agents": {
+    "scribe": {
+      "status": "complete",
+      "diagnosesCount": 4,
+      "medicationsCount": 6,
+      "patient": "Thomas R."
+    },
+    "guardian": {
+      "status": "complete",
+      "riskLevel": "LOW",
+      "findingsCount": 0
+    },
+    "compliance": {
+      "status": "complete",
+      "overallStatus": "FAIL",
+      "findingsCount": 1
+    },
+    "sentinel": {
+      "status": "complete",
+      "riskLevel": "CRITICAL",
+      "findingsCount": 9
+    },
+    "advocate": {
+      "status": "complete",
+      "urgency": "ROUTINE",
+      "category": "IMAGING"
+    },
+    "vision": {
+      "status": "ANALYZED"
+    },
+    "arbiter": {
+      "status": "complete",
+      "overallRisk": "MODERATE",
+      "totalIssues": 8,
+      "votingConfidence": 66,
+      "conflictCount": 1
+    }
+  },
+  "fullResult": {
+    "timestamp": "2026-04-19T09:26:29.739Z",
+    "pipeline": "AEGIS v1.0",
+    "agents": {
+      "scribe": {
+        "status": "complete",
+        "output": {
+          "patient": {
+            "name": "Thomas R.",
+            "age": 62,
+            "sex": "M"
+          },
+          "symptoms": [
+            "cough",
+            "fever",
+            "shortness of breath",
+            "productive cough",
+            "yellow/green sputum",
+            "dyspnea on exertion",
+            "fatigue"
+          ],
+          "diagnoses": [
+            {
+              "name": "community-acquired pneumonia",
+              "icd10": null
+            },
+            {
+              "name": "hypertension",
+              "icd10": null
+            },
+            {
+              "name": "Type 2 Diabetes Mellitus",
+              "icd10": "E11.9"
+            },
+            {
+              "name": "asthma",
+              "icd10": null
+            }
+          ],
+          "medications": [
+            {
+              "name": "metformin",
+              "dose": "500mg",
+              "route": "oral",
+              "frequency": "BID"
+            },
+            {
+              "name": "lisinopril",
+              "dose": "10mg",
+              "route": "oral",
+              "frequency": "daily"
+            },
+            {
+              "name": "albuterol",
+              "dose": null,
+              "route": "inhaled",
+              "frequency": "PRN"
+            },
+            {
+              "name": "amoxicillin-clavulanate",
+              "dose": "875/125 mg",
+              "route": "oral",
+              "frequency": "BID"
+            },
+            {
+              "name": "azithromycin",
+              "dose": "500mg",
+              "route": "oral",
+              "frequency": "day 1"
+            },
+            {
+              "name": "propranolol",
+              "dose": "10mg",
+              "route": null,
+              "frequency": null
+            }
+          ],
+          "allergies": [
+            "penicillin"
+          ],
+          "procedures": [
+            "Chest X-Ray"
+          ],
+          "vitals": {
+            "bp": "138/86",
+            "hr": 104,
+            "temp": "38.6°C (101.5°F)",
+            "spo2": "92%",
+            "rr": 22
+          },
+          "labResults": [],
+          "labs": [],
+          "plan": "1. Suspected community-acquired pneumonia. Will order a Chest X-Ray to confirm.\n2. Given the symptoms and vitals, covering for typical and atypical organisms. Prescribing Amoxicillin-Clavulanate 875/125 mg PO BID and Azithromycin 500mg PO day 1. \n3. Patient's asthma is acting up due to the infection; will prescribe Propranolol 10mg for anxiety related to the shortness of breath.\n4. Continuing home meds.",
+          "_rawText": "Patient: Thomas R., 62yo M\nChief Complaint: Worsening cough, fever, and shortness of breath for 3 days.\n\nHPI: Patient presents to the ED with a 3-day history of productive cough (yellow/green sputum), subjective fevers, and progressive dyspnea on exertion. He reports feeling unusually fatigued. \nPast Medical History: Hypertension, Type 2 Diabetes Mellitus, Asthma (moderate persistent).\nAllergies: Penicillin (causes severe hives/anaphylaxis). \n\nVitals: \nBP: 138/86\nHR: 104 bpm\nResp Rate: 22 breaths/min\nTemp: 38.6°C (101.5°F)\nSpO2: 92% on room air\n\nCurrent Medications: \n- Metformin 500mg BID\n- Lisinopril 10mg daily\n- Albuterol inhaler PRN\n\nAssessment & Plan:\n1. Suspected community-acquired pneumonia. Will order a Chest X-Ray to confirm.\n2. Given the symptoms and vitals, covering for typical and atypical organisms. Prescribing Amoxicillin-Clavulanate 875/125 mg PO BID and Azithromycin 500mg PO day 1. \n3. Patient's asthma is acting up due to the infection; will prescribe Propranolol 10mg for anxiety related to the shortness of breath.\n4. Continuing home meds."
+        }
+      },
+      "guardian": {
+        "status": "complete",
+        "output": {
+          "riskLevel": "LOW",
+          "findings": [],
+          "summary": "No drug interactions detected (checked local DB + NLM RxNorm).",
+          "rxnorm": {
+            "resolved": 6,
+            "additionalInteractions": 0,
+            "source": "NLM RxNorm API"
+          }
+        }
+      },
+      "compliance": {
+        "status": "complete",
+        "output": {
+          "icd10Validation": [
+            {
+              "diagnosis": "community-acquired pneumonia",
+              "code": null,
+              "valid": false,
+              "status": "MISSING",
+              "message": "No ICD-10 code provided for \"community-acquired pneumonia\". A code is required for billing."
+            },
+            {
+              "diagnosis": "hypertension",
+              "code": null,
+              "valid": false,
+              "status": "MISSING",
+              "message": "No ICD-10 code provided for \"hypertension\". A code is required for billing."
+            },
+            {
+              "diagnosis": "Type 2 Diabetes Mellitus",
+              "code": "E11.9",
+              "valid": true,
+              "status": "VALID",
+              "description": "Type 2 diabetes mellitus without complications",
+              "category": "Endocrine",
+              "message": "Code E11.9 is valid: Type 2 diabetes mellitus without complications."
+            },
+            {
+              "diagnosis": "asthma",
+              "code": null,
+              "valid": false,
+              "status": "MISSING",
+              "message": "No ICD-10 code provided for \"asthma\". A code is required for billing."
+            }
+          ],
+          "billingFindings": [
+            {
+              "code": "E11.9",
+              "rule": "BILL-001",
+              "message": "\"E11.9\" is an unspecified code. Consider using a more specific code (e.g. E11.65, E11.21, E11.22) to reduce claim denials.",
+              "severity": "WARNING"
+            }
+          ],
+          "overallStatus": "FAIL",
+          "summary": "4 diagnosis code(s) checked: 1 valid, 3 invalid/missing. 1 billing finding(s). Overall status: FAIL."
+        }
+      },
+      "sentinel": {
+        "status": "complete",
+        "output": {
+          "riskLevel": "CRITICAL",
+          "findings": [
+            {
+              "type": "RED_FLAG_CLUSTER",
+              "severity": "CRITICAL",
+              "cluster": "Sepsis triad",
+              "condition": "Sepsis / Septic Shock",
+              "matchedMarkers": [
+                "fever",
+                "tachycardia"
+              ],
+              "missingMarkers": [
+                "hypotension"
+              ],
+              "action": "Initiate sepsis bundle: blood cultures, lactate, broad-spectrum antibiotics within 1 hour",
+              "message": "⚠️ RED FLAG: Sepsis triad — 2/3 markers present for Sepsis / Septic Shock. Initiate sepsis bundle: blood cultures, lactate, broad-spectrum antibiotics within 1 hour"
+            },
+            {
+              "type": "RED_FLAG_CLUSTER",
+              "severity": "CRITICAL",
+              "cluster": "PE triad",
+              "condition": "Pulmonary Embolism",
+              "matchedMarkers": [
+                "shortness of breath",
+                "tachycardia"
+              ],
+              "missingMarkers": [
+                "pleuritic chest pain"
+              ],
+              "action": "D-dimer or CT-PA based on Wells score. Anticoagulation if confirmed",
+              "message": "⚠️ RED FLAG: PE triad — 2/3 markers present for Pulmonary Embolism. D-dimer or CT-PA based on Wells score. Anticoagulation if confirmed"
+            },
+            {
+              "type": "MISSED_DIAGNOSIS",
+              "severity": "CRITICAL",
+              "symptom": "fever",
+              "possibleCondition": "Sepsis",
+              "requiredWorkup": [
+                "blood cultures",
+                "lactate",
+                "CBC"
+              ],
+              "message": "Symptom \"fever\" may indicate Sepsis (CRITICAL). Consider workup: blood cultures, lactate, CBC."
+            },
+            {
+              "type": "MISSED_DIAGNOSIS",
+              "severity": "HIGH",
+              "symptom": "fever",
+              "possibleCondition": "Endocarditis",
+              "requiredWorkup": [
+                "blood cultures",
+                "echocardiogram"
+              ],
+              "message": "Symptom \"fever\" may indicate Endocarditis (HIGH). Consider workup: blood cultures, echocardiogram."
+            },
+            {
+              "type": "MISSED_DIAGNOSIS",
+              "severity": "HIGH",
+              "symptom": "shortness of breath",
+              "possibleCondition": "Heart failure exacerbation",
+              "requiredWorkup": [
+                "BNP",
+                "chest X-ray"
+              ],
+              "message": "Symptom \"shortness of breath\" may indicate Heart failure exacerbation (HIGH). Consider workup: BNP, chest X-ray."
+            },
+            {
+              "type": "MISSED_DIAGNOSIS",
+              "severity": "HIGH",
+              "symptom": "shortness of breath",
+              "possibleCondition": "COPD exacerbation",
+              "requiredWorkup": [
+                "ABG",
+                "chest X-ray"
+              ],
+              "message": "Symptom \"shortness of breath\" may indicate COPD exacerbation (HIGH). Consider workup: ABG, chest X-ray."
+            },
+            {
+              "type": "MISSED_DIAGNOSIS",
+              "severity": "CRITICAL",
+              "symptom": "shortness of breath",
+              "possibleCondition": "Pulmonary embolism",
+              "requiredWorkup": [
+                "D-dimer",
+                "CT-PA"
+              ],
+              "message": "Symptom \"shortness of breath\" may indicate Pulmonary embolism (CRITICAL). Consider workup: D-dimer, CT-PA."
+            },
+            {
+              "type": "VITAL_ABNORMAL",
+              "severity": "MODERATE",
+              "vital": "heart rate",
+              "value": 104,
+              "message": "Tachycardia HR 104 bpm. Evaluate for pain, anxiety, infection, dehydration, cardiac cause."
+            },
+            {
+              "type": "VITAL_ABNORMAL",
+              "severity": "MODERATE",
+              "vital": "SpO2",
+              "value": 92,
+              "message": "Low SpO2 92%. Apply supplemental oxygen. Assess for pneumonia, PE, COPD exacerbation, heart failure."
+            }
+          ],
+          "aiReasoning": {
+            "missedConsiderations": [
+              {
+                "condition": "COPD exacerbation",
+                "reasoning": "Patient has asthma, is a smoker (presumed, given CAP and asthma), and presents with productive cough, shortness of breath, and hypoxemia. COPD exacerbation should be considered, especially given the age and smoking history.",
+                "urgency": "MODERATE",
+                "suggestedWorkup": [
+                  "Spirometry (if possible)",
+                  "ABG if SpO2 continues to decline"
+                ]
+              },
+              {
+                "condition": "Influenza",
+                "reasoning": "Patient presents with fever, cough, and fatigue. Influenza should be considered, especially during flu season.",
+                "urgency": "LOW",
+                "suggestedWorkup": [
+                  "Influenza PCR"
+                ]
+              },
+              {
+                "condition": "Heart Failure",
+                "reasoning": "Patient presents with shortness of breath and has a history of hypertension. Heart failure should be considered as a possible cause of dyspnea, especially if the chest x-ray is not definitive for pneumonia.",
+                "urgency": "MODERATE",
+                "suggestedWorkup": [
+                  "BNP",
+                  "Echocardiogram (if BNP elevated)"
+                ]
+              }
+            ],
+            "medicationConcerns": [
+              {
+                "medication": "propranolol",
+                "concern": "Propranolol is a beta-blocker and is contraindicated in patients with asthma due to the risk of bronchospasm. It should not be prescribed for anxiety in this patient.",
+                "suggestion": "Discontinue propranolol immediately and consider an alternative anxiolytic that does not have beta-blocking properties (e.g., buspirone, lorazepam if absolutely necessary)."
+              },
+              {
+                "medication": "amoxicillin-clavulanate",
+                "concern": "Patient has a penicillin allergy. Amoxicillin-clavulanate should be avoided.",
+                "suggestion": "Discontinue amoxicillin-clavulanate immediately and switch to an alternative antibiotic that is safe for patients with penicillin allergies (e.g., levofloxacin, doxycycline)."
+              },
+              {
+                "medication": "azithromycin",
+                "concern": "Azithromycin is being given in addition to amoxicillin-clavulanate. Given the penicillin allergy, azithromycin should be the primary antibiotic, and a full course should be prescribed, not just a single dose.",
+                "suggestion": "Continue azithromycin for a full course (e.g., 5 days)."
+              }
+            ],
+            "deteriorationRisk": {
+              "level": "MODERATE",
+              "reasoning": "Patient has multiple comorbidities (diabetes, hypertension, asthma), is hypoxemic (SpO2 92%), and has an elevated heart rate (104) and respiratory rate (22). The patient is also febrile. These factors increase the risk of clinical deterioration.",
+              "monitoringPlan": "Closely monitor vital signs (SpO2, heart rate, respiratory rate, blood pressure, temperature) every 4-6 hours. Repeat chest x-ray if symptoms worsen. Consider arterial blood gas if SpO2 continues to decline. Monitor for signs of sepsis (e.g., altered mental status, hypotension)."
+            },
+            "overallAssessment": "The patient is a 62-year-old male with community-acquired pneumonia, hypertension, type 2 diabetes, and asthma. The current treatment plan has significant medication errors (propranolol contraindicated in asthma, amoxicillin-clavulanate contraindicated in penicillin allergy) and the patient is at moderate risk for clinical deterioration. The medication regimen needs immediate adjustment and close monitoring is warranted."
+          },
+          "findingCounts": {
+            "redFlags": 2,
+            "missedDiagnoses": 5,
+            "vitalAlerts": 2,
+            "labAlerts": 0,
+            "medMismatches": 0
+          },
+          "deteriorationRisk": {
+            "level": "MODERATE",
+            "reasoning": "Patient has multiple comorbidities (diabetes, hypertension, asthma), is hypoxemic (SpO2 92%), and has an elevated heart rate (104) and respiratory rate (22). The patient is also febrile. These factors increase the risk of clinical deterioration.",
+            "monitoringPlan": "Closely monitor vital signs (SpO2, heart rate, respiratory rate, blood pressure, temperature) every 4-6 hours. Repeat chest x-ray if symptoms worsen. Consider arterial blood gas if SpO2 continues to decline. Monitor for signs of sepsis (e.g., altered mental status, hypotension)."
+          },
+          "summary": "Sentinel identified 15 concern(s) requiring attention. Risk level: CRITICAL.",
+          "durationMs": 5875
+        }
+      },
+      "vision": {
+        "status": "complete",
+        "output": {
+          "mode": "full",
+          "analysis": {
+            "imageType": "X-ray",
+            "bodyRegion": "Chest",
+            "findings": [
+              {
+                "description": "Right lower lobe consolidation/opacity",
+                "location": "Right lower lung field",
+                "severity": "MODERATE",
+                "confidence": "HIGH"
+              }
+            ],
+            "impression": "There is evidence of right lower lobe consolidation/opacity, which may represent pneumonia or other infectious/inflammatory process. Clinical correlation is recommended.",
+            "recommendations": [
+              "Correlate with clinical findings and laboratory data.",
+              "Consider further imaging if clinically indicated."
+            ],
+            "urgency": "ROUTINE",
+            "limitations": "This is a preliminary AI analysis and should be confirmed by a qualified physician. The analysis is limited by the quality of the image and the available clinical information."
+          },
+          "status": "ANALYZED",
+          "crossReference": {
+            "confirmations": [
+              {
+                "finding": "Right lower lobe consolidation/opacity",
+                "clinicalData": "Suspected community-acquired pneumonia. Will order a Chest X-Ray to confirm."
+              }
+            ],
+            "discrepancies": [],
+            "newFindings": [],
+            "overallCorrelation": "CONCORDANT",
+            "summary": "The image analysis confirms the clinical suspicion of right lower lobe consolidation, consistent with pneumonia. The patient's symptoms, vitals, and plan of care align with the image findings, indicating a concordant correlation."
+          },
+          "summary": "Image analysis complete (X-ray). Correlation: CONCORDANT. 1 findings, 0 discrepancies.",
+          "durationMs": 5293
+        }
+      },
+      "advocate": {
+        "status": "complete",
+        "output": {
+          "status": "GENERATED",
+          "category": "IMAGING",
+          "urgency": "ROUTINE",
+          "approvalLikelihood": "HIGH",
+          "document": {
+            "metadata": {
+              "documentType": "Prior Authorization Request",
+              "generatedAt": "2026-04-19T09:26:50.218Z",
+              "generatedBy": "AEGIS Advocate Agent",
+              "payerType": "Medicare / CMS",
+              "category": "Advanced Imaging",
+              "turnaround": {
+                "standard": "5 business days",
+                "urgent": "72 hours"
+              },
+              "cmsCompliance": "CMS-0057-F (FHIR ePA)",
+              "appealWindow": "120 days"
+            },
+            "patientInformation": {
+              "name": "Thomas R.",
+              "age": 62,
+              "sex": "M",
+              "memberId": "[Member ID — to be filled]",
+              "dateOfService": "2026-04-19"
+            },
+            "requestingProvider": {
+              "name": "[Provider Name — to be filled]",
+              "npi": "[NPI — to be filled]",
+              "specialty": "[Specialty]",
+              "facility": "[Facility Name]",
+              "phone": "[Phone]",
+              "fax": "[Fax]"
+            },
+            "clinicalInformation": {
+              "primaryDiagnosis": {
+                "name": "community-acquired pneumonia",
+                "icd10": null
+              },
+              "allDiagnoses": [
+                {
+                  "name": "community-acquired pneumonia",
+                  "icd10": null
+                },
+                {
+                  "name": "hypertension",
+                  "icd10": null
+                },
+                {
+                  "name": "Type 2 Diabetes Mellitus",
+                  "icd10": "E11.9"
+                },
+                {
+                  "name": "asthma",
+                  "icd10": null
+                }
+              ],
+              "icd10Codes": [
+                {
+                  "code": "E11.9",
+                  "description": "Type 2 Diabetes Mellitus"
+                }
+              ],
+              "currentMedications": [
+                {
+                  "name": "metformin",
+                  "dose": "500mg",
+                  "route": "oral",
+                  "frequency": "BID"
+                },
+                {
+                  "name": "lisinopril",
+                  "dose": "10mg",
+                  "route": "oral",
+                  "frequency": "daily"
+                },
+                {
+                  "name": "albuterol",
+                  "dose": null,
+                  "route": "inhaled",
+                  "frequency": "PRN"
+                },
+                {
+                  "name": "amoxicillin-clavulanate",
+                  "dose": "875/125 mg",
+                  "route": "oral",
+                  "frequency": "BID"
+                },
+                {
+                  "name": "azithromycin",
+                  "dose": "500mg",
+                  "route": "oral",
+                  "frequency": "day 1"
+                },
+                {
+                  "name": "propranolol",
+                  "dose": "10mg",
+                  "route": null,
+                  "frequency": null
+                }
+              ],
+              "allergies": [
+                "penicillin"
+              ],
+              "relevantVitals": {
+                "bp": "138/86",
+                "hr": 104,
+                "temp": "38.6°C (101.5°F)",
+                "spo2": "92%",
+                "rr": 22
+              },
+              "pertinentLabResults": []
+            },
+            "serviceRequested": {
+              "description": "1. Suspected community-acquired pneumonia. Will order a Chest X-Ray to confirm.\n2. Given the symptoms and vitals, covering for typical and atypical organisms. Prescribing Amoxicillin-Clavulanate 875/125 mg PO BID and Azithromycin 500mg PO day 1. \n3. Patient's asthma is acting up due to the infection; will prescribe Propranolol 10mg for anxiety related to the shortness of breath.\n4. Continuing home meds.",
+              "procedures": [
+                "Chest X-Ray"
+              ],
+              "urgency": "ROUTINE"
+            },
+            "medicalNecessityJustification": {
+              "clinicalSummary": "Thomas R., a 62-year-old male with a history of Type 2 Diabetes Mellitus, hypertension, and asthma, presents with cough, fever (38.6°C), shortness of breath, and decreased oxygen saturation (92%). He reports productive cough with yellow/green sputum, dyspnea on exertion, and fatigue, indicating a likely respiratory infection.",
+              "justification": "The requested chest X-ray is medically necessary to confirm the suspected diagnosis of community-acquired pneumonia (CAP) given the patient's symptoms and risk factors. Dual antibiotic therapy with amoxicillin-clavulanate and azithromycin is warranted to provide broad-spectrum coverage against both typical and atypical pneumonia pathogens, considering the patient's penicillin allergy. Propranolol is being prescribed to manage anxiety related to the patient's shortness of breath, which is exacerbating his underlying asthma. Prompt diagnosis and treatment are crucial to prevent disease progression and potential complications.",
+              "alternativesConsidered": [
+                "Monotherapy with a different antibiotic",
+                "Outpatient observation without immediate chest X-ray"
+              ],
+              "riskIfDenied": "Delaying or denying the chest X-ray and appropriate antibiotic treatment could lead to worsening pneumonia, potential hospitalization, and increased risk of complications such as sepsis or respiratory failure. Untreated anxiety related to shortness of breath can further compromise respiratory function and overall well-being.",
+              "supportingGuidelines": [
+                "Infectious Diseases Society of America (IDSA) guidelines for community-acquired pneumonia",
+                "American Thoracic Society (ATS) guidelines for community-acquired pneumonia"
+              ]
+            },
+            "supportingEvidence": [
+              {
+                "type": "Vital Signs",
+                "data": "BP: 138/86, HR: 104, Temp: 38.6°C (101.5°F), SpO2: 92%, RR: 22"
+              },
+              {
+                "type": "Diagnosis",
+                "data": "community-acquired pneumonia"
+              },
+              {
+                "type": "Diagnosis",
+                "data": "hypertension"
+              },
+              {
+                "type": "Diagnosis",
+                "data": "Type 2 Diabetes Mellitus (E11.9)"
+              },
+              {
+                "type": "Diagnosis",
+                "data": "asthma"
+              },
+              {
+                "type": "Current Medications",
+                "data": "metformin 500mg BID; lisinopril 10mg daily; albuterol  PRN; amoxicillin-clavulanate 875/125 mg BID; azithromycin 500mg day 1; propranolol 10mg "
+              }
+            ],
+            "payerRequirements": [
+              "Must use CMS-1500 or UB-04 format",
+              "ePA via FHIR API required (CMS-0057-F mandate, effective Jan 2026)",
+              "Standard turnaround: 7 calendar days",
+              "Urgent turnaround: 72 hours",
+              "Peer-to-peer review available on denial"
+            ],
+            "estimatedOutcome": {
+              "approvalLikelihood": "HIGH",
+              "recommendedActions": [
+                "Submit via FHIR ePA API per CMS-0057-F",
+                "Include all supporting lab results and imaging",
+                "Document failed conservative management if applicable",
+                "Standard review timeline applies"
+              ]
+            }
+          },
+          "summary": "Prior authorization request generated for Advanced Imaging. Urgency: ROUTINE. Estimated approval: HIGH.",
+          "durationMs": 3650
+        }
+      },
+      "arbiter": {
+        "status": "complete",
+        "output": {
+          "overallRisk": "MODERATE",
+          "totalIssues": 8,
+          "criticalIssues": 3,
+          "highIssues": 1,
+          "voting": {
+            "method": "Weighted Majority Vote",
+            "weightedRiskScore": 2.17,
+            "confidence": 66,
+            "voteCount": 5,
+            "votes": [
+              {
+                "agent": "guardian",
+                "domain": "SAFETY",
+                "riskScore": 1,
+                "weight": 1
+              },
+              {
+                "agent": "sentinel",
+                "domain": "CLINICAL",
+                "riskScore": 4,
+                "weight": 0.95
+              },
+              {
+                "agent": "sentinel-deterioration",
+                "domain": "CLINICAL",
+                "riskScore": 2,
+                "weight": 0.7
+              },
+              {
+                "agent": "compliance",
+                "domain": "COMPLIANCE",
+                "riskScore": 3,
+                "weight": 0.6
+              },
+              {
+                "agent": "vision",
+                "domain": "CLINICAL",
+                "riskScore": 1,
+                "weight": 0.8
+              }
+            ]
+          },
+          "scoredIssues": [
+            {
+              "id": "S:MISSED_DIAGNOSIS:Sepsis",
+              "description": "Symptom \"fever\" may indicate Sepsis (CRITICAL). Consider workup: blood cultures, lactate, CBC.",
+              "type": "MISSED_DIAGNOSIS",
+              "domain": "DIAGNOSTIC",
+              "severity": "CRITICAL",
+              "sources": [
+                "sentinel"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 3,
+              "beliefMass": 1,
+              "confidenceLabel": "HIGH",
+              "details": [
+                {
+                  "source": "sentinel",
+                  "severity": "CRITICAL",
+                  "description": "Symptom \"fever\" may indicate Sepsis (CRITICAL). Consider workup: blood cultures, lactate, CBC."
+                },
+                {
+                  "source": "sentinel",
+                  "severity": "HIGH",
+                  "description": "Symptom \"fever\" may indicate Endocarditis (HIGH). Consider workup: blood cultures, echocardiogram."
+                },
+                {
+                  "source": "sentinel",
+                  "severity": "CRITICAL",
+                  "description": "Symptom \"shortness of breath\" may indicate Pulmonary embolism (CRITICAL). Consider workup: D-dimer, CT-PA."
+                }
+              ]
+            },
+            {
+              "id": "S:MISSED_DIAGNOSIS:Heart failure exacerbation",
+              "description": "Symptom \"shortness of breath\" may indicate Heart failure exacerbation (HIGH). Consider workup: BNP, chest X-ray.",
+              "type": "MISSED_DIAGNOSIS",
+              "domain": "DIAGNOSTIC",
+              "severity": "HIGH",
+              "sources": [
+                "sentinel"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 2,
+              "beliefMass": 0.94,
+              "confidenceLabel": "HIGH",
+              "details": [
+                {
+                  "source": "sentinel",
+                  "severity": "HIGH",
+                  "description": "Symptom \"shortness of breath\" may indicate Heart failure exacerbation (HIGH). Consider workup: BNP, chest X-ray."
+                },
+                {
+                  "source": "sentinel",
+                  "severity": "HIGH",
+                  "description": "Symptom \"shortness of breath\" may indicate COPD exacerbation (HIGH). Consider workup: ABG, chest X-ray."
+                }
+              ]
+            },
+            {
+              "id": "S:RED_FLAG_CLUSTER:Sepsis triad",
+              "description": "⚠️ RED FLAG: Sepsis triad — 2/3 markers present for Sepsis / Septic Shock. Initiate sepsis bundle: blood cultures, lactate, broad-spectrum antibiotics within 1 hour",
+              "type": "RED_FLAG_CLUSTER",
+              "domain": "CLINICAL",
+              "severity": "CRITICAL",
+              "sources": [
+                "sentinel"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.9,
+              "confidenceLabel": "HIGH",
+              "details": [
+                {
+                  "source": "sentinel",
+                  "severity": "CRITICAL",
+                  "description": "⚠️ RED FLAG: Sepsis triad — 2/3 markers present for Sepsis / Septic Shock. Initiate sepsis bundle: blood cultures, lactate, broad-spectrum antibiotics within 1 hour"
+                }
+              ]
+            },
+            {
+              "id": "S:RED_FLAG_CLUSTER:PE triad",
+              "description": "⚠️ RED FLAG: PE triad — 2/3 markers present for Pulmonary Embolism. D-dimer or CT-PA based on Wells score. Anticoagulation if confirmed",
+              "type": "RED_FLAG_CLUSTER",
+              "domain": "CLINICAL",
+              "severity": "CRITICAL",
+              "sources": [
+                "sentinel"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.9,
+              "confidenceLabel": "HIGH",
+              "details": [
+                {
+                  "source": "sentinel",
+                  "severity": "CRITICAL",
+                  "description": "⚠️ RED FLAG: PE triad — 2/3 markers present for Pulmonary Embolism. D-dimer or CT-PA based on Wells score. Anticoagulation if confirmed"
+                }
+              ]
+            },
+            {
+              "id": "SA:COPD exacerbation",
+              "description": "AI suspects COPD exacerbation: Patient has asthma, is a smoker (presumed, given CAP and asthma), and presents with productive cough, shortness of breath, and hypoxemia. COPD exacerbation should be considered, especially given the age and smoking history.",
+              "type": "AI_INSIGHT",
+              "domain": "DIAGNOSTIC",
+              "severity": "MODERATE",
+              "sources": [
+                "sentinel-ai"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 3,
+              "beliefMass": 0.81,
+              "confidenceLabel": "HIGH",
+              "details": [
+                {
+                  "source": "sentinel-ai",
+                  "severity": "MODERATE",
+                  "description": "AI suspects COPD exacerbation: Patient has asthma, is a smoker (presumed, given CAP and asthma), and presents with productive cough, shortness of breath, and hypoxemia. COPD exacerbation should be considered, especially given the age and smoking history."
+                },
+                {
+                  "source": "sentinel-ai",
+                  "severity": "LOW",
+                  "description": "AI suspects Influenza: Patient presents with fever, cough, and fatigue. Influenza should be considered, especially during flu season."
+                },
+                {
+                  "source": "sentinel-ai",
+                  "severity": "MODERATE",
+                  "description": "AI suspects Heart Failure: Patient presents with shortness of breath and has a history of hypertension. Heart failure should be considered as a possible cause of dyspnea, especially if the chest x-ray is not definitive for pneumonia."
+                }
+              ]
+            },
+            {
+              "id": "C:BILL-001:E11.9",
+              "description": "\"E11.9\" is an unspecified code. Consider using a more specific code (e.g. E11.65, E11.21, E11.22) to reduce claim denials.",
+              "type": "BILL-001",
+              "domain": "COMPLIANCE",
+              "severity": "MODERATE",
+              "sources": [
+                "compliance"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.5,
+              "confidenceLabel": "MODERATE",
+              "details": [
+                {
+                  "source": "compliance",
+                  "severity": "MODERATE",
+                  "description": "\"E11.9\" is an unspecified code. Consider using a more specific code (e.g. E11.65, E11.21, E11.22) to reduce claim denials."
+                }
+              ]
+            },
+            {
+              "id": "S:VITAL_ABNORMAL:heart rate",
+              "description": "Tachycardia HR 104 bpm. Evaluate for pain, anxiety, infection, dehydration, cardiac cause.",
+              "type": "VITAL_ABNORMAL",
+              "domain": "CLINICAL",
+              "severity": "MODERATE",
+              "sources": [
+                "sentinel"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.45,
+              "confidenceLabel": "MODERATE",
+              "details": [
+                {
+                  "source": "sentinel",
+                  "severity": "MODERATE",
+                  "description": "Tachycardia HR 104 bpm. Evaluate for pain, anxiety, infection, dehydration, cardiac cause."
+                }
+              ]
+            },
+            {
+              "id": "S:VITAL_ABNORMAL:SpO2",
+              "description": "Low SpO2 92%. Apply supplemental oxygen. Assess for pneumonia, PE, COPD exacerbation, heart failure.",
+              "type": "VITAL_ABNORMAL",
+              "domain": "CLINICAL",
+              "severity": "MODERATE",
+              "sources": [
+                "sentinel"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.45,
+              "confidenceLabel": "MODERATE",
+              "details": [
+                {
+                  "source": "sentinel",
+                  "severity": "MODERATE",
+                  "description": "Low SpO2 92%. Apply supplemental oxygen. Assess for pneumonia, PE, COPD exacerbation, heart failure."
+                }
+              ]
+            }
+          ],
+          "evidenceMethod": "Dempster-Shafer Belief Accumulation",
+          "conflicts": [
+            {
+              "type": "RISK_DISAGREEMENT",
+              "agents": [
+                "guardian",
+                "sentinel"
+              ],
+              "description": "Guardian assessed LOW risk, but Sentinel assessed CRITICAL risk.",
+              "resolution": "Escalating to higher risk level — Sentinel's clinical analysis takes precedence for diagnostic concerns.",
+              "resolvedRisk": "CRITICAL"
+            }
+          ],
+          "conflictCount": 1,
+          "consensus": {
+            "executiveSummary": "The patient presents with moderate overall risk, primarily driven by concerns for missed diagnoses including sepsis and heart failure exacerbation. Red flag clusters for sepsis and pulmonary embolism are present. Consider COPD exacerbation given the patient's history and presentation. Immediate action is required to rule out critical conditions.",
+            "criticalAlerts": [
+              "Initiate sepsis bundle: blood cultures, lactate, broad-spectrum antibiotics within 1 hour.",
+              "Evaluate for pulmonary embolism: D-dimer or CT-PA based on Wells score. Anticoagulation if confirmed."
+            ],
+            "clinicalRecommendations": [
+              {
+                "priority": 1,
+                "action": "Sepsis workup: blood cultures, lactate, CBC.",
+                "rationale": "Symptom \"fever\" may indicate Sepsis (CRITICAL) and 2/3 markers present for Sepsis / Septic Shock.",
+                "timeframe": "IMMEDIATE"
+              },
+              {
+                "priority": 1,
+                "action": "Heart failure exacerbation workup: BNP, chest X-ray.",
+                "rationale": "Symptom \"shortness of breath\" may indicate Heart failure exacerbation (HIGH).",
+                "timeframe": "WITHIN_1_HOUR"
+              },
+              {
+                "priority": 2,
+                "action": "Consider COPD exacerbation.",
+                "rationale": "Patient has asthma, is a smoker (presumed, given CAP and asthma), and presents with productive cough, shortness of breath, and hypoxemia.",
+                "timeframe": "WITHIN_24_HOURS"
+              },
+              {
+                "priority": 3,
+                "action": "Closely monitor vital signs (SpO2, heart rate, respiratory rate, blood pressure, temperature) every 4-6 hours.",
+                "rationale": "Patient has multiple comorbidities (diabetes, hypertension, asthma), is hypoxemic (SpO2 92%), and has an elevated heart rate (104) and respiratory rate (22). The patient is also febrile. These factors increase the risk of clinical deterioration.",
+                "timeframe": "ROUTINE"
+              },
+              {
+                "priority": 3,
+                "action": "Repeat chest x-ray if symptoms worsen. Consider arterial blood gas if SpO2 continues to decline.",
+                "rationale": "Patient is hypoxemic and at risk for respiratory compromise.",
+                "timeframe": "ROUTINE"
+              }
+            ],
+            "qualityMetrics": {
+              "documentationCompleteness": "PARTIAL",
+              "codingAccuracy": "NEEDS_REVIEW",
+              "safetyVerification": "CONCERNS_NOTED"
+            },
+            "agentConsensus": {
+              "overallConfidence": "MODERATE",
+              "areasOfAgreement": [],
+              "areasOfConflict": [
+                "Guardian assessed LOW risk, but Sentinel assessed CRITICAL risk."
+              ]
+            }
+          },
+          "agentStatuses": {
+            "scribe": "✅ Complete",
+            "guardian": "✅ LOW",
+            "compliance": "⚠️ FAIL",
+            "sentinel": "🔴 CRITICAL",
+            "advocate": "📄 GENERATED",
+            "vision": "👁️ ANALYZED"
+          },
+          "summary": "AEGIS consensus: 8 issues (3 critical). Risk: MODERATE (confidence: 66%). 1 inter-agent conflicts resolved. The patient presents with moderate overall risk, primarily driven by concerns for missed diagnoses including sepsis and heart failure exacerbation. Red flag clusters for sepsis and pulmonary embolism are present. Consider COPD exacerbation given the patient's history and presentation. Immediate action is required to rule out critical conditions.",
+          "durationMs": 4731
+        }
+      }
+    },
+    "timings": {
+      "scribe": 4247,
+      "compliance": 0,
+      "guardian": 1399,
+      "sentinel": 5875,
+      "parallelPhase": 7274,
+      "vision": 5307,
+      "advocate": 3650,
+      "arbiter": 4731,
+      "total": 25211
+    },
+    "clinicalScores": [
+      {
+        "name": "qSOFA",
+        "score": 1,
+        "maxScore": 3,
+        "risk": "MODERATE",
+        "recommendation": "Monitor closely. Consider full SOFA scoring and serial lactate measurements.",
+        "breakdown": [
+          {
+            "param": "Respiratory Rate",
+            "value": 1,
+            "note": "22 (≥22)"
+          },
+          {
+            "param": "Systolic BP",
+            "value": 0,
+            "note": "138 (>100)"
+          },
+          {
+            "param": "Mental Status",
+            "value": 0,
+            "note": "Alert and oriented"
+          }
+        ]
+      },
+      {
+        "name": "NEWS2",
+        "score": 6,
+        "maxScore": 20,
+        "risk": "MODERATE",
+        "recommendation": "Urgent response — increase monitoring frequency, clinical review within 30 minutes.",
+        "breakdown": [
+          {
+            "param": "Resp Rate",
+            "value": 2,
+            "note": "22/min"
+          },
+          {
+            "param": "SpO2",
+            "value": 2,
+            "note": "92%"
+          },
+          {
+            "param": "Systolic BP",
+            "value": 0,
+            "note": "138mmHg"
+          },
+          {
+            "param": "Heart Rate",
+            "value": 1,
+            "note": "104bpm"
+          },
+          {
+            "param": "Temperature",
+            "value": 1,
+            "note": "38.6°C"
+          },
+          {
+            "param": "Consciousness",
+            "value": 0,
+            "note": "Alert"
+          }
+        ]
+      }
+    ],
+    "failedAgents": [],
+    "summary": {
+      "overallRisk": "MODERATE",
+      "totalIssues": 8,
+      "criticalIssues": 3,
+      "agentStatuses": {
+        "scribe": "✅ Complete",
+        "guardian": "✅ LOW",
+        "compliance": "⚠️ FAIL",
+        "sentinel": "🔴 CRITICAL",
+        "advocate": "📄 GENERATED",
+        "vision": "👁️ ANALYZED"
+      },
+      "executiveSummary": "The patient presents with moderate overall risk, primarily driven by concerns for missed diagnoses including sepsis and heart failure exacerbation. Red flag clusters for sepsis and pulmonary embolism are present. Consider COPD exacerbation given the patient's history and presentation. Immediate action is required to rule out critical conditions.",
+      "pipelineDurationMs": 25211
+    }
+  }
+}

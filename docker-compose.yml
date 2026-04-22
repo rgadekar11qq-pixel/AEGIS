@@ -1,0 +1,54 @@
+services:
+  # ── AEGIS API Server ──────────────────────────────────────────────
+  aegis:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - NODE_ENV=production
+      - LLM_PROVIDER=${LLM_PROVIDER:-gemini}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - VLLM_BASE_URL=${VLLM_BASE_URL:-http://vllm:8000/v1}
+      - VLLM_MODEL=${VLLM_MODEL:-meta-llama/Llama-3.1-70B-Instruct}
+      - VLLM_VISION_MODEL=${VLLM_VISION_MODEL:-meta-llama/Llama-3.2-11B-Vision-Instruct}
+    restart: unless-stopped
+    depends_on:
+      vllm:
+        condition: service_started
+        required: false
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3000/health').then(r=>r.ok?process.exit(0):process.exit(1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # ── vLLM on AMD MI300X ─────────────────────────────────────────────
+  # Activate with: LLM_PROVIDER=vllm docker compose --profile gpu up
+  vllm:
+    image: rocm/vllm:latest
+    profiles: ["gpu"]
+    devices:
+      - /dev/kfd
+      - /dev/dri
+    group_add:
+      - video
+      - render
+    ports:
+      - "8000:8000"
+    environment:
+      - HUGGING_FACE_HUB_TOKEN=${HF_TOKEN}
+    command: >
+      --model meta-llama/Llama-3.1-70B-Instruct
+      --tensor-parallel-size 1
+      --max-model-len 8192
+      --gpu-memory-utilization 0.85
+      --dtype float16
+    shm_size: "16gb"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 120s

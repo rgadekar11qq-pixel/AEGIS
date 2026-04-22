@@ -1,0 +1,881 @@
+{
+  "id": "run_1775395580910_msqdg1",
+  "timestamp": "2026-04-05T13:26:20.910Z",
+  "summary": {
+    "overallRisk": "HIGH",
+    "totalIssues": 8,
+    "criticalIssues": 1,
+    "pipelineDurationMs": 18600,
+    "executiveSummary": "This patient presents with acute stroke and significantly elevated blood pressure (192/108), indicating hypertensive urgency/emergency. There is high suspicion for aspiration pneumonia given the patient's stroke and slurred speech. Drug interactions between beta-blockers and diabetic medications, as well as metoprolol and warfarin, require close monitoring."
+  },
+  "timings": {
+    "scribe": 3810,
+    "compliance": 3,
+    "guardian": 1381,
+    "sentinel": 5746,
+    "parallelPhase": 7128,
+    "advocate": 3280,
+    "arbiter": 4378,
+    "total": 18600
+  },
+  "agents": {
+    "scribe": {
+      "status": "complete",
+      "diagnosesCount": 4,
+      "medicationsCount": 4,
+      "patient": "David Park"
+    },
+    "guardian": {
+      "status": "complete",
+      "riskLevel": "MODERATE",
+      "findingsCount": 2
+    },
+    "compliance": {
+      "status": "complete",
+      "overallStatus": "FAIL",
+      "findingsCount": 2
+    },
+    "sentinel": {
+      "status": "complete",
+      "riskLevel": "CRITICAL",
+      "findingsCount": 1
+    },
+    "advocate": {
+      "status": "complete",
+      "urgency": "EMERGENT",
+      "category": "REFERRAL"
+    },
+    "vision": {
+      "status": "skipped"
+    },
+    "arbiter": {
+      "status": "complete",
+      "overallRisk": "HIGH",
+      "totalIssues": 8,
+      "votingConfidence": 88,
+      "conflictCount": 1
+    }
+  },
+  "fullResult": {
+    "timestamp": "2026-04-05T13:26:02.218Z",
+    "pipeline": "AEGIS v1.0",
+    "agents": {
+      "scribe": {
+        "status": "complete",
+        "output": {
+          "patient": {
+            "name": "David Park",
+            "age": 76,
+            "sex": "M"
+          },
+          "symptoms": [
+            "right-sided weakness",
+            "slurred speech"
+          ],
+          "diagnoses": [
+            {
+              "name": "Acute ischemic stroke",
+              "icd10": "I63.9"
+            },
+            {
+              "name": "Atrial fibrillation",
+              "icd10": "I48.91"
+            },
+            {
+              "name": "Type 2 DM",
+              "icd10": "E11.9"
+            },
+            {
+              "name": "HTN",
+              "icd10": "I10"
+            }
+          ],
+          "medications": [
+            {
+              "name": "glipizide",
+              "dose": "5mg",
+              "route": "oral",
+              "frequency": "BID"
+            },
+            {
+              "name": "metoprolol",
+              "dose": "50mg",
+              "route": "oral",
+              "frequency": "BID"
+            },
+            {
+              "name": "hydrochlorothiazide",
+              "dose": "25mg",
+              "route": "oral",
+              "frequency": "daily"
+            },
+            {
+              "name": "warfarin",
+              "dose": null,
+              "route": null,
+              "frequency": null
+            }
+          ],
+          "allergies": [],
+          "procedures": [
+            "CT head"
+          ],
+          "vitals": {
+            "bp": "192/108",
+            "hr": 94,
+            "temp": "36.8°C",
+            "spo2": "97%",
+            "rr": 16
+          },
+          "labResults": [],
+          "labs": [],
+          "plan": "tPA administration, neurology consult, ICU monitoring",
+          "_rawText": "Patient David Park, 76M. Presented with sudden right-sided weakness and slurred speech x45 minutes. PMH: Atrial fibrillation (not on anticoagulation — stopped warfarin 2 months ago due to GI bleed), Type 2 DM on glipizide 5mg BID, HTN on metoprolol 50mg BID and hydrochlorothiazide 25mg daily. Allergies: none. BP 192/108, HR 94 irregular, Temp 36.8°C, SpO2 97%, RR 16. NIH Stroke Scale: 14. CT head: no hemorrhage. Assessment: Acute ischemic stroke, likely cardioembolic. Plan: tPA administration, neurology consult, ICU monitoring."
+        }
+      },
+      "guardian": {
+        "status": "complete",
+        "output": {
+          "riskLevel": "MODERATE",
+          "findings": [
+            {
+              "type": "DRUG_INTERACTION",
+              "severity": "MODERATE",
+              "drugs": [
+                "glipizide",
+                "metoprolol"
+              ],
+              "message": "Beta-blockers mask hypoglycemic symptoms (tachycardia, tremor) and impair glycogenolysis. Monitor blood glucose closely in diabetic patients."
+            },
+            {
+              "type": "DRUG_INTERACTION",
+              "severity": "MODERATE",
+              "drugs": [
+                "metoprolol",
+                "warfarin"
+              ],
+              "message": "Metoprolol may increase warfarin plasma concentration via CYP2C19 inhibition. Monitor INR when initiating or adjusting doses."
+            }
+          ],
+          "summary": "2 potential safety issue(s) identified (local DB + NLM RxNorm). Review before proceeding.",
+          "rxnorm": {
+            "resolved": 4,
+            "additionalInteractions": 0,
+            "source": "NLM RxNorm API"
+          }
+        }
+      },
+      "compliance": {
+        "status": "complete",
+        "output": {
+          "icd10Validation": [
+            {
+              "diagnosis": "Acute ischemic stroke",
+              "code": "I63.9",
+              "valid": false,
+              "status": "UNRECOGNIZED",
+              "message": "Code \"I63.9\" has valid ICD-10 format but is not in the reference database. Verify against the full CMS ICD-10-CM table."
+            },
+            {
+              "diagnosis": "Atrial fibrillation",
+              "code": "I48.91",
+              "valid": true,
+              "status": "VALID",
+              "description": "Unspecified atrial fibrillation",
+              "category": "Circulatory",
+              "message": "Code I48.91 is valid: Unspecified atrial fibrillation."
+            },
+            {
+              "diagnosis": "Type 2 DM",
+              "code": "E11.9",
+              "valid": true,
+              "status": "VALID",
+              "description": "Type 2 diabetes mellitus without complications",
+              "category": "Endocrine",
+              "message": "Code E11.9 is valid: Type 2 diabetes mellitus without complications."
+            },
+            {
+              "diagnosis": "HTN",
+              "code": "I10",
+              "valid": true,
+              "status": "VALID",
+              "description": "Essential (primary) hypertension",
+              "category": "Circulatory",
+              "message": "Code I10 is valid: Essential (primary) hypertension."
+            }
+          ],
+          "billingFindings": [
+            {
+              "code": "E11.9",
+              "rule": "BILL-001",
+              "message": "\"E11.9\" is an unspecified code. Consider using a more specific code (e.g. E11.65, E11.21, E11.22) to reduce claim denials.",
+              "severity": "WARNING"
+            },
+            {
+              "code": "I10",
+              "rule": "BILL-002",
+              "message": "Multiple codes in \"Circulatory\" category (I48.91 and I10). Verify medical necessity for each to avoid bundling edits.",
+              "severity": "INFO"
+            }
+          ],
+          "overallStatus": "FAIL",
+          "summary": "4 diagnosis code(s) checked: 3 valid, 1 invalid/missing. 2 billing finding(s). Overall status: FAIL."
+        }
+      },
+      "sentinel": {
+        "status": "complete",
+        "output": {
+          "riskLevel": "CRITICAL",
+          "findings": [
+            {
+              "type": "VITAL_CRITICAL",
+              "severity": "CRITICAL",
+              "vital": "blood pressure",
+              "value": "192/108",
+              "message": "CRITICAL: Blood pressure 192/108 exceeds critical threshold. Hypertensive urgency/emergency protocol indicated."
+            }
+          ],
+          "aiReasoning": {
+            "missedConsiderations": [
+              {
+                "condition": "Aspiration pneumonia",
+                "reasoning": "Patient with acute stroke and slurred speech is at high risk for aspiration. Aspiration pneumonia can develop quickly and significantly worsen prognosis.",
+                "urgency": "HIGH",
+                "suggestedWorkup": [
+                  "Chest X-ray",
+                  "Sputum culture if productive cough develops"
+                ]
+              },
+              {
+                "condition": "Cardiac arrhythmia other than A-fib",
+                "reasoning": "Given the acute stroke and metoprolol use, it's important to rule out other arrhythmias that could have contributed to the stroke or be exacerbated by treatment.",
+                "urgency": "MODERATE",
+                "suggestedWorkup": [
+                  "EKG",
+                  "Cardiac monitoring"
+                ]
+              },
+              {
+                "condition": "Hypercoagulable state",
+                "reasoning": "While atrial fibrillation is a likely cause of the stroke, especially in the absence of other clear etiologies, a hypercoagulable workup should be considered, particularly if the patient is young or has a history suggestive of clotting disorders.",
+                "urgency": "LOW",
+                "suggestedWorkup": [
+                  "Hypercoagulable workup (Factor V Leiden, Prothrombin gene mutation, Antiphospholipid antibodies, etc.)"
+                ]
+              }
+            ],
+            "medicationConcerns": [
+              {
+                "medication": "warfarin",
+                "concern": "Warfarin dose is missing. INR needs to be checked and warfarin dose adjusted accordingly, especially given the interaction with metoprolol.",
+                "suggestion": "Check INR immediately. Consult pharmacy for appropriate warfarin dosing based on INR and indication (atrial fibrillation)."
+              },
+              {
+                "medication": "glipizide",
+                "concern": "Glipizide increases the risk of hypoglycemia, especially in the setting of acute illness and potential changes in oral intake. Metoprolol can mask hypoglycemic symptoms.",
+                "suggestion": "Monitor blood glucose frequently. Consider temporarily holding or reducing the dose of glipizide during the acute phase of the stroke."
+              },
+              {
+                "medication": "hydrochlorothiazide",
+                "concern": "Hydrochlorothiazide can exacerbate dehydration, which can worsen stroke outcomes. It can also cause electrolyte imbalances.",
+                "suggestion": "Monitor electrolytes and renal function. Consider holding hydrochlorothiazide during the acute phase of the stroke, especially if the patient is not tolerating oral intake well."
+              }
+            ],
+            "deteriorationRisk": {
+              "level": "HIGH",
+              "reasoning": "Acute stroke patients are at high risk for neurological deterioration, aspiration, and complications from tPA. The patient's elevated blood pressure also increases the risk of hemorrhagic conversion.",
+              "monitoringPlan": "Frequent neurological exams (NIHSS), continuous cardiac monitoring, blood pressure monitoring, monitoring for signs of aspiration (cough, fever, increased respiratory rate), and monitoring for signs of bleeding."
+            },
+            "overallAssessment": "This is a 76-year-old male presenting with acute right-sided weakness and slurred speech secondary to an acute ischemic stroke. He has multiple comorbidities including atrial fibrillation, type 2 diabetes, and hypertension, which require careful medication management and close monitoring for complications. The patient is at high risk for neurological deterioration, aspiration, and bleeding."
+          },
+          "findingCounts": {
+            "redFlags": 0,
+            "missedDiagnoses": 0,
+            "vitalAlerts": 1,
+            "labAlerts": 0,
+            "medMismatches": 0
+          },
+          "deteriorationRisk": {
+            "level": "HIGH",
+            "reasoning": "Acute stroke patients are at high risk for neurological deterioration, aspiration, and complications from tPA. The patient's elevated blood pressure also increases the risk of hemorrhagic conversion.",
+            "monitoringPlan": "Frequent neurological exams (NIHSS), continuous cardiac monitoring, blood pressure monitoring, monitoring for signs of aspiration (cough, fever, increased respiratory rate), and monitoring for signs of bleeding."
+          },
+          "summary": "Sentinel identified 7 concern(s) requiring attention. Risk level: CRITICAL.",
+          "durationMs": 5746
+        }
+      },
+      "vision": {
+        "status": "skipped",
+        "reason": "No image provided"
+      },
+      "advocate": {
+        "status": "complete",
+        "output": {
+          "status": "GENERATED",
+          "category": "REFERRAL",
+          "urgency": "EMERGENT",
+          "approvalLikelihood": "HIGH",
+          "document": {
+            "metadata": {
+              "documentType": "Prior Authorization Request",
+              "generatedAt": "2026-04-05T13:26:16.439Z",
+              "generatedBy": "AEGIS Advocate Agent",
+              "payerType": "Medicare / CMS",
+              "category": "Specialist Referral",
+              "turnaround": {
+                "standard": "3 business days",
+                "urgent": "24 hours"
+              },
+              "cmsCompliance": "CMS-0057-F (FHIR ePA)",
+              "appealWindow": "120 days"
+            },
+            "patientInformation": {
+              "name": "David Park",
+              "age": 76,
+              "sex": "M",
+              "memberId": "[Member ID — to be filled]",
+              "dateOfService": "2026-04-05"
+            },
+            "requestingProvider": {
+              "name": "[Provider Name — to be filled]",
+              "npi": "[NPI — to be filled]",
+              "specialty": "[Specialty]",
+              "facility": "[Facility Name]",
+              "phone": "[Phone]",
+              "fax": "[Fax]"
+            },
+            "clinicalInformation": {
+              "primaryDiagnosis": {
+                "name": "Acute ischemic stroke",
+                "icd10": "I63.9"
+              },
+              "allDiagnoses": [
+                {
+                  "name": "Acute ischemic stroke",
+                  "icd10": "I63.9"
+                },
+                {
+                  "name": "Atrial fibrillation",
+                  "icd10": "I48.91"
+                },
+                {
+                  "name": "Type 2 DM",
+                  "icd10": "E11.9"
+                },
+                {
+                  "name": "HTN",
+                  "icd10": "I10"
+                }
+              ],
+              "icd10Codes": [
+                {
+                  "code": "I63.9",
+                  "description": "Acute ischemic stroke"
+                },
+                {
+                  "code": "I48.91",
+                  "description": "Atrial fibrillation"
+                },
+                {
+                  "code": "E11.9",
+                  "description": "Type 2 DM"
+                },
+                {
+                  "code": "I10",
+                  "description": "HTN"
+                }
+              ],
+              "currentMedications": [
+                {
+                  "name": "glipizide",
+                  "dose": "5mg",
+                  "route": "oral",
+                  "frequency": "BID"
+                },
+                {
+                  "name": "metoprolol",
+                  "dose": "50mg",
+                  "route": "oral",
+                  "frequency": "BID"
+                },
+                {
+                  "name": "hydrochlorothiazide",
+                  "dose": "25mg",
+                  "route": "oral",
+                  "frequency": "daily"
+                },
+                {
+                  "name": "warfarin",
+                  "dose": null,
+                  "route": null,
+                  "frequency": null
+                }
+              ],
+              "allergies": [],
+              "relevantVitals": {
+                "bp": "192/108",
+                "hr": 94,
+                "temp": "36.8°C",
+                "spo2": "97%",
+                "rr": 16
+              },
+              "pertinentLabResults": []
+            },
+            "serviceRequested": {
+              "description": "tPA administration, neurology consult, ICU monitoring",
+              "procedures": [
+                "CT head"
+              ],
+              "urgency": "EMERGENT"
+            },
+            "medicalNecessityJustification": {
+              "clinicalSummary": "David Park is a 76-year-old male presenting with acute onset right-sided weakness and slurred speech. He has a history of atrial fibrillation, type 2 diabetes mellitus, and hypertension, and is currently on warfarin, glipizide, metoprolol, and hydrochlorothiazide. His blood pressure is significantly elevated at 192/108, and he is suspected of having an acute ischemic stroke.",
+              "justification": "Given Mr. Park's acute onset of neurological deficits consistent with stroke, immediate tPA administration is medically necessary to attempt to restore blood flow to the affected area of the brain and minimize permanent neurological damage. A neurology consult is crucial for expert assessment, diagnosis confirmation, and guidance on further management. ICU monitoring is essential to closely observe for potential complications such as bleeding, cerebral edema, and hemodynamic instability following tPA administration. These interventions are critical for optimizing the patient's outcome and preventing further neurological deterioration.",
+              "alternativesConsidered": [
+                "Observation without thrombolysis",
+                "Aspirin administration alone"
+              ],
+              "riskIfDenied": "Delaying or denying tPA administration will significantly increase the risk of permanent neurological deficits, including paralysis, speech impairment, and cognitive dysfunction. The patient's quality of life will be severely impacted, and the potential for long-term disability and dependence on others will be substantially elevated. Furthermore, delayed treatment increases the risk of mortality.",
+              "supportingGuidelines": [
+                "American Heart Association/American Stroke Association guidelines for the early management of acute ischemic stroke",
+                "National Institute of Neurological Disorders and Stroke (NINDS) rt-PA Stroke Study Group"
+              ]
+            },
+            "supportingEvidence": [
+              {
+                "type": "Vital Signs",
+                "data": "BP: 192/108, HR: 94, Temp: 36.8°C, SpO2: 97%, RR: 16"
+              },
+              {
+                "type": "Diagnosis",
+                "data": "Acute ischemic stroke (I63.9)"
+              },
+              {
+                "type": "Diagnosis",
+                "data": "Atrial fibrillation (I48.91)"
+              },
+              {
+                "type": "Diagnosis",
+                "data": "Type 2 DM (E11.9)"
+              },
+              {
+                "type": "Diagnosis",
+                "data": "HTN (I10)"
+              },
+              {
+                "type": "Current Medications",
+                "data": "glipizide 5mg BID; metoprolol 50mg BID; hydrochlorothiazide 25mg daily; warfarin  "
+              }
+            ],
+            "payerRequirements": [
+              "Must use CMS-1500 or UB-04 format",
+              "ePA via FHIR API required (CMS-0057-F mandate, effective Jan 2026)",
+              "Standard turnaround: 7 calendar days",
+              "Urgent turnaround: 72 hours",
+              "Peer-to-peer review available on denial"
+            ],
+            "estimatedOutcome": {
+              "approvalLikelihood": "HIGH",
+              "recommendedActions": [
+                "Submit via FHIR ePA API per CMS-0057-F",
+                "Include all supporting lab results and imaging",
+                "Document failed conservative management if applicable",
+                "Mark as URGENT — expedited review required"
+              ]
+            }
+          },
+          "summary": "Prior authorization request generated for Specialist Referral. Urgency: EMERGENT. Estimated approval: HIGH.",
+          "durationMs": 3280
+        }
+      },
+      "arbiter": {
+        "status": "complete",
+        "output": {
+          "overallRisk": "HIGH",
+          "totalIssues": 8,
+          "criticalIssues": 1,
+          "highIssues": 1,
+          "voting": {
+            "method": "Weighted Majority Vote",
+            "weightedRiskScore": 2.98,
+            "confidence": 88,
+            "voteCount": 4,
+            "votes": [
+              {
+                "agent": "guardian",
+                "domain": "SAFETY",
+                "riskScore": 2,
+                "weight": 1
+              },
+              {
+                "agent": "sentinel",
+                "domain": "CLINICAL",
+                "riskScore": 4,
+                "weight": 0.95
+              },
+              {
+                "agent": "sentinel-deterioration",
+                "domain": "CLINICAL",
+                "riskScore": 3,
+                "weight": 0.7
+              },
+              {
+                "agent": "compliance",
+                "domain": "COMPLIANCE",
+                "riskScore": 3,
+                "weight": 0.6
+              }
+            ]
+          },
+          "scoredIssues": [
+            {
+              "id": "S:VITAL_CRITICAL:blood pressure",
+              "description": "CRITICAL: Blood pressure 192/108 exceeds critical threshold. Hypertensive urgency/emergency protocol indicated.",
+              "type": "VITAL_CRITICAL",
+              "domain": "CLINICAL",
+              "severity": "CRITICAL",
+              "sources": [
+                "sentinel"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.9,
+              "confidenceLabel": "HIGH",
+              "details": [
+                {
+                  "source": "sentinel",
+                  "severity": "CRITICAL",
+                  "description": "CRITICAL: Blood pressure 192/108 exceeds critical threshold. Hypertensive urgency/emergency protocol indicated."
+                }
+              ]
+            },
+            {
+              "id": "SA:Aspiration pneumonia",
+              "description": "AI suspects Aspiration pneumonia: Patient with acute stroke and slurred speech is at high risk for aspiration. Aspiration pneumonia can develop quickly and significantly worsen prognosis.",
+              "type": "AI_INSIGHT",
+              "domain": "DIAGNOSTIC",
+              "severity": "HIGH",
+              "sources": [
+                "sentinel-ai"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.75,
+              "confidenceLabel": "HIGH",
+              "details": [
+                {
+                  "source": "sentinel-ai",
+                  "severity": "HIGH",
+                  "description": "AI suspects Aspiration pneumonia: Patient with acute stroke and slurred speech is at high risk for aspiration. Aspiration pneumonia can develop quickly and significantly worsen prognosis."
+                }
+              ]
+            },
+            {
+              "id": "G:DRUG_INTERACTION:glipizide+metoprolol",
+              "description": "Beta-blockers mask hypoglycemic symptoms (tachycardia, tremor) and impair glycogenolysis. Monitor blood glucose closely in diabetic patients.",
+              "type": "DRUG_INTERACTION",
+              "domain": "SAFETY",
+              "severity": "MODERATE",
+              "sources": [
+                "guardian"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.5,
+              "confidenceLabel": "MODERATE",
+              "details": [
+                {
+                  "source": "guardian",
+                  "severity": "MODERATE",
+                  "description": "Beta-blockers mask hypoglycemic symptoms (tachycardia, tremor) and impair glycogenolysis. Monitor blood glucose closely in diabetic patients."
+                }
+              ]
+            },
+            {
+              "id": "G:DRUG_INTERACTION:metoprolol+warfarin",
+              "description": "Metoprolol may increase warfarin plasma concentration via CYP2C19 inhibition. Monitor INR when initiating or adjusting doses.",
+              "type": "DRUG_INTERACTION",
+              "domain": "SAFETY",
+              "severity": "MODERATE",
+              "sources": [
+                "guardian"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.5,
+              "confidenceLabel": "MODERATE",
+              "details": [
+                {
+                  "source": "guardian",
+                  "severity": "MODERATE",
+                  "description": "Metoprolol may increase warfarin plasma concentration via CYP2C19 inhibition. Monitor INR when initiating or adjusting doses."
+                }
+              ]
+            },
+            {
+              "id": "SA:Cardiac arrhythmia other than A-fib",
+              "description": "AI suspects Cardiac arrhythmia other than A-fib: Given the acute stroke and metoprolol use, it's important to rule out other arrhythmias that could have contributed to the stroke or be exacerbated by treatment.",
+              "type": "AI_INSIGHT",
+              "domain": "DIAGNOSTIC",
+              "severity": "MODERATE",
+              "sources": [
+                "sentinel-ai"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.5,
+              "confidenceLabel": "MODERATE",
+              "details": [
+                {
+                  "source": "sentinel-ai",
+                  "severity": "MODERATE",
+                  "description": "AI suspects Cardiac arrhythmia other than A-fib: Given the acute stroke and metoprolol use, it's important to rule out other arrhythmias that could have contributed to the stroke or be exacerbated by treatment."
+                }
+              ]
+            },
+            {
+              "id": "C:BILL-001:E11.9",
+              "description": "\"E11.9\" is an unspecified code. Consider using a more specific code (e.g. E11.65, E11.21, E11.22) to reduce claim denials.",
+              "type": "BILL-001",
+              "domain": "COMPLIANCE",
+              "severity": "MODERATE",
+              "sources": [
+                "compliance"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.5,
+              "confidenceLabel": "MODERATE",
+              "details": [
+                {
+                  "source": "compliance",
+                  "severity": "MODERATE",
+                  "description": "\"E11.9\" is an unspecified code. Consider using a more specific code (e.g. E11.65, E11.21, E11.22) to reduce claim denials."
+                }
+              ]
+            },
+            {
+              "id": "SA:Hypercoagulable state",
+              "description": "AI suspects Hypercoagulable state: While atrial fibrillation is a likely cause of the stroke, especially in the absence of other clear etiologies, a hypercoagulable workup should be considered, particularly if the patient is young or has a history suggestive of clotting disorders.",
+              "type": "AI_INSIGHT",
+              "domain": "DIAGNOSTIC",
+              "severity": "LOW",
+              "sources": [
+                "sentinel-ai"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.25,
+              "confidenceLabel": "LOW",
+              "details": [
+                {
+                  "source": "sentinel-ai",
+                  "severity": "LOW",
+                  "description": "AI suspects Hypercoagulable state: While atrial fibrillation is a likely cause of the stroke, especially in the absence of other clear etiologies, a hypercoagulable workup should be considered, particularly if the patient is young or has a history suggestive of clotting disorders."
+                }
+              ]
+            },
+            {
+              "id": "C:BILL-002:I10",
+              "description": "Multiple codes in \"Circulatory\" category (I48.91 and I10). Verify medical necessity for each to avoid bundling edits.",
+              "type": "BILL-002",
+              "domain": "COMPLIANCE",
+              "severity": "LOW",
+              "sources": [
+                "compliance"
+              ],
+              "sourceCount": 1,
+              "evidenceCount": 1,
+              "beliefMass": 0.25,
+              "confidenceLabel": "LOW",
+              "details": [
+                {
+                  "source": "compliance",
+                  "severity": "LOW",
+                  "description": "Multiple codes in \"Circulatory\" category (I48.91 and I10). Verify medical necessity for each to avoid bundling edits."
+                }
+              ]
+            }
+          ],
+          "evidenceMethod": "Dempster-Shafer Belief Accumulation",
+          "conflicts": [
+            {
+              "type": "RISK_DISAGREEMENT",
+              "agents": [
+                "guardian",
+                "sentinel"
+              ],
+              "description": "Guardian assessed MODERATE risk, but Sentinel assessed CRITICAL risk.",
+              "resolution": "Escalating to higher risk level — Sentinel's clinical analysis takes precedence for diagnostic concerns.",
+              "resolvedRisk": "CRITICAL"
+            }
+          ],
+          "conflictCount": 1,
+          "consensus": {
+            "executiveSummary": "This patient presents with acute stroke and significantly elevated blood pressure (192/108), indicating hypertensive urgency/emergency. There is high suspicion for aspiration pneumonia given the patient's stroke and slurred speech. Drug interactions between beta-blockers and diabetic medications, as well as metoprolol and warfarin, require close monitoring.",
+            "criticalAlerts": [
+              "CRITICAL: Blood pressure 192/108 exceeds critical threshold. Hypertensive urgency/emergency protocol indicated.",
+              "HIGH: AI suspects Aspiration pneumonia: Patient with acute stroke and slurred speech is at high risk for aspiration."
+            ],
+            "clinicalRecommendations": [
+              {
+                "priority": 1,
+                "action": "Initiate hypertensive urgency/emergency protocol to rapidly but safely lower blood pressure.",
+                "rationale": "The patient's blood pressure is dangerously elevated and poses a significant risk of further stroke or end-organ damage.",
+                "timeframe": "IMMEDIATE"
+              },
+              {
+                "priority": 1,
+                "action": "Evaluate for aspiration pneumonia, including chest X-ray and sputum culture if indicated.",
+                "rationale": "Aspiration pneumonia is a common and serious complication of stroke, particularly in patients with dysphagia.",
+                "timeframe": "WITHIN_1_HOUR"
+              },
+              {
+                "priority": 2,
+                "action": "Monitor blood glucose closely, especially given beta-blocker use, and adjust diabetic medications as needed.",
+                "rationale": "Beta-blockers can mask hypoglycemic symptoms and impair glycogenolysis, increasing the risk of hypoglycemia in diabetic patients.",
+                "timeframe": "WITHIN_1_HOUR"
+              },
+              {
+                "priority": 2,
+                "action": "Monitor INR closely given potential interaction between metoprolol and warfarin.",
+                "rationale": "Metoprolol may increase warfarin plasma concentration via CYP2C19 inhibition, increasing the risk of bleeding.",
+                "timeframe": "WITHIN_24_HOURS"
+              },
+              {
+                "priority": 3,
+                "action": "Evaluate for cardiac arrhythmia other than A-fib.",
+                "rationale": "Rule out other arrhythmias that could have contributed to the stroke or be exacerbated by treatment.",
+                "timeframe": "WITHIN_24_HOURS"
+              },
+              {
+                "priority": 3,
+                "action": "Consider hypercoagulable workup.",
+                "rationale": "While atrial fibrillation is a likely cause of the stroke, especially in the absence of other clear etiologies, a hypercoagulable workup should be considered, particularly if the patient is young or has a history suggestive of clotting disorders.",
+                "timeframe": "ROUTINE"
+              }
+            ],
+            "qualityMetrics": {
+              "documentationCompleteness": "PARTIAL",
+              "codingAccuracy": "NEEDS_REVIEW",
+              "safetyVerification": "CONCERNS_NOTED"
+            },
+            "agentConsensus": {
+              "overallConfidence": "HIGH",
+              "areasOfAgreement": [],
+              "areasOfConflict": [
+                "Guardian assessed MODERATE risk, but Sentinel assessed CRITICAL risk."
+              ]
+            }
+          },
+          "agentStatuses": {
+            "scribe": "✅ Complete",
+            "guardian": "⚠️ MODERATE",
+            "compliance": "⚠️ FAIL",
+            "sentinel": "🔴 CRITICAL",
+            "advocate": "📄 GENERATED",
+            "vision": "⏭️ No image"
+          },
+          "summary": "AEGIS consensus: 8 issues (1 critical). Risk: HIGH (confidence: 88%). 1 inter-agent conflicts resolved. This patient presents with acute stroke and significantly elevated blood pressure (192/108), indicating hypertensive urgency/emergency. There is high suspicion for aspiration pneumonia given the patient's stroke and slurred speech. Drug interactions between beta-blockers and diabetic medications, as well as metoprolol and warfarin, require close monitoring.",
+          "durationMs": 4377
+        }
+      }
+    },
+    "timings": {
+      "scribe": 3810,
+      "compliance": 3,
+      "guardian": 1381,
+      "sentinel": 5746,
+      "parallelPhase": 7128,
+      "advocate": 3280,
+      "arbiter": 4378,
+      "total": 18600
+    },
+    "clinicalScores": [
+      {
+        "name": "NEWS2",
+        "score": 1,
+        "maxScore": 20,
+        "risk": "LOW",
+        "recommendation": "Ward-based care. Reassess within 4-6 hours.",
+        "breakdown": [
+          {
+            "param": "Resp Rate",
+            "value": 0,
+            "note": "16/min"
+          },
+          {
+            "param": "SpO2",
+            "value": 0,
+            "note": "97%"
+          },
+          {
+            "param": "Systolic BP",
+            "value": 0,
+            "note": "192mmHg"
+          },
+          {
+            "param": "Heart Rate",
+            "value": 1,
+            "note": "94bpm"
+          },
+          {
+            "param": "Temperature",
+            "value": 0,
+            "note": "36.8°C"
+          },
+          {
+            "param": "Consciousness",
+            "value": 0,
+            "note": "Alert"
+          }
+        ]
+      },
+      {
+        "name": "CHA₂DS₂-VASc",
+        "score": 6,
+        "maxScore": 9,
+        "risk": "HIGH",
+        "recommendation": "Anticoagulation recommended (DOACs preferred over warfarin). Annual stroke risk: 9.8-15.2%",
+        "breakdown": [
+          {
+            "param": "Hypertension",
+            "value": 1,
+            "note": "Present"
+          },
+          {
+            "param": "Age ≥75",
+            "value": 2,
+            "note": "76 years"
+          },
+          {
+            "param": "Diabetes",
+            "value": 1,
+            "note": "Present"
+          },
+          {
+            "param": "Stroke/TIA History",
+            "value": 2,
+            "note": "Present"
+          }
+        ]
+      }
+    ],
+    "failedAgents": [],
+    "summary": {
+      "overallRisk": "HIGH",
+      "totalIssues": 8,
+      "criticalIssues": 1,
+      "agentStatuses": {
+        "scribe": "✅ Complete",
+        "guardian": "⚠️ MODERATE",
+        "compliance": "⚠️ FAIL",
+        "sentinel": "🔴 CRITICAL",
+        "advocate": "📄 GENERATED",
+        "vision": "⏭️ No image"
+      },
+      "executiveSummary": "This patient presents with acute stroke and significantly elevated blood pressure (192/108), indicating hypertensive urgency/emergency. There is high suspicion for aspiration pneumonia given the patient's stroke and slurred speech. Drug interactions between beta-blockers and diabetic medications, as well as metoprolol and warfarin, require close monitoring.",
+      "pipelineDurationMs": 18600
+    }
+  }
+}
