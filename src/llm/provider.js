@@ -85,9 +85,14 @@ class VLLMProvider {
   }
 
   async generate(prompt, { temperature = 0, maxTokens = 4096 } = {}) {
+    const headers = { "Content-Type": "application/json" };
+    if (process.env.VLLM_API_KEY) {
+      headers["Authorization"] = `Bearer ${process.env.VLLM_API_KEY}`;
+    }
+
     const response = await fetch(`${this.baseUrl}/chat/completions`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify({
         model: this.model,
         messages: [{ role: "user", content: prompt }],
@@ -103,9 +108,14 @@ class VLLMProvider {
   }
 
   async generateWithImage(prompt, imageBase64, mimeType = "image/png", { temperature = 0, maxTokens = 4096 } = {}) {
+    const headers = { "Content-Type": "application/json" };
+    if (process.env.VLLM_API_KEY) {
+      headers["Authorization"] = `Bearer ${process.env.VLLM_API_KEY}`;
+    }
+
     const response = await fetch(`${this.baseUrl}/chat/completions`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers,
       body: JSON.stringify({
         model: this.visionModel,
         messages: [{

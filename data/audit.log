@@ -313,3 +313,7 @@
 2026-04-21T08:25:39.297Z | POST /aegis/what-if | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)
 2026-04-21T08:26:29.720Z | POST /aegis/what-if | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)
 2026-04-21T08:26:32.371Z | POST /aegis/what-if | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)
+2026-04-25T10:28:54.234Z | POST /aegis/stream | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)
+2026-04-25T10:29:35.380Z | POST /aegis/runs | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)
+2026-04-25T10:29:35.390Z | POST /aegis/runs | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)
+2026-04-25T10:29:35.547Z | POST /aegis/what-if | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko)
