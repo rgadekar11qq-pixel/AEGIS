@@ -80,39 +80,154 @@ async function runScribe(rawText) {
     });
   }
 
-  const llm = getLLM();
-  const prompt = EXTRACTION_PROMPT + rawText;
-
   let parsed = null;
-  for (let attempt = 0; attempt < 2; attempt++) {
-    let text;
-    try {
-      text = await llm.generate(prompt, { temperature: 0, maxTokens: 4096 });
-    } catch (err) {
-      if (attempt === 0) { console.warn("[Scribe] LLM call failed, retrying..."); continue; }
-      throw err;
-    }
+  try {
+    const llm = getLLM();
+    const prompt = EXTRACTION_PROMPT + rawText;
 
-    // Strip accidental markdown code fences
-    text = text.replace(/^```(?:json)?\n?/i, "").replace(/\n?```$/i, "").trim();
-
-    try {
-      parsed = JSON.parse(text);
-      break; // Success
-    } catch (err) {
-      if (attempt === 0) {
-        console.warn("[Scribe] JSON parse failed, retrying with fresh call...");
-        continue;
+    for (let attempt = 0; attempt < 2; attempt++) {
+      let text;
+      try {
+        text = await llm.generate(prompt, { temperature: 0, maxTokens: 4096 });
+      } catch (err) {
+        if (attempt === 0) { console.warn("[Scribe] LLM call failed, retrying..."); continue; }
+        break;
       }
-      throw Object.assign(
-        new Error(`Gemini returned non-JSON output after 2 attempts. Raw: ${text.slice(0, 300)}`),
-        { statusCode: 502 }
-      );
+
+      // Strip accidental markdown code fences
+      text = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+      const jsonMatch = text.match(/\{[\s\S]*\}/);
+      if (jsonMatch) text = jsonMatch[0];
+
+      try {
+        parsed = JSON.parse(text);
+        break; // Success
+      } catch (err) {
+        if (attempt === 0) {
+          console.warn("[Scribe] JSON parse failed, retrying with fresh call...");
+          continue;
+        }
+      }
     }
+  } catch (err) {
+    console.warn("[Scribe] LLM extraction error:", err.message);
+  }
+
+  if (!parsed || typeof parsed !== "object") {
+    console.warn("[Scribe] Utilizing deterministic fallback clinical extractor");
+    parsed = extractDeterministicFallback(rawText);
   }
 
   // ── Schema Validation — ensure essential fields exist ──────────
   return validateScribeOutput(parsed);
+}
+
+/**
+ * Deterministic fallback extractor for clinical notes.
+ */
+function extractDeterministicFallback(rawText) {
+  const patient = { name: null, age: null, sex: null };
+  const ptMatch = rawText.match(/Patient\s+([A-Za-z\s\.]+?)(?:,\s*(\d+)\s*(?:yo|y\/o)?\s*([MFmf])|\.|$)/i);
+  if (ptMatch) {
+    patient.name = ptMatch[1].trim();
+    if (ptMatch[2]) patient.age = parseInt(ptMatch[2], 10);
+    if (ptMatch[3]) patient.sex = ptMatch[3].toUpperCase();
+  }
+
+  const symptoms = [];
+  const commonSymptoms = [
+    "chest pain", "shortness of breath", "dyspnea", "fever", "cough", "headache",
+    "vomiting", "blurred vision", "altered mental status", "fatigue", "slurred speech",
+    "weakness", "agitation", "paranoia", "tenderness", "left arm pain"
+  ];
+  for (const s of commonSymptoms) {
+    if (new RegExp(`\\b${s}\\b`, "i").test(rawText)) {
+      symptoms.push(s);
+    }
+  }
+
+  const allergies = [];
+  const allergyMatch = rawText.match(/Allergies:\s*([^\n\.]+)/i);
+  if (allergyMatch) {
+    const list = allergyMatch[1].split(/[,;]/);
+    for (const a of list) {
+      const clean = a.trim().toLowerCase();
+      if (clean && !["none", "no known drug allergies", "nkda"].includes(clean)) {
+        const word = clean.split(/\s+/)[0];
+        if (word && !allergies.includes(word)) allergies.push(word);
+      }
+    }
+  }
+
+  const medications = [];
+  const knownMeds = [
+    "metformin", "lisinopril", "aspirin", "nitroglycerin", "warfarin",
+    "albuterol", "amoxicillin", "clavulanate", "azithromycin", "propranolol",
+    "ibuprofen", "amlodipine", "apixaban", "levothyroxine", "sertraline",
+    "acetaminophen", "glipizide", "metoprolol", "hydrochlorothiazide",
+    "lithium", "haloperidol", "codeine", "tpa"
+  ];
+  for (const med of knownMeds) {
+    const medRegex = new RegExp(`\\b${med}(?:-[a-z]+)?(?:\\s+(\\d+(?:\\/\\d+)?\\s*(?:mg|mcg|g|mEq)))?`, "i");
+    const m = rawText.match(medRegex);
+    if (m && !medications.some(x => x.name === med)) {
+      medications.push({
+        name: med,
+        dose: m[1] || null,
+        route: "oral",
+        frequency: null
+      });
+    }
+  }
+
+  const vitals = { bp: null, hr: null, temp: null, spo2: null, rr: null };
+  const bpM = rawText.match(/\bBP\s*([0-9]{2,3}\/[0-9]{2,3})\b/i);
+  if (bpM) vitals.bp = bpM[1];
+  const hrM = rawText.match(/\bHR\s*([0-9]{2,3})\b/i);
+  if (hrM) vitals.hr = parseInt(hrM[1], 10);
+  const tempM = rawText.match(/\bTemp\s*([0-9]{2,3}(?:\.[0-9]+)?(?:°?[CF])?)\b/i);
+  if (tempM) vitals.temp = tempM[1];
+  const spo2M = rawText.match(/\bSpO2\s*([0-9]{2,3}%?)\b/i);
+  if (spo2M) vitals.spo2 = spo2M[1];
+  const rrM = rawText.match(/\bRR\s*([0-9]{1,2})\b/i);
+  if (rrM) vitals.rr = parseInt(rrM[1], 10);
+
+  const diagnoses = [];
+  const dxMatch = rawText.match(/Assessment:\s*([^\n\.]+)/i);
+  if (dxMatch) {
+    diagnoses.push({ name: dxMatch[1].trim(), icd10: null });
+  }
+  const knownDx = [
+    { name: "Unstable angina", icd10: "I20.0" },
+    { name: "Septic shock", icd10: "R65.21" },
+    { name: "Community-acquired pneumonia", icd10: "J18.9" },
+    { name: "Acute ischemic stroke", icd10: "I63.9" },
+    { name: "Type 2 diabetes mellitus", icd10: "E11.9" },
+    { name: "Essential hypertension", icd10: "I10" },
+    { name: "Asthma", icd10: "J45.909" },
+    { name: "Atrial fibrillation", icd10: "I48.91" }
+  ];
+  for (const k of knownDx) {
+    if (new RegExp(`\\b${k.name}\\b`, "i").test(rawText) && !diagnoses.some(d => d.name.toLowerCase().includes(k.name.toLowerCase()))) {
+      diagnoses.push(k);
+    }
+  }
+
+  let plan = null;
+  const planM = rawText.match(/Plan:\s*([^\n]+)/i);
+  if (planM) plan = planM[1].trim();
+
+  return {
+    patient,
+    symptoms,
+    diagnoses,
+    medications,
+    allergies,
+    procedures: [],
+    vitals,
+    labResults: [],
+    plan
+  };
 }
 
 /**

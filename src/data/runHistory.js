@@ -7,11 +7,15 @@
 const fs = require("fs");
 const path = require("path");
 
-const RUNS_DIR = path.join(__dirname, "..", "..", "data", "runs");
+const RUNS_DIR = process.env.VERCEL ? "/tmp/runs" : path.join(__dirname, "..", "..", "data", "runs");
 
 // Ensure directory exists
-if (!fs.existsSync(RUNS_DIR)) {
-  fs.mkdirSync(RUNS_DIR, { recursive: true });
+try {
+  if (!fs.existsSync(RUNS_DIR)) {
+    fs.mkdirSync(RUNS_DIR, { recursive: true });
+  }
+} catch (e) {
+  console.warn("[runHistory] Directory init warning:", e.message);
 }
 
 /**
@@ -68,7 +72,11 @@ function saveRun(result) {
   const fullRecord = { ...record, fullResult: result };
 
   const filename = `${id}.json`;
-  fs.writeFileSync(path.join(RUNS_DIR, filename), JSON.stringify(fullRecord, null, 2));
+  try {
+    fs.writeFileSync(path.join(RUNS_DIR, filename), JSON.stringify(fullRecord, null, 2));
+  } catch (e) {
+    console.warn("[runHistory] Save error:", e.message);
+  }
 
   return { id, filename, timestamp };
 }

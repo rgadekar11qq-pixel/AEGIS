@@ -373,13 +373,15 @@ async function runAIClinicalReasoning(entities, guardianReport, complianceReport
     }, null, 2);
 
     const prompt = SENTINEL_PROMPT.replace("{PATIENT_DATA}", patientData);
-    let text = await llm.generate(prompt, { temperature: 0.1, maxTokens: 2048 });
+    let text = await llm.generate(prompt, { temperature: 0.1, maxTokens: 4096 });
 
-    // Strip markdown fences
-    text = text.replace(/^```(?:json)?\n?/i, "").replace(/\n?```$/i, "");
-    return JSON.parse(text);
+    // Strip markdown fences & extract JSON
+    let cleanText = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+    const jsonMatch = cleanText.match(/\{[\s\S]*\}/);
+    if (jsonMatch) cleanText = jsonMatch[0];
+    return JSON.parse(cleanText);
   } catch (err) {
-    console.error("[Sentinel] AI reasoning failed:", err.message);
+    console.warn("[Sentinel] AI reasoning fallback:", err.message);
     return {
       missedConsiderations: [],
       medicationConcerns: [],

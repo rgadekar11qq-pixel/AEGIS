@@ -48,7 +48,7 @@ function extractEvidence(allAgentOutputs) {
         domain: "SAFETY",
         severity: f.severity || "MODERATE",
         type: f.type,
-        description: f.message,
+        description: f.message || f.description || "Safety finding",
         raw: f,
       });
     }
@@ -68,7 +68,7 @@ function extractEvidence(allAgentOutputs) {
         domain,
         severity: f.severity || "MODERATE",
         type: f.type,
-        description: f.message,
+        description: f.message || f.description || "Clinical finding",
         raw: f,
       });
     }
@@ -99,7 +99,7 @@ function extractEvidence(allAgentOutputs) {
         domain: "COMPLIANCE",
         severity: f.severity === "ERROR" ? "HIGH" : f.severity === "WARNING" ? "MODERATE" : "LOW",
         type: f.rule || "BILLING",
-        description: f.message,
+        description: f.message || f.description || "Compliance finding",
         raw: f,
       });
     }
@@ -274,14 +274,18 @@ function dempsterShaferAccumulate(evidence) {
 
 function areSimilarFindings(a, b) {
   // Same type = definitely related
-  if (a.type === b.type && a.id.split(":").slice(-1)[0] === b.id.split(":").slice(-1)[0]) return true;
+  if (a.type && b.type && a.type === b.type && a.id && b.id && a.id.split(":").slice(-1)[0] === b.id.split(":").slice(-1)[0]) return true;
 
   // Check keyword overlap in descriptions
-  const wordsA = new Set(a.description.toLowerCase().split(/\W+/).filter(w => w.length > 3));
-  const wordsB = new Set(b.description.toLowerCase().split(/\W+/).filter(w => w.length > 3));
+  const descA = String(a.description || a.message || "");
+  const descB = String(b.description || b.message || "");
+  const wordsA = new Set(descA.toLowerCase().split(/\W+/).filter(w => w.length > 3));
+  const wordsB = new Set(descB.toLowerCase().split(/\W+/).filter(w => w.length > 3));
   let overlap = 0;
   for (const w of wordsA) { if (wordsB.has(w)) overlap++; }
-  const jaccardSimilarity = overlap / (wordsA.size + wordsB.size - overlap);
+  const total = wordsA.size + wordsB.size - overlap;
+  if (total === 0) return false;
+  const jaccardSimilarity = overlap / total;
   return jaccardSimilarity > 0.3;
 }
 
@@ -371,9 +375,11 @@ async function synthesizeReport(voteResult, scoredClusters, conflicts, deteriora
       .replace("{CONFLICTS}", JSON.stringify(conflicts))
       .replace("{DETERIORATION}", JSON.stringify(deteriorationRisk || { level: "UNKNOWN" }));
 
-    let text = await llm.generate(prompt, { temperature: 0.1, maxTokens: 1500 });
-    text = text.replace(/^```(?:json)?\n?/i, "").replace(/\n?```$/i, "");
-    const raw = JSON.parse(text);
+    let text = await llm.generate(prompt, { temperature: 0.1, maxTokens: 4096 });
+    let cleanText = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+    const jsonMatch = cleanText.match(/\{[\s\S]*\}/);
+    if (jsonMatch) cleanText = jsonMatch[0];
+    const raw = JSON.parse(cleanText);
 
     // Schema validation — coerce malformed LLM output to safe defaults
     const { valid, data, errors } = validateLLMOutput(raw, ARBITER_SYNTHESIS_SCHEMA);
@@ -382,7 +388,7 @@ async function synthesizeReport(voteResult, scoredClusters, conflicts, deteriora
     }
     return data;
   } catch (err) {
-    console.error("[Arbiter] Synthesis failed:", err.message);
+    console.warn("[Arbiter] Synthesis fallback:", err.message);
     return {
       executiveSummary: `Analysis identified ${scoredClusters.length} issues. Overall risk: ${voteResult.overallRisk}. Review individual agent reports.`,
       criticalAlerts: scoredClusters.filter(c => c.severity === "CRITICAL").map(c => c.description),

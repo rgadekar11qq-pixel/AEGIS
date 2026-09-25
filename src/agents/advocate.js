@@ -135,14 +135,16 @@ async function generateMedicalNecessity(entities, procedure) {
       .replace("{PATIENT_DATA}", patientData)
       .replace("{PROCEDURE}", procedure || entities.plan || "Specialist consultation");
 
-    let text = await llm.generate(prompt, { temperature: 0.2, maxTokens: 2048 });
-    text = text.replace(/^```(?:json)?\n?/i, "").replace(/\n?```$/i, "");
-    const raw = JSON.parse(text);
+    let text = await llm.generate(prompt, { temperature: 0.2, maxTokens: 4096 });
+    let cleanText = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+    const jsonMatch = cleanText.match(/\{[\s\S]*\}/);
+    if (jsonMatch) cleanText = jsonMatch[0];
+    const raw = JSON.parse(cleanText);
     const { valid, data, errors } = validateLLMOutput(raw, ADVOCATE_NECESSITY_SCHEMA);
     if (!valid) console.warn("[Advocate] Schema validation fixed LLM output:", errors.join("; "));
     return data;
   } catch (err) {
-    console.error("[Advocate] AI generation failed:", err.message);
+    console.warn("[Advocate] AI generation fallback:", err.message);
     return {
       clinicalSummary: "Clinical summary generation unavailable.",
       medicalNecessity: "Medical necessity justification requires manual review.",
