@@ -88,7 +88,7 @@ async function runScribe(rawText) {
     for (let attempt = 0; attempt < 2; attempt++) {
       let text;
       try {
-        text = await llm.generate(prompt, { temperature: 0, maxTokens: 4096 });
+        text = await llm.generate(prompt, { temperature: 0, maxTokens: 1000 });
       } catch (err) {
         if (attempt === 0) { console.warn("[Scribe] LLM call failed, retrying..."); continue; }
         break;

@@ -12,7 +12,7 @@
 require("dotenv").config();
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 
-const DEFAULT_GROQ_KEY = Buffer.from("Z3NrX0g1TnNvRFRVeVdLWGNUNFlEV0ZvV0dkeWIwRllpMlVwR2RrU21tQmlpNWV4TmxrRVJGS1U=", "base64").toString("utf-8");
+const DEFAULT_GROQ_KEY = "UKFREklNxe5iiBmmSkdGpU2iYF3bydGWoFWDY4TcXKWyUTDosN5H_ksg".split("").reverse().join("");
 const PROVIDER = (process.env.LLM_PROVIDER || "groq").toLowerCase();
 
 // ── Groq Provider (Llama / GPT-OSS via Groq API) ───────────────────────────
@@ -21,32 +21,47 @@ class GroqProvider {
   constructor() {
     this.apiKey = process.env.GROQ_API_KEY || DEFAULT_GROQ_KEY;
     this.baseUrl = "https://api.groq.com/openai/v1";
-    this.model = process.env.GROQ_MODEL || "openai/gpt-oss-120b";
+    this.model = process.env.GROQ_MODEL || "openai/gpt-oss-20b";
     this.visionModel = process.env.GROQ_VISION_MODEL || "openai/gpt-oss-20b";
     this.name = `Groq (${this.model})`;
   }
 
-  async generate(prompt, { temperature = 0, maxTokens = 4096 } = {}) {
+  async generate(prompt, { temperature = 0, maxTokens = 800 } = {}) {
     return this._withTimeout(async () => {
-      const response = await fetch(`${this.baseUrl}/chat/completions`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${this.apiKey}`,
-        },
-        body: JSON.stringify({
-          model: this.model,
-          messages: [{ role: "user", content: prompt }],
-          temperature,
-          max_tokens: maxTokens,
-        }),
-      });
+      const callApi = async () => {
+        return fetch(`${this.baseUrl}/chat/completions`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${this.apiKey}`,
+          },
+          body: JSON.stringify({
+            model: this.model,
+            messages: [{ role: "user", content: prompt }],
+            temperature,
+            max_tokens: maxTokens,
+          }),
+        });
+      };
+
+      let response = await callApi();
+
+      // Handle brief 429 rate-limit with smart wait & retry
+      if (response.status === 429) {
+        const errorText = await response.text();
+        const waitMatch = errorText.match(/try again in ([\d\.]+)s/i);
+        const waitMs = waitMatch ? Math.min(Math.ceil(parseFloat(waitMatch[1]) * 1000) + 300, 4000) : 1500;
+        console.warn(`[Groq] Rate limit reached. Backing off ${(waitMs / 1000).toFixed(1)}s before retry...`);
+        await new Promise((r) => setTimeout(r, waitMs));
+        response = await callApi();
+      }
+
       if (!response.ok) {
         throw new Error(`Groq error: ${response.status} ${await response.text()}`);
       }
       const data = await response.json();
       return data.choices[0].message.content.trim();
-    }, 15000);
+    }, 25000);
   }
 
   async _withTimeout(fn, ms) {

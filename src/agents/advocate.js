@@ -135,7 +135,7 @@ async function generateMedicalNecessity(entities, procedure) {
       .replace("{PATIENT_DATA}", patientData)
       .replace("{PROCEDURE}", procedure || entities.plan || "Specialist consultation");
 
-    let text = await llm.generate(prompt, { temperature: 0.2, maxTokens: 4096 });
+    let text = await llm.generate(prompt, { temperature: 0.2, maxTokens: 1200 });
     let cleanText = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
     const jsonMatch = cleanText.match(/\{[\s\S]*\}/);
     if (jsonMatch) cleanText = jsonMatch[0];

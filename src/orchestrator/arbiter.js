@@ -375,7 +375,7 @@ async function synthesizeReport(voteResult, scoredClusters, conflicts, deteriora
       .replace("{CONFLICTS}", JSON.stringify(conflicts))
       .replace("{DETERIORATION}", JSON.stringify(deteriorationRisk || { level: "UNKNOWN" }));
 
-    let text = await llm.generate(prompt, { temperature: 0.1, maxTokens: 4096 });
+    let text = await llm.generate(prompt, { temperature: 0.1, maxTokens: 1200 });
     let cleanText = text.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
     const jsonMatch = cleanText.match(/\{[\s\S]*\}/);
     if (jsonMatch) cleanText = jsonMatch[0];
