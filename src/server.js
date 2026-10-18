@@ -35,7 +35,7 @@ app.use(cors());
 const activeTransports = new Map();
 const activeServers = new Map();
 
-// ── MCP Server Setup (For Prompt Opinion Hackathon) ──────────────────────────
+// ── MCP Server Setup (Model Context Protocol) ──────────────────────────────
 app.get("/sse", async (req, res) => {
   console.log("[MCP] New SSE connection established");
   

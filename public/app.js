@@ -14,9 +14,14 @@ function showToast(message, type = 'success', durationMs = 3500) {
   }
   const toast = document.createElement('div');
   const colors = { success: '#00b894', error: '#ff6b6b', info: '#0abde3', warning: '#f59e0b' };
-  const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
+  const icons = {
+    success: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#00b894" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',
+    error: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ff6b6b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
+    info: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0abde3" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
+    warning: '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>'
+  };
   toast.style.cssText = `pointer-events:auto;display:flex;align-items:center;gap:10px;padding:10px 18px;background:rgba(22,22,37,0.95);border:1px solid ${colors[type]||colors.info};border-radius:12px;font-size:0.78rem;color:#e2e8f0;font-family:'Inter',sans-serif;box-shadow:0 8px 32px rgba(0,0,0,0.5);backdrop-filter:blur(12px);transform:translateX(120%);transition:transform 0.35s cubic-bezier(0.22,1,0.36,1),opacity 0.3s;max-width:380px`;
-  toast.innerHTML = `<span style="font-size:1.1rem">${icons[type]||icons.info}</span><span>${message}</span>`;
+  toast.innerHTML = `<span style="display:flex;align-items:center">${icons[type]||icons.info}</span><span>${message}</span>`;
   container.appendChild(toast);
   requestAnimationFrame(() => { toast.style.transform = 'translateX(0)'; });
   setTimeout(() => {
@@ -174,14 +179,130 @@ drawBgParticles();
 const netCanvas=document.getElementById("networkCanvas"),netCtx=netCanvas.getContext("2d"),dpr=window.devicePixelRatio||1;
 function resizeNet(){const r=netCanvas.parentElement.getBoundingClientRect();netCanvas.width=r.width*dpr;netCanvas.height=290*dpr;netCanvas.style.width=r.width+"px";netCanvas.style.height="290px";netCtx.setTransform(dpr,0,0,dpr,0,0);}
 const AGENTS=[
-  {id:"scribe",label:"Scribe",icon:"🖊️",color:"#a29bfe",x:0,y:0,state:"idle",time:null},
-  {id:"guardian",label:"Guardian",icon:"🛡️",color:"#00cec9",x:0,y:0,state:"idle",time:null},
-  {id:"compliance",label:"Compliance",icon:"📋",color:"#fdcb6e",x:0,y:0,state:"idle",time:null},
-  {id:"sentinel",label:"Sentinel",icon:"🔍",color:"#fd79a8",x:0,y:0,state:"idle",time:null},
-  {id:"advocate",label:"Advocate",icon:"📄",color:"#00b894",x:0,y:0,state:"idle",time:null},
-  {id:"vision",label:"Vision",icon:"👁️",color:"#0abde3",x:0,y:0,state:"idle",time:null},
-  {id:"arbiter",label:"Arbiter",icon:"⚖️",color:"#6c5ce7",x:0,y:0,state:"idle",time:null},
+  {id:"scribe",label:"Scribe",role:"Entity Extraction",color:"#a29bfe",x:0,y:0,state:"idle",time:null},
+  {id:"guardian",label:"Guardian",role:"Safety Engine",color:"#00cec9",x:0,y:0,state:"idle",time:null},
+  {id:"compliance",label:"Compliance",role:"Billing & CMS",color:"#fdcb6e",x:0,y:0,state:"idle",time:null},
+  {id:"sentinel",label:"Sentinel",role:"Diagnostics & Gaps",color:"#fd79a8",x:0,y:0,state:"idle",time:null},
+  {id:"advocate",label:"Advocate",role:"Prior Authorization",color:"#00b894",x:0,y:0,state:"idle",time:null},
+  {id:"vision",label:"Vision",role:"Diagnostic Imaging",color:"#0abde3",x:0,y:0,state:"idle",time:null},
+  {id:"arbiter",label:"Arbiter",role:"Consensus Synthesizer",color:"#6c5ce7",x:0,y:0,state:"idle",time:null},
 ];
+
+// Vector glyph renderer on Canvas
+function drawAgentIcon(ctx, id, x, y, size, color) {
+  ctx.save();
+  ctx.translate(x, y);
+  ctx.strokeStyle = color;
+  ctx.fillStyle = color;
+  ctx.lineWidth = 1.9;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  const s = size / 24;
+  ctx.scale(s, s);
+
+  if (id === "scribe") {
+    // Stylus / Pen
+    ctx.beginPath();
+    ctx.moveTo(-6, 6);
+    ctx.lineTo(4, -4);
+    ctx.lineTo(7, -7);
+    ctx.lineTo(5, -9);
+    ctx.lineTo(2, -6);
+    ctx.lineTo(-4, 4);
+    ctx.lineTo(-7, 7);
+    ctx.lineTo(-4, 4);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(0, 0, 1.4, 0, Math.PI * 2);
+    ctx.fill();
+  } else if (id === "guardian") {
+    // Clinical Security Shield
+    ctx.beginPath();
+    ctx.moveTo(0, -9);
+    ctx.lineTo(7, -5);
+    ctx.lineTo(7, 2);
+    ctx.quadraticCurveTo(7, 8, 0, 10);
+    ctx.quadraticCurveTo(-7, 8, -7, 2);
+    ctx.lineTo(-7, -5);
+    ctx.closePath();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(-3, 1);
+    ctx.lineTo(-1, 3);
+    ctx.lineTo(4, -2);
+    ctx.stroke();
+  } else if (id === "compliance") {
+    // Medical Record / Checklist
+    ctx.beginPath();
+    ctx.rect(-6, -7, 12, 16);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(-3, -7); ctx.lineTo(-3, -9); ctx.lineTo(3, -9); ctx.lineTo(3, -7);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(-3, -2); ctx.lineTo(3, -2);
+    ctx.moveTo(-3, 2); ctx.lineTo(3, 2);
+    ctx.moveTo(-3, 6); ctx.lineTo(1, 6);
+    ctx.stroke();
+  } else if (id === "sentinel") {
+    // Diagnostic Aperture / Crosshair Radar
+    ctx.beginPath();
+    ctx.arc(0, 0, 6.5, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(0, 0, 2.2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(0, -9); ctx.lineTo(0, -6.5);
+    ctx.moveTo(0, 6.5); ctx.lineTo(0, 9);
+    ctx.moveTo(-9, 0); ctx.lineTo(-6.5, 0);
+    ctx.moveTo(6.5, 0); ctx.lineTo(9, 0);
+    ctx.stroke();
+  } else if (id === "advocate") {
+    // Medical Necessity Dossier
+    ctx.beginPath();
+    ctx.moveTo(-6, -8);
+    ctx.lineTo(2, -8);
+    ctx.lineTo(6, -4);
+    ctx.lineTo(6, 8);
+    ctx.lineTo(-6, 8);
+    ctx.closePath();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(2, -8); ctx.lineTo(2, -4); ctx.lineTo(6, -4);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(-3, 0); ctx.lineTo(3, 0);
+    ctx.moveTo(-3, 4); ctx.lineTo(3, 4);
+    ctx.stroke();
+  } else if (id === "vision") {
+    // Diagnostic Imaging Aperture
+    ctx.beginPath();
+    ctx.moveTo(-8, 0);
+    ctx.quadraticCurveTo(0, -6, 8, 0);
+    ctx.quadraticCurveTo(0, 6, -8, 0);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(0, 0, 3, 0, Math.PI * 2);
+    ctx.fill();
+  } else if (id === "arbiter") {
+    // Scales of Consensus
+    ctx.beginPath();
+    ctx.moveTo(0, -8); ctx.lineTo(0, 8);
+    ctx.moveTo(-7, -4); ctx.lineTo(7, -4);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(-7, -4); ctx.lineTo(-9, 1); ctx.lineTo(-5, 1); ctx.closePath();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(7, -4); ctx.lineTo(5, 1); ctx.lineTo(9, 1); ctx.closePath();
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(-4, 8); ctx.lineTo(4, 8);
+    ctx.stroke();
+  }
+  ctx.restore();
+}
 const CONNECTIONS=[[0,1],[0,2],[0,3],[0,4],[0,5],[1,6],[2,6],[3,6],[4,6],[5,6]];
 let netParticles=[],animFrame=null;
 
@@ -383,11 +504,8 @@ function drawNetwork(){
     netCtx.lineWidth=0.5;
     netCtx.stroke();
 
-    // Large emoji icon — this is the agent's "face"
-    netCtx.font=`${isArb?30:24}px serif`;
-    netCtx.textAlign="center";
-    netCtx.textBaseline="middle";
-    netCtx.fillText(ag.icon,ag.x,ag.y-3);
+    // Professional vector agent icon glyph
+    drawAgentIcon(netCtx, ag.id, ag.x, ag.y - (isArb ? 4 : 3), isArb ? 25 : 21, ag.color);
 
     // Short abbreviation inside node (below icon)
     const abbrevs={scribe:"SCR",guardian:"GRD",compliance:"CMP",sentinel:"SNT",advocate:"ADV",vision:"VIS",arbiter:"ARB"};
@@ -448,9 +566,9 @@ function drawNetwork(){
     netCtx.font="600 9px 'JetBrains Mono',monospace";
     let st="Idle",stColor=tc.netIdleStatus;
     if(ag.state==="running"){st="Processing...";stColor=tc.isLight?"#0891b2":"#00cec9";}
-    else if(ag.state==="complete"){st=ag.time?`✓ ${(ag.time/1000).toFixed(1)}s`:"✓ Done";stColor=tc.isLight?"#15803d":"#00b894";}
-    else if(ag.state==="error"){st="✗ Error";stColor=tc.isLight?"#b91c1c":"#ff6b6b";}
-    else if(ag.state==="skipped"){st="— Skip";stColor=tc.netIdleStatus;}
+    else if(ag.state==="complete"){st=ag.time?`${(ag.time/1000).toFixed(1)}s`:"Done";stColor=tc.isLight?"#15803d":"#00b894";}
+    else if(ag.state==="error"){st="Error";stColor=tc.isLight?"#b91c1c":"#ff6b6b";}
+    else if(ag.state==="skipped"){st="Skipped";stColor=tc.netIdleStatus;}
     netCtx.fillStyle=stColor;
     netCtx.fillText(st,ag.x,ag.y+r+28);
   }
@@ -499,11 +617,10 @@ async function runPipeline(){
   const rawText=$("#clinicalInput").value.trim();if(!rawText||isRunning)return;
   isRunning=true;completedAgents=0;lastArbiterData=null;lastPipelineResult=null;
   const btn=$("#runAegis");btn.disabled=true;btn.classList.add("running");btn.querySelector(".run-btn-text").textContent="Analyzing...";
-  $("#agentNetwork").classList.remove("hidden");$("#resultsDashboard").classList.remove("hidden");
-  $("#analyticsDashboard").classList.add("hidden");
-  resetAll();setSystemStatus("running","Processing...");startTimer();resizeNet();layoutAgents();
+  resetAll();setSystemStatus("running","Processing...");startTimer();
+  switchTab("network");
+  resizeNet();layoutAgents();
   if(animFrame)cancelAnimationFrame(animFrame);drawNetwork();
-  $("#agentNetwork").scrollIntoView({behavior:"smooth",block:"start"});
   try{
     const body={rawText,generatePriorAuth:true,payerType:$("#payerSelect").value};
     if(imageBase64){body.imageBase64=imageBase64;body.imageMimeType=imageMimeType;}
@@ -512,10 +629,38 @@ async function runPipeline(){
     while(true){const{done,value}=await reader.read();if(done)break;buffer+=decoder.decode(value,{stream:true});const lines=buffer.split("\n");buffer=lines.pop();
     for(const line of lines){if(!line.startsWith("data: "))continue;const data=line.slice(6).trim();if(data==="[DONE]")continue;try{handleEvent(JSON.parse(data));}catch(e){}}}
   }catch(err){console.error("Pipeline error:",err);setSystemStatus("error","Pipeline Failed");}
-  stopTimer();isRunning=false;btn.disabled=false;btn.classList.remove("running");btn.querySelector(".run-btn-text").textContent="Run AEGIS Pipeline";
+  stopTimer();isRunning=false;btn.disabled=false;btn.classList.remove("running");btn.querySelector(".run-btn-text").textContent="Execute Consensus Pipeline";
 }
 function handleEvent(event){const{agent,status,data}=event;
-  if(agent==="pipeline"){if(status==="done"&&data?.result){lastPipelineResult=data.result;renderFinalResults(data.result);renderDashboardCharts(data.result);if(data.result.clinicalScores)renderClinicalScores(data.result.clinicalScores);saveRunToServer(data.result);showFailedAgents(data.result);renderAgentTimingBars(data.result);setSystemStatus("complete","Analysis Complete");initWhatIfSandbox(data.result);}else if(status==="error"){setSystemStatus("error","Error: "+(data?.error||"Unknown"));}return;}
+  if(agent==="pipeline"){
+    if(status==="done"&&data?.result){
+      lastPipelineResult=data.result;
+      renderFinalResults(data.result);
+      renderDashboardCharts(data.result);
+      if(data.result.clinicalScores)renderClinicalScores(data.result.clinicalScores);
+      saveRunToServer(data.result);
+      showFailedAgents(data.result);
+      renderAgentTimingBars(data.result);
+      setSystemStatus("complete","Analysis Complete");
+      initWhatIfSandbox(data.result);
+
+      // Update Tab Badges
+      const netBadge = document.getElementById("networkTabBadge");
+      if (netBadge) netBadge.textContent = "7/7 Done";
+      const agentsBadge = document.getElementById("agentsTabBadge");
+      if (agentsBadge) agentsBadge.textContent = "6 Verified";
+      const arbBadge = document.getElementById("arbiterTabBadge");
+      if (arbBadge) {
+        const risk = (data.result.summary?.overallRisk || "LOW").toUpperCase();
+        arbBadge.textContent = `${risk} RISK`;
+        arbBadge.className = `tab-indicator arbiter-indicator ${risk.toLowerCase()}`;
+      }
+      showToast("Consensus pipeline finished — Consensus Arbiter ready", "success");
+    } else if(status==="error"){
+      setSystemStatus("error","Error: "+(data?.error||"Unknown"));
+    }
+    return;
+  }
   if(agent==="scores"&&status==="complete"&&data?.output){renderClinicalScores(data.output);return;}
   setAgentState(agent,status,data?.durationMs);
   if(status==="complete"&&data?.output)renderAgentPanel(agent,data.output);
@@ -560,12 +705,12 @@ function renderClinicalScores(scores) {
   const hasConflict = new Set(riskLevels).size > 1;
   if (hasConflict) {
     h += `<div class="score-context-box" style="margin-top:0.5rem;font-size:0.64rem;padding:8px 12px;border:1px solid var(--border-subtle);border-radius:8px;line-height:1.5">
-      <strong>ℹ️ Score Context:</strong> Different clinical scores measure different risks.
+      <span class="context-tag">CDS</span> <strong>Score Context:</strong> Different clinical scores evaluate distinct clinical risk pathways.
       ${scores.map(s => `<strong>${s.name}</strong> measures ${s.name.includes('HEART')?'30-day cardiac event risk':s.name.includes('NEWS')?'acute physiological deterioration':s.name.includes('qSOFA')?'sepsis-related organ dysfunction':s.name.includes('CHA')?'annual stroke risk':'clinical risk'}`).join('. ')}.
-      Conflicting risk levels are expected when the patient has domain-specific conditions (e.g., high cardiac risk but stable vital signs).
+      Divergent risk levels are expected when patient indicators are condition-specific (e.g., acute cardiac ischemia with preserved vital signs).
     </div>`;
   }
-  h += '<div style="margin-top:0.5rem;font-size:0.58rem;color:var(--text-muted);opacity:0.7;padding:4px 8px;border-top:1px solid var(--border-subtle)">⚕ Clinical scores use published standardized thresholds (e.g. NEWS2 flags BP ≤90 or ≥220, not intermediate hypertension). Low scores do not exclude clinical concern — always correlate with full picture.</div>';
+  h += '<div style="margin-top:0.5rem;font-size:0.58rem;color:var(--text-muted);opacity:0.7;padding:4px 8px;border-top:1px solid var(--border-subtle)"><span class="context-tag">NOTE</span> Standardized clinical scores calculate risk based on published medical criteria. Normal scores do not rule out acute pathology — always evaluate full clinical context.</div>';
   $("#clinicalScoresBody").innerHTML = h;
 }
 
@@ -574,38 +719,186 @@ function renderClinicalScores(scores) {
 // ═══════════════════════════════════════════════════════════════
 function renderAgentPanel(agent,output){const body=$(`#body-${agent}`),badge=$(`#badge-${agent}`);if(!body)return;const r={scribe:renderScribe,guardian:renderGuardian,compliance:renderCompliance,sentinel:renderSentinel,advocate:renderAdvocate,vision:renderVision,arbiter:renderArbiter};if(r[agent])r[agent](body,badge,output);}
 
-function renderScribe(body,badge,d){badge.textContent=`${d.diagnoses?.length||0} dx`;badge.className="panel-badge pass";let h="";if(d.patient)h+=`<div class="entity-group"><div class="entity-group-title">Patient</div><span class="entity-tag">👤 ${d.patient.name||"?"},${d.patient.age||"?"}${d.patient.sex||""}</span></div>`;if(d.diagnoses?.length){h+=`<div class="entity-group"><div class="entity-group-title">Diagnoses</div>`;d.diagnoses.forEach(x=>{h+=`<span class="entity-tag">🏷️ ${x.name}${x.icd10?` (${x.icd10})`:""}</span>`;});h+="</div>";}if(d.medications?.length){h+=`<div class="entity-group"><div class="entity-group-title">Medications</div>`;d.medications.forEach(x=>{h+=`<span class="entity-tag">💊 ${x.name} ${x.dose||""}</span>`;});h+="</div>";}if(d.allergies?.length){h+=`<div class="entity-group"><div class="entity-group-title">Allergies</div>`;d.allergies.forEach(x=>{h+=`<span class="entity-tag" style="border-color:var(--accent-red)">⚠️ ${x}</span>`;});h+="</div>";}if(d.vitals){h+=`<div class="entity-group"><div class="entity-group-title">Vitals</div>`;const v=d.vitals;if(v.bp)h+=`<span class="entity-tag">BP:${v.bp}</span>`;if(v.hr)h+=`<span class="entity-tag">HR:${v.hr}</span>`;if(v.spo2)h+=`<span class="entity-tag">SpO2:${v.spo2}</span>`;if(v.temp)h+=`<span class="entity-tag">T:${v.temp}</span>`;h+="</div>";}body.innerHTML=h||'<div class="panel-placeholder">No entities</div>';}
+function renderScribe(body,badge,d){
+  badge.textContent=`${d.diagnoses?.length||0} dx`;
+  badge.className="panel-badge pass";
+  let h="";
+  if(d.patient)h+=`<div class="entity-group"><div class="entity-group-title">Patient Demographics</div><span class="entity-tag"><span class="tag-prefix">PT:</span> ${d.patient.name||"Unspecified"}, ${d.patient.age||"?"}${d.patient.sex||""}</span></div>`;
+  if(d.diagnoses?.length){
+    h+=`<div class="entity-group"><div class="entity-group-title">Diagnoses</div>`;
+    d.diagnoses.forEach(x=>{h+=`<span class="entity-tag"><span class="tag-prefix">DX:</span> ${x.name}${x.icd10?` (${x.icd10})`:""}</span>`;});
+    h+="</div>";
+  }
+  if(d.medications?.length){
+    h+=`<div class="entity-group"><div class="entity-group-title">Active Medications</div>`;
+    d.medications.forEach(x=>{h+=`<span class="entity-tag"><span class="rx-tag">Rx</span> ${x.name} ${x.dose||""}</span>`;});
+    h+="</div>";
+  }
+  if(d.allergies?.length){
+    h+=`<div class="entity-group"><div class="entity-group-title">Documented Allergies</div>`;
+    d.allergies.forEach(x=>{h+=`<span class="entity-tag" style="border-color:var(--accent-red)"><span class="allergy-tag">ALLERGY</span> ${x}</span>`;});
+    h+="</div>";
+  }
+  if(d.vitals){
+    h+=`<div class="entity-group"><div class="entity-group-title">Vitals</div>`;
+    const v=d.vitals;
+    if(v.bp)h+=`<span class="entity-tag">BP: ${v.bp}</span>`;
+    if(v.hr)h+=`<span class="entity-tag">HR: ${v.hr}</span>`;
+    if(v.spo2)h+=`<span class="entity-tag">SpO2: ${v.spo2}</span>`;
+    if(v.temp)h+=`<span class="entity-tag">Temp: ${v.temp}</span>`;
+    h+="</div>";
+  }
+  body.innerHTML=h||'<div class="panel-placeholder">No entities extracted</div>';
+}
 
-function renderGuardian(body,badge,d){badge.textContent=d.riskLevel;badge.className=`panel-badge ${d.riskLevel.toLowerCase()}`;if(!d.findings?.length){body.innerHTML='<div style="text-align:center;padding:1.5rem;color:var(--accent-green)">✅ No safety issues</div>';return;}body.innerHTML=d.findings.map(f=>`<div class="finding-item ${f.severity.toLowerCase()}"><div class="finding-type">${f.type} — ${f.severity}</div><div>${f.message}</div></div>`).join("");}
+function renderGuardian(body,badge,d){
+  badge.textContent=d.riskLevel;
+  badge.className=`panel-badge ${d.riskLevel.toLowerCase()}`;
+  if(!d.findings?.length){
+    body.innerHTML='<div class="empty-state-pass"><span class="badge-tag-pass">PASS</span> No contraindications or drug interactions detected</div>';
+    return;
+  }
+  body.innerHTML=d.findings.map(f=>`<div class="finding-item ${f.severity.toLowerCase()}"><div class="finding-type">${f.type} — ${f.severity}</div><div>${f.message}</div></div>`).join("");
+}
 
-function renderCompliance(body,badge,d){badge.textContent=d.overallStatus;badge.className=`panel-badge ${d.overallStatus==="PASS"?"pass":d.overallStatus==="FAIL"?"fail":"moderate"}`;let h="";if(d.codeValidation?.length){h+=`<div class="entity-group"><div class="entity-group-title">ICD-10 Codes</div>`;d.codeValidation.forEach(c=>{h+=`<span class="entity-tag">${c.valid?"✅":"❌"} ${c.code} — ${c.description||"?"}</span>`;});h+="</div>";}if(d.billingFindings?.length)d.billingFindings.forEach(f=>{h+=`<div class="finding-item ${f.severity==="ERROR"?"high":"moderate"}"><div class="finding-type">${f.rule} — ${f.severity}</div><div>${f.message}</div></div>`;});body.innerHTML=h||'<div style="text-align:center;padding:1.5rem;color:var(--accent-green)">✅ Compliant</div>';}
+function renderCompliance(body,badge,d){
+  badge.textContent=d.overallStatus;
+  badge.className=`panel-badge ${d.overallStatus==="PASS"?"pass":d.overallStatus==="FAIL"?"fail":"moderate"}`;
+  let h="";
+  if(d.codeValidation?.length){
+    h+=`<div class="entity-group"><div class="entity-group-title">ICD-10-CM Coding Validation</div>`;
+    d.codeValidation.forEach(c=>{
+      h+=`<span class="entity-tag"><span class="code-status-pill ${c.valid?'valid':'invalid'}">${c.valid?'VALID':'INVALID'}</span> ${c.code} — ${c.description||"?"}</span>`;
+    });
+    h+="</div>";
+  }
+  if(d.billingFindings?.length)d.billingFindings.forEach(f=>{
+    h+=`<div class="finding-item ${f.severity==="ERROR"?"high":"moderate"}"><div class="finding-type">${f.rule} — ${f.severity}</div><div>${f.message}</div></div>`;
+  });
+  body.innerHTML=h||'<div class="empty-state-pass"><span class="badge-tag-pass">PASS</span> Billing & Coding Fully Compliant</div>';
+}
 
-function renderSentinel(body,badge,d){badge.textContent=d.riskLevel;badge.className=`panel-badge ${d.riskLevel?.toLowerCase()||"low"}`;let h="";if(d.findings?.length)d.findings.forEach(f=>{h+=`<div class="finding-item ${f.severity.toLowerCase()}"><div class="finding-type">${f.type} — ${f.severity}</div><div>${f.message}</div></div>`;});if(d.aiReasoning?.overallAssessment)h+=`<div class="consensus-section"><div class="consensus-title">🧠 AI Assessment</div><div class="consensus-text">${d.aiReasoning.overallAssessment}</div></div>`;if(d.deteriorationRisk){const dr=d.deteriorationRisk;h+=`<div class="finding-item ${dr.level==="HIGH"?"high":dr.level==="MODERATE"?"moderate":"low"}"><div class="finding-type">Deterioration Risk — ${dr.level}</div><div>${dr.reasoning}</div></div>`;}body.innerHTML=h||'<div style="text-align:center;padding:1.5rem;color:var(--accent-green)">✅ No gaps</div>';}
+function renderSentinel(body,badge,d){
+  badge.textContent=d.riskLevel;
+  badge.className=`panel-badge ${d.riskLevel?.toLowerCase()||"low"}`;
+  let h="";
+  if(d.findings?.length)d.findings.forEach(f=>{
+    h+=`<div class="finding-item ${f.severity.toLowerCase()}"><div class="finding-type">${f.type} — ${f.severity}</div><div>${f.message}</div></div>`;
+  });
+  if(d.aiReasoning?.overallAssessment){
+    h+=`<div class="consensus-section"><div class="consensus-title">Clinical Diagnostic Assessment</div><div class="consensus-text">${d.aiReasoning.overallAssessment}</div></div>`;
+  }
+  if(d.deteriorationRisk){
+    const dr=d.deteriorationRisk;
+    h+=`<div class="finding-item ${dr.level==="HIGH"?"high":dr.level==="MODERATE"?"moderate":"low"}"><div class="finding-type">Deterioration Risk — ${dr.level}</div><div>${dr.reasoning}</div></div>`;
+  }
+  body.innerHTML=h||'<div class="empty-state-pass"><span class="badge-tag-pass">PASS</span> No diagnostic omissions or clinical gaps</div>';
+}
 
-function renderAdvocate(body,badge,d){badge.textContent=d.urgency||"DONE";badge.className=`panel-badge ${d.urgency==="EMERGENT"?"critical":d.urgency==="URGENT"?"high":"pass"}`;let h=`<div class="consensus-section"><div class="consensus-title">📄 Prior Auth — ${d.category}</div><div class="consensus-text">${d.summary}</div></div>`;const doc=d.document;if(doc?.medicalNecessityJustification){const mn=doc.medicalNecessityJustification;if(mn.clinicalSummary)h+=`<div class="consensus-section"><div class="consensus-title">Clinical Summary</div><div class="consensus-text">${mn.clinicalSummary}</div></div>`;if(mn.justification)h+=`<div class="consensus-section"><div class="consensus-title">Medical Necessity</div><div class="consensus-text">${mn.justification}</div></div>`;}body.innerHTML=h;}
+function renderAdvocate(body,badge,d){
+  badge.textContent=d.urgency||"DONE";
+  badge.className=`panel-badge ${d.urgency==="EMERGENT"?"critical":d.urgency==="URGENT"?"high":"pass"}`;
+  let h=`<div class="consensus-section"><div class="consensus-title">Prior Authorization Dossier — ${d.category}</div><div class="consensus-text">${d.summary}</div></div>`;
+  const doc=d.document;
+  if(doc?.medicalNecessityJustification){
+    const mn=doc.medicalNecessityJustification;
+    if(mn.clinicalSummary)h+=`<div class="consensus-section"><div class="consensus-title">Clinical Summary</div><div class="consensus-text">${mn.clinicalSummary}</div></div>`;
+    if(mn.justification)h+=`<div class="consensus-section"><div class="consensus-title">Medical Necessity Rationale</div><div class="consensus-text">${mn.justification}</div></div>`;
+  }
+  body.innerHTML=h;
+}
 
-function renderVision(body,badge,d){badge.textContent=d.status;badge.className=`panel-badge ${d.status==="ANALYZED"?"pass":"moderate"}`;if(!d.analysis){body.innerHTML='<div class="panel-placeholder">No image provided</div>';return;}let h="";if(d.analysis?.findings?.length)d.analysis.findings.forEach(f=>{h+=`<div class="finding-item ${f.severity?.toLowerCase()||"low"}"><div class="finding-type">${f.location||"General"} — ${f.severity}</div><div>${f.description}</div></div>`;});if(d.analysis?.impression)h+=`<div class="consensus-section"><div class="consensus-title">Impression</div><div class="consensus-text">${d.analysis.impression}</div></div>`;body.innerHTML=h||'<div class="panel-placeholder">No findings</div>';}
+function renderVision(body,badge,d){
+  badge.textContent=d.status;
+  badge.className=`panel-badge ${d.status==="ANALYZED"?"pass":"moderate"}`;
+  if(!d.analysis){
+    body.innerHTML='<div class="panel-placeholder">No radiology imaging provided for analysis</div>';
+    return;
+  }
+  let h="";
+  if(d.analysis?.findings?.length)d.analysis.findings.forEach(f=>{
+    h+=`<div class="finding-item ${f.severity?.toLowerCase()||"low"}"><div class="finding-type">${f.location||"General"} — ${f.severity}</div><div>${f.description}</div></div>`;
+  });
+  if(d.analysis?.impression){
+    h+=`<div class="consensus-section"><div class="consensus-title">Radiological Impression</div><div class="consensus-text">${d.analysis.impression}</div></div>`;
+  }
+  body.innerHTML=h||'<div class="panel-placeholder">No acute abnormalities detected</div>';
+}
 
 function renderArbiter(body,badge,d){
   lastArbiterData=d;
   badge.textContent=`${d.totalIssues} issues`;badge.className=`panel-badge ${d.overallRisk?.toLowerCase()||"low"}`;
   let h="";
-  if(d.consensus?.executiveSummary)h+=`<div class="consensus-section"><div class="consensus-title">📊 Executive Summary</div><div class="consensus-text">${d.consensus.executiveSummary}</div></div>`;
+  if(d.consensus?.executiveSummary)h+=`<div class="consensus-section"><div class="consensus-title">Executive Clinical Summary</div><div class="consensus-text">${d.consensus.executiveSummary}</div></div>`;
   // Voting
-  if(d.voting){h+=`<div class="consensus-section"><div class="consensus-title">🗳️ Weighted Majority Vote</div><div style="display:flex;gap:1.5rem;margin:0.5rem 0;flex-wrap:wrap">`;h+=`<div class="entity-group"><div class="entity-group-title">Risk Score</div><span class="entity-tag" style="font-size:1rem;font-weight:800;border-color:var(--accent-primary)">${d.voting.weightedRiskScore}/4.0</span></div>`;h+=`<div class="entity-group"><div class="entity-group-title">Confidence</div><span class="entity-tag" style="font-size:1rem;font-weight:800;border-color:${d.voting.confidence>=75?'var(--accent-green)':d.voting.confidence>=50?'var(--accent-amber)':'var(--accent-red)'}">${d.voting.confidence}%</span></div>`;h+=`<div class="entity-group"><div class="entity-group-title">Votes</div><span class="entity-tag" style="font-size:1rem;font-weight:800">${d.voting.voteCount}</span></div></div>`;
-  if(d.voting.votes?.length){const tc=getThemeColors();h+=`<div style="margin-top:0.3rem">`;d.voting.votes.forEach(v=>{const pct=Math.round(v.riskScore/4*100),cl=v.riskScore>=3?'var(--accent-red)':v.riskScore>=2?'var(--accent-amber)':'var(--accent-green)';h+=`<div style="display:flex;align-items:center;gap:0.5rem;margin:2px 0;font-size:0.68rem"><span style="width:110px;color:var(--text-muted)">${v.agent}</span><div style="flex:1;height:6px;background:${tc.trackBg};border-radius:3px;overflow:hidden"><div style="width:${pct}%;height:100%;background:${cl};border-radius:3px"></div></div><span style="width:40px;text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--text-secondary)">${v.riskScore}/4</span></div>`;});h+="</div>";}h+="</div>";}
+  if(d.voting){
+    h+=`<div class="consensus-section"><div class="consensus-title">Weighted Multi-Agent Decision Matrix</div><div style="display:flex;gap:1.5rem;margin:0.5rem 0;flex-wrap:wrap">`;
+    h+=`<div class="entity-group"><div class="entity-group-title">Risk Score</div><span class="entity-tag" style="font-size:1rem;font-weight:800;border-color:var(--accent-primary)">${d.voting.weightedRiskScore}/4.0</span></div>`;
+    h+=`<div class="entity-group"><div class="entity-group-title">Consensus Confidence</div><span class="entity-tag" style="font-size:1rem;font-weight:800;border-color:${d.voting.confidence>=75?'var(--accent-green)':d.voting.confidence>=50?'var(--accent-amber)':'var(--accent-red)'}">${d.voting.confidence}%</span></div>`;
+    h+=`<div class="entity-group"><div class="entity-group-title">Specialist Votes</div><span class="entity-tag" style="font-size:1rem;font-weight:800">${d.voting.voteCount}</span></div></div>`;
+    if(d.voting.votes?.length){
+      const tc=getThemeColors();
+      h+=`<div style="margin-top:0.3rem">`;
+      d.voting.votes.forEach(v=>{
+        const pct=Math.round(v.riskScore/4*100),cl=v.riskScore>=3?'var(--accent-red)':v.riskScore>=2?'var(--accent-amber)':'var(--accent-green)';
+        h+=`<div style="display:flex;align-items:center;gap:0.5rem;margin:2px 0;font-size:0.68rem"><span style="width:110px;color:var(--text-muted)">${v.agent}</span><div style="flex:1;height:6px;background:${tc.trackBg};border-radius:3px;overflow:hidden"><div style="width:${pct}%;height:100%;background:${cl};border-radius:3px"></div></div><span style="width:40px;text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--text-secondary)">${v.riskScore}/4</span></div>`;
+      });
+      h+="</div>";
+    }
+    h+="</div>";
+  }
   // Evidence
-  if(d.scoredIssues?.length){h+=`<div class="consensus-section"><div class="consensus-title">🔬 Dempster-Shafer Evidence</div>`;d.scoredIssues.slice(0,6).forEach(is=>{const bp=Math.round(is.beliefMass*100),sc=is.severity?.toLowerCase()||"low";h+=`<div class="finding-item ${sc}"><div style="display:flex;justify-content:space-between"><div class="finding-type">${is.type} — ${is.severity}</div><span style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:0.7rem;color:${bp>=70?'var(--accent-green)':bp>=40?'var(--accent-amber)':'var(--text-muted)'}">${bp}%</span></div><div>${is.description}</div>${is.sources?.length>1?`<div style="margin-top:3px;font-size:0.6rem;color:var(--text-muted)">Sources: ${is.sources.join(" + ")}</div>`:""}</div>`;});h+="</div>";}
-  if(d.consensus?.criticalAlerts?.length){h+=`<div class="consensus-section"><div class="consensus-title">🚨 Critical Alerts</div>`;d.consensus.criticalAlerts.forEach(a=>{h+=`<div class="finding-item critical"><div>${a}</div></div>`;});h+="</div>";}
-  if(d.conflicts?.length){h+=`<div class="consensus-section"><div class="consensus-title">⚡ Conflicts Resolved (${d.conflictCount})</div>`;d.conflicts.forEach(c=>{h+=`<div class="finding-item moderate"><div class="finding-type">${c.type}</div><div>${c.description}</div><div style="margin-top:4px;font-size:0.68rem;color:var(--accent-green)">↳ ${c.resolution}</div></div>`;});h+="</div>";}
-  if(d.consensus?.clinicalRecommendations?.length){h+=`<div class="consensus-section"><div class="consensus-title">📋 Recommendations</div>`;d.consensus.clinicalRecommendations.forEach(r=>{h+=`<div class="recommendation-item"><div class="rec-priority">${r.priority}</div><div class="rec-content"><div class="rec-action">${r.action}</div><div class="rec-rationale">${r.rationale}</div>${r.timeframe?`<span class="rec-timeframe ${r.timeframe.toLowerCase()}">${r.timeframe.replace(/_/g," ")}</span>`:""}</div></div>`;});h+="</div>";}
-  if(d.consensus?.qualityMetrics){const qm=d.consensus.qualityMetrics;h+=`<div class="consensus-section"><div class="consensus-title">📈 Quality Metrics</div><div style="display:flex;gap:0.5rem;flex-wrap:wrap">`;[{l:'Documentation',v:qm.documentationCompleteness},{l:'Coding',v:qm.codingAccuracy},{l:'Safety',v:qm.safetyVerification}].forEach(m=>{const c=m.v?.includes('VERIFIED')||m.v?.includes('COMPLETE')||m.v?.includes('ACCURATE')?'var(--accent-green)':m.v?.includes('UNSAFE')||m.v?.includes('INACCURATE')?'var(--accent-red)':'var(--accent-amber)';h+=`<span class="entity-tag" style="border-color:${c}">${m.l}: ${m.v||'N/A'}</span>`;});h+="</div></div>";}
-  body.innerHTML=h||'<div class="panel-placeholder">No data</div>';
+  if(d.scoredIssues?.length){
+    h+=`<div class="consensus-section"><div class="consensus-title">Dempster-Shafer Mathematical Evidence Fusion</div>`;
+    d.scoredIssues.slice(0,6).forEach(is=>{
+      const bp=Math.round(is.beliefMass*100),sc=is.severity?.toLowerCase()||"low";
+      h+=`<div class="finding-item ${sc}"><div style="display:flex;justify-content:space-between"><div class="finding-type">${is.type} — ${is.severity}</div><span style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:0.7rem;color:${bp>=70?'var(--accent-green)':bp>=40?'var(--accent-amber)':'var(--text-muted)'}">${bp}%</span></div><div>${is.description}</div>${is.sources?.length>1?`<div style="margin-top:3px;font-size:0.6rem;color:var(--text-muted)">Sources: ${is.sources.join(" + ")}</div>`:""}</div>`;
+    });
+    h+="</div>";
+  }
+  if(d.consensus?.criticalAlerts?.length){
+    h+=`<div class="consensus-section"><div class="consensus-title">Critical Safety & Contraindication Alerts</div>`;
+    d.consensus.criticalAlerts.forEach(a=>{h+=`<div class="finding-item critical"><div>${a}</div></div>`;});
+    h+="</div>";
+  }
+  if(d.conflicts?.length){
+    h+=`<div class="consensus-section"><div class="consensus-title">Inter-Agent Conflict Resolutions (${d.conflictCount})</div>`;
+    d.conflicts.forEach(c=>{
+      h+=`<div class="finding-item moderate"><div class="finding-type">${c.type}</div><div>${c.description}</div><div style="margin-top:4px;font-size:0.68rem;color:var(--accent-green)">↳ Resolution: ${c.resolution}</div></div>`;
+    });
+    h+="</div>";
+  }
+  if(d.consensus?.clinicalRecommendations?.length){
+    h+=`<div class="consensus-section"><div class="consensus-title">Consensus Clinical Action Plan</div>`;
+    d.consensus.clinicalRecommendations.forEach(r=>{
+      h+=`<div class="recommendation-item"><div class="rec-priority">${r.priority}</div><div class="rec-content"><div class="rec-action">${r.action}</div><div class="rec-rationale">${r.rationale}</div>${r.timeframe?`<span class="rec-timeframe ${r.timeframe.toLowerCase()}">${r.timeframe.replace(/_/g," ")}</span>`:""}</div></div>`;
+    });
+    h+="</div>";
+  }
+  if(d.consensus?.qualityMetrics){
+    const qm=d.consensus.qualityMetrics;
+    h+=`<div class="consensus-section"><div class="consensus-title">Clinical Quality & Compliance Metrics</div><div style="display:flex;gap:0.5rem;flex-wrap:wrap">`;
+    [{l:'Documentation',v:qm.documentationCompleteness},{l:'Coding',v:qm.codingAccuracy},{l:'Safety',v:qm.safetyVerification}].forEach(m=>{
+      const c=m.v?.includes('VERIFIED')||m.v?.includes('COMPLETE')||m.v?.includes('ACCURATE')?'var(--accent-green)':m.v?.includes('UNSAFE')||m.v?.includes('INACCURATE')?'var(--accent-red)':'var(--accent-amber)';
+      h+=`<span class="entity-tag" style="border-color:${c}">${m.l}: ${m.v||'N/A'}</span>`;
+    });
+    h+="</div></div>";
+  }
+  body.innerHTML=h||'<div class="panel-placeholder">No consensus data available</div>';
 }
 
-function renderSkippedPanel(agent){const body=$(`#body-${agent}`),badge=$(`#badge-${agent}`);if(!body)return;badge.textContent="SKIP";badge.className="panel-badge";
-const skipMessages={vision:'📷 No medical image attached. Use the "Attach Image" button above to upload radiology images (X-ray, CT, MRI) for AI-powered imaging analysis and clinical correlation.',advocate:'Prior authorization generation was not requested for this analysis.',default:'This agent was not required for the current analysis.'};
-body.innerHTML=`<div class="panel-placeholder" style="text-align:center;padding:2rem 1.5rem;opacity:0.7"><div style="font-size:1.5rem;margin-bottom:8px">${agent==='vision'?'🔬':'⏭️'}</div><div>${skipMessages[agent]||skipMessages.default}</div></div>`;}
+function renderSkippedPanel(agent){
+  const body=$(`#body-${agent}`),badge=$(`#badge-${agent}`);
+  if(!body)return;
+  badge.textContent="SKIPPED";
+  badge.className="panel-badge";
+  const skipMessages={
+    vision:'No diagnostic image attached. Attach DICOM or radiology imaging (X-Ray, CT, MRI) for multi-modal imaging analysis and correlation.',
+    advocate:'Prior authorization generation was not requested for this case.',
+    default:'Specialist agent was not required for the current clinical presentation.'
+  };
+  body.innerHTML=`<div class="panel-placeholder" style="text-align:center;padding:2rem 1.5rem;opacity:0.75"><div style="font-size:0.75rem;font-weight:700;letter-spacing:1px;color:var(--text-muted);margin-bottom:8px;font-family:'JetBrains Mono',monospace">[SPECIALIST OMITTED]</div><div style="font-size:0.72rem;line-height:1.5">${skipMessages[agent]||skipMessages.default}</div></div>`;
+}
 
 function renderFinalResults(result){const s=result.summary||{};const risk=(s.overallRisk||"LOW").toLowerCase();$("#riskBanner").className=`risk-banner risk-${risk}`;$("#riskTitle").textContent=`${s.overallRisk||"LOW"} RISK`;const fullSummary=s.executiveSummary||"Analysis complete";
 if(fullSummary.length>200){$("#riskSubtitle").innerHTML=`${fullSummary.slice(0,180)}... <a href="#" style="color:inherit;opacity:0.7;font-size:0.7em" onclick="this.parentElement.textContent='${fullSummary.replace(/'/g,"\\'").replace(/"/g,'&quot;')}';return false">show more</a>`;}else{$("#riskSubtitle").textContent=fullSummary;}$("#statTotal").textContent=s.totalIssues||0;$("#statCritical").textContent=s.criticalIssues||0;$("#statAgents").textContent="7";$("#statTime").textContent=`${((s.pipelineDurationMs||0)/1000).toFixed(1)}s`;if(result.agents?.arbiter?.output)renderAgentPanel("arbiter",result.agents.arbiter.output);}
@@ -905,7 +1198,7 @@ function exportPDF() {
 </style>
 </head>
 <body>
-<h1>⚕ AEGIS Clinical Intelligence Report</h1>
+<h1>AEGIS Clinical Intelligence Consensus Report</h1>
 <div class="meta-row"><div>Date: <span class="meta-val">${ts.split("T")[0]}</span></div><div>Time: <span class="meta-val">${ts.split("T")[1].split(".")[0]}</span></div><div>Pipeline: <span class="meta-val">${((s.pipelineDurationMs||0)/1000).toFixed(1)}s</span></div><div>Agents: <span class="meta-val">7</span></div></div>
 <p style="margin:10px 0"><span class="risk-badge risk-${s.overallRisk||'LOW'}">${s.overallRisk||'LOW'} RISK</span></p>
 
@@ -953,7 +1246,7 @@ ${Object.entries(r.timings||{}).filter(([k])=>!["total","parallelPhase"].include
 </table>
 
 <div class="footer">
-⚕ AEGIS v1.0 — Autonomous Examination Guardian & Intelligence System<br>
+AEGIS Enterprise CDS — Autonomous Examination Guardian & Intelligence System<br>
 Generated by multi-agent consensus engine • ${new Date().toLocaleDateString()}<br>
 <strong>CONFIDENTIAL</strong> — This report contains Protected Health Information (PHI)
 </div>
@@ -976,14 +1269,14 @@ Generated by multi-agent consensus engine • ${new Date().toLocaleDateString()}
     try {
       iframe.contentWindow.focus();
       iframe.contentWindow.print();
-      showToast('📄 Use "Save as PDF" in the Print dialog to download your report', 'info');
+      showToast('Use "Save as PDF" in the Print dialog to download report', 'info');
     } catch (e) {
       console.error("Print error:", e);
       // Final fallback: open in new tab
       const blob = new Blob([fullHTML], { type: "text/html;charset=utf-8" });
       const url = URL.createObjectURL(blob);
       window.open(url, "_blank");
-      showToast('📄 Report opened in new tab — press Ctrl+P to save as PDF', 'info');
+      showToast('Report opened in new tab — press Ctrl+P to save as PDF', 'info');
     }
     // Clean up iframe after print dialog closes
     setTimeout(() => { try { document.body.removeChild(iframe); } catch(e){} }, 3000);
@@ -997,7 +1290,7 @@ function exportFHIR() {
   if (!lastPipelineResult) return alert("Run a pipeline first.");
   const btn = document.getElementById("exportFhirBtn");
   const origText = btn ? btn.textContent : "";
-  if (btn) { btn.textContent = "⏳ Generating..."; btn.disabled = true; }
+  if (btn) { btn.textContent = "Generating..."; btn.disabled = true; }
   fetch("/aegis/fhir", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -1012,8 +1305,8 @@ function exportFHIR() {
     a.download = `aegis_fhir_bundle_${Date.now()}.json`;
     a.click();
     URL.revokeObjectURL(url);
-    if (btn) { btn.textContent = "✅ Downloaded"; setTimeout(() => { btn.textContent = origText; btn.disabled = false; }, 2000); }
-    showToast('🔗 FHIR R4 bundle downloaded (' + (bundle.entry?.length || 0) + ' resources)', 'success');
+    if (btn) { btn.textContent = "Downloaded"; setTimeout(() => { btn.textContent = origText; btn.disabled = false; }, 2000); }
+    showToast('FHIR R4 bundle downloaded (' + (bundle.entry?.length || 0) + ' resources)', 'success');
   })
   .catch(e => { showToast('FHIR export failed: ' + e.message, 'error'); if (btn) { btn.textContent = origText; btn.disabled = false; } });
 }
@@ -1093,18 +1386,18 @@ function renderVitalCards(point) {
   const newsColor = news >= 7 ? "var(--accent-red)" : news >= 5 ? "#ff6b6b" : news >= 3 ? "var(--accent-amber)" : "var(--accent-green)";
 
   const cards = [
-    { label: "HR", value: v.hr, unit: "bpm", color: v.hr > 100 || v.hr < 60 ? "var(--accent-red)" : "var(--accent-green)", icon: "💓" },
-    { label: "BP", value: v.bp, unit: "mmHg", color: v.sbp > 140 || v.sbp < 90 ? "var(--accent-red)" : "var(--accent-green)", icon: "🩸" },
-    { label: "SpO2", value: v.spo2, unit: "%", color: v.spo2 < 92 ? "var(--accent-red)" : v.spo2 < 95 ? "var(--accent-amber)" : "var(--accent-green)", icon: "🫁" },
-    { label: "RR", value: v.rr, unit: "/min", color: v.rr > 24 || v.rr < 10 ? "var(--accent-red)" : "var(--accent-green)", icon: "🌬️" },
-    { label: "Temp", value: v.temp, unit: "°C", color: v.temp > 38.5 ? "var(--accent-red)" : v.temp < 36 ? "var(--accent-amber)" : "var(--accent-green)", icon: "🌡️" },
-    { label: "NEWS2", value: news, unit: "/20", color: newsColor, icon: "⚠️" },
+    { label: "HR", value: v.hr, unit: "bpm", color: v.hr > 100 || v.hr < 60 ? "var(--accent-red)" : "var(--accent-green)" },
+    { label: "BP", value: v.bp, unit: "mmHg", color: v.sbp > 140 || v.sbp < 90 ? "var(--accent-red)" : "var(--accent-green)" },
+    { label: "SpO2", value: v.spo2, unit: "%", color: v.spo2 < 92 ? "var(--accent-red)" : v.spo2 < 95 ? "var(--accent-amber)" : "var(--accent-green)" },
+    { label: "RR", value: v.rr, unit: "/min", color: v.rr > 24 || v.rr < 10 ? "var(--accent-red)" : "var(--accent-green)" },
+    { label: "Temp", value: v.temp, unit: "°C", color: v.temp > 38.5 ? "var(--accent-red)" : v.temp < 36 ? "var(--accent-amber)" : "var(--accent-green)" },
+    { label: "NEWS2", value: news, unit: "/20", color: newsColor },
   ];
 
   $("#vitalCards").innerHTML = cards.map(c => `
     <div class="vital-stat-card" style="border:1px solid var(--border-subtle);border-radius:10px;padding:8px;text-align:center;transition:all 0.3s">
-      <div style="font-size:0.6rem;color:var(--text-muted)">${c.icon} ${c.label}</div>
-      <div style="font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:800;color:${c.color};transition:color 0.5s">${c.value}</div>
+      <div style="font-size:0.62rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.5px">${c.label}</div>
+      <div style="font-family:'JetBrains Mono',monospace;font-size:1.25rem;font-weight:800;color:${c.color};margin:2px 0;transition:color 0.5s">${c.value}</div>
       <div style="font-size:0.55rem;color:var(--text-muted)">${c.unit}</div>
     </div>
   `).join("");
@@ -1216,7 +1509,7 @@ function renderVitalAlert(point) {
   const colors = { CRITICAL: "var(--accent-red)", HIGH: "#ff6b6b", MODERATE: "var(--accent-amber)" };
   bar.style.background = colors[point.alert.level] || "var(--accent-amber)";
   bar.style.color = "#fff";
-  bar.textContent = `⚠️ ${point.alert.level}: ${point.alert.message}`;
+  bar.textContent = `ALERT [${point.alert.level}]: ${point.alert.message}`;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -1228,7 +1521,7 @@ function showFailedAgents(result) {
   const failed = result.failedAgents || [];
   if (failed.length === 0) { bar.classList.add("hidden"); return; }
   bar.classList.remove("hidden");
-  bar.textContent = `⚠️ ${failed.length} agent(s) failed: ${failed.join(", ").toUpperCase()}. Consensus confidence reduced. Results based on ${7 - failed.length}/7 agents.`;
+  bar.textContent = `System Warning: ${failed.length} agent(s) degraded: ${failed.join(", ").toUpperCase()}. Consensus confidence adjusted. Synthesis completed with ${7 - failed.length}/7 agents.`;
   // Auto-hide after 15 seconds
   setTimeout(() => bar.classList.add("hidden"), 15000);
 }
@@ -1246,41 +1539,46 @@ function renderAgentTimingBars(result) {
   const maxMs = Math.max(...data.map(d => d.ms));
   const tc = getThemeColors();
 
-  // Find or create timing container in dashboard
   let container = document.getElementById("agentTimingBars");
   if (!container) {
-    container = document.createElement("div");
+    container = document.createElement("section");
     container.id = "agentTimingBars";
-    container.className = "dash-card";
-    container.style.cssText = "grid-column:1/-1;padding:12px;border-radius:12px;text-align:left";
-    const dashGrid = document.querySelector(".dashboard-grid");
-    if (dashGrid) dashGrid.appendChild(container);
+    container.className = "glass-panel";
+    container.style.cssText = "padding:1.2rem;text-align:left;margin-top:1.2rem";
+    const netTab = document.getElementById("tab-network");
+    if (netTab) netTab.appendChild(container);
   }
 
   const colors = tc.isLight
     ? { scribe: "#6366f1", guardian: "#0891b2", compliance: "#d97706", sentinel: "#db2777", advocate: "#059669", arbiter: "#4f46e5" }
     : { scribe: "#a29bfe", guardian: "#00cec9", compliance: "#fdcb6e", sentinel: "#fd79a8", advocate: "#00b894", arbiter: "#6c5ce7" };
 
-  const icons = {
-    scribe: "🖊️", guardian: "🛡️", compliance: "📋",
-    sentinel: "🔍", advocate: "📄", arbiter: "⚖️"
+  const badges = {
+    scribe: "SCR", guardian: "GRD", compliance: "CMP",
+    sentinel: "SNT", advocate: "ADV", arbiter: "ARB"
   };
 
   container.innerHTML = `
-    <div style="font-size:0.65rem;font-weight:700;color:var(--text-secondary);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">
-      ⏱️ Agent Latency Breakdown — Total: ${(total/1000).toFixed(1)}s
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.8rem">
+      <div style="font-size:0.72rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px">
+        Agent Execution Latency Breakdown
+      </div>
+      <span class="meta-chip" style="font-family:'JetBrains Mono',monospace">Total Duration: ${(total/1000).toFixed(1)}s</span>
     </div>
     ${data.map(d => {
-      const pct = Math.max(5, (d.ms / maxMs) * 100);
-      const sec = (d.ms / 1000).toFixed(1);
+      const pct = Math.max(6, (d.ms / maxMs) * 100);
+      const sec = (d.ms / 1000).toFixed(2);
       const col = colors[d.name] || "#888";
-      const icon = icons[d.name] || "•";
+      const badge = badges[d.name] || d.name.slice(0,3).toUpperCase();
       const barColor = d.ms > 8000 ? "var(--accent-red)" : d.ms > 4000 ? "var(--accent-amber)" : col;
-      return `<div style="display:flex;align-items:center;gap:8px;margin:4px 0">
-        <div style="width:80px;font-size:0.65rem;font-weight:600;color:${col};text-align:right">${icon} ${d.name}</div>
-        <div style="flex:1;height:16px;background:${tc.trackBg};border-radius:8px;overflow:hidden;position:relative">
-          <div style="width:${pct}%;height:100%;background:${barColor};border-radius:8px;transition:width 0.6s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:6px">
-            <span style="font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:#ffffff;text-shadow:0 1px 2px rgba(0,0,0,0.5);font-weight:700">${sec}s</span>
+      return `<div style="display:flex;align-items:center;gap:10px;margin:6px 0">
+        <div style="width:110px;display:flex;align-items:center;justify-content:flex-end;gap:6px">
+          <span class="agent-badge-pill" style="background:rgba(255,255,255,0.06);color:${col}">${badge}</span>
+          <span style="font-size:0.68rem;font-weight:600;color:var(--text-secondary);text-transform:capitalize">${d.name}</span>
+        </div>
+        <div style="flex:1;height:18px;background:${tc.trackBg};border-radius:9px;overflow:hidden;position:relative">
+          <div style="width:${pct}%;height:100%;background:${barColor};border-radius:9px;transition:width 0.6s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:8px">
+            <span style="font-family:'JetBrains Mono',monospace;font-size:0.58rem;color:#ffffff;text-shadow:0 1px 2px rgba(0,0,0,0.5);font-weight:700">${sec}s</span>
           </div>
         </div>
       </div>`;
@@ -1288,25 +1586,58 @@ function renderAgentTimingBars(result) {
   `;
 }
 
-// Wire all buttons
-document.addEventListener("DOMContentLoaded", () => {
-  const pdfBtn = document.getElementById("exportPdfBtn");
-  if (pdfBtn) pdfBtn.addEventListener("click", exportPDF);
+// ═══════════════════════════════════════════════════════════════
+//  TAB NAVIGATION CONTROLLER
+// ═══════════════════════════════════════════════════════════════
+function initTabs() {
+  const tabs = document.querySelectorAll(".nav-tab");
+  tabs.forEach(tab => {
+    tab.addEventListener("click", () => {
+      const tabId = tab.dataset.tab;
+      switchTab(tabId);
+    });
+  });
 
-  const fhirBtn = document.getElementById("exportFhirBtn");
-  if (fhirBtn) fhirBtn.addEventListener("click", exportFHIR);
+  // Wire specialist agent filter buttons in Tab 3 (Individual Reports)
+  document.querySelectorAll(".agent-filter-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".agent-filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      const filter = btn.dataset.agent;
+      const panels = document.querySelectorAll("#resultsGridContainer .result-panel");
+      panels.forEach(p => {
+        if (filter === "all" || p.id === `panel-${filter}`) {
+          p.style.display = "";
+        } else {
+          p.style.display = "none";
+        }
+      });
+    });
+  });
+}
 
-  const startBtn = document.getElementById("startVitals");
-  if (startBtn) startBtn.addEventListener("click", startVitalStream);
+function switchTab(tabId) {
+  const tabs = document.querySelectorAll(".nav-tab");
+  const panes = document.querySelectorAll(".tab-pane");
 
-  const stopBtn = document.getElementById("stopVitals");
-  if (stopBtn) stopBtn.addEventListener("click", stopVitalStream);
-});
+  tabs.forEach(t => t.classList.toggle("active", t.dataset.tab === tabId));
+  panes.forEach(p => p.classList.toggle("hidden", p.id !== `tab-${tabId}`));
+
+  if (tabId === "network") {
+    requestAnimationFrame(() => {
+      resizeNet();
+      layoutAgents();
+      if (!animFrame && isRunning) drawNetwork();
+    });
+  } else if (tabId === "dashboard") {
+    if (lastPipelineResult) {
+      renderDashboardCharts(lastPipelineResult);
+    }
+  }
+}
 
 // ═══════════════════════════════════════════════════════════════
 //  WHAT-IF MEDICATION SANDBOX — Interactive Drug Modeling
-//  Toggles medications on/off and instantly recalculates risk
-//  using deterministic Guardian checks (~5ms, no LLM call)
 // ═══════════════════════════════════════════════════════════════
 let whatIfEntities = null;
 let whatIfDebounce = null;
@@ -1315,15 +1646,14 @@ function initWhatIfSandbox(result) {
   const entities = result.agents?.scribe?.output;
   if (!entities || !entities.medications?.length) return;
 
-  whatIfEntities = JSON.parse(JSON.stringify(entities)); // deep clone
+  whatIfEntities = JSON.parse(JSON.stringify(entities));
   const sandbox = $("#whatIfSandbox");
-  sandbox.classList.remove("hidden");
+  if (sandbox) sandbox.classList.remove("hidden");
 
   const grid = $("#whatIfMedGrid");
   const meds = entities.medications || [];
   const allergies = entities.allergies || [];
 
-  // Build medication toggle rows
   let html = "";
   for (const med of meds) {
     const name = med.name || "Unknown";
@@ -1332,7 +1662,7 @@ function initWhatIfSandbox(result) {
     html += `
       <label class="whatif-med-row" for="${id}" id="row-${id}">
         <div class="whatif-med-info">
-          <span class="whatif-med-name">💊 ${name}</span>
+          <span class="whatif-med-name"><span class="rx-tag">Rx</span> ${name}</span>
           ${dose ? `<span class="whatif-med-dose">${dose}</span>` : ""}
         </div>
         <div class="whatif-toggle-wrap">
@@ -1342,29 +1672,25 @@ function initWhatIfSandbox(result) {
       </label>`;
   }
 
-  // Show allergies (not toggleable — always active)
   if (allergies.length) {
     html += `<div style="margin-top:0.6rem;font-size:0.62rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px">Allergies (always active)</div>`;
     for (const a of allergies) {
-      html += `<div class="whatif-allergy-row">⚠️ ${a}</div>`;
+      html += `<div class="whatif-allergy-row"><span class="allergy-tag">ALLERGY</span> ${a}</div>`;
     }
   }
 
   grid.innerHTML = html;
 
-  // Wire toggle events
   grid.querySelectorAll(".whatif-toggle").forEach(toggle => {
     toggle.addEventListener("change", () => runWhatIfAnalysis());
   });
 
-  // Run initial analysis to set baseline
   runWhatIfAnalysis();
 }
 
 async function runWhatIfAnalysis() {
   if (!whatIfEntities) return;
 
-  // Debounce rapid toggles
   if (whatIfDebounce) clearTimeout(whatIfDebounce);
   whatIfDebounce = setTimeout(async () => {
     const grid = $("#whatIfMedGrid");
@@ -1381,7 +1707,6 @@ async function runWhatIfAnalysis() {
       }
     });
 
-    // Update status
     const statusBadge = $("#whatIfStatus");
     statusBadge.textContent = "Analyzing...";
     statusBadge.className = "panel-badge";
@@ -1402,10 +1727,8 @@ async function runWhatIfAnalysis() {
         return;
       }
 
-      // Update latency badge
       $("#whatIfLatency").textContent = `${data.durationMs}ms`;
 
-      // Update risk level with color animation
       const riskEl = $("#whatIfRiskLevel");
       const risk = data.guardian.riskLevel || "LOW";
       riskEl.textContent = risk;
@@ -1417,18 +1740,15 @@ async function runWhatIfAnalysis() {
       };
       riskEl.style.color = riskColors[risk] || riskColors.LOW;
 
-      // Animate the risk readout border
       const readout = $("#whatIfRiskReadout");
       readout.style.borderColor = riskColors[risk] || "var(--border-subtle)";
       readout.style.transition = "border-color 0.3s";
 
-      // Update findings count
       const findingsCount = data.guardian.findings?.length || 0;
       $("#whatIfFindings").textContent = findingsCount === 0
-        ? "✅ No safety issues"
-        : `⚠️ ${findingsCount} safety issue${findingsCount > 1 ? "s" : ""} detected`;
+        ? "No pharmacological risks detected"
+        : `${findingsCount} pharmacological warning${findingsCount > 1 ? "s" : ""} detected`;
 
-      // Render findings list
       const findingsList = $("#whatIfFindingsList");
       if (findingsCount > 0) {
         findingsList.innerHTML = data.guardian.findings.map(f => {
@@ -1442,17 +1762,15 @@ async function runWhatIfAnalysis() {
         findingsList.innerHTML = "";
       }
 
-      // Update status
       const disabledCount = disabledMeds.length;
       if (disabledCount > 0) {
-        statusBadge.textContent = `${disabledCount} med${disabledCount > 1 ? "s" : ""} disabled`;
+        statusBadge.textContent = `${disabledCount} med${disabledCount > 1 ? "s" : ""} discontinued`;
         statusBadge.className = "panel-badge moderate";
       } else {
-        statusBadge.textContent = "Baseline (all meds)";
+        statusBadge.textContent = "Baseline (all active)";
         statusBadge.className = "panel-badge pass";
       }
 
-      // Toast notification on significant risk change
       const origRisk = lastPipelineResult?.agents?.guardian?.output?.riskLevel;
       if (origRisk && origRisk !== risk) {
         const direction = ["LOW","MODERATE","HIGH","CRITICAL"].indexOf(risk) < ["LOW","MODERATE","HIGH","CRITICAL"].indexOf(origRisk) ? "decreased" : "increased";
@@ -1464,5 +1782,24 @@ async function runWhatIfAnalysis() {
       statusBadge.textContent = "API Error";
       statusBadge.className = "panel-badge fail";
     }
-  }, 150); // 150ms debounce
+  }, 150);
 }
+
+// ═══════════════════════════════════════════════════════════════
+//  APPLICATION INITIALIZATION
+// ═══════════════════════════════════════════════════════════════
+document.addEventListener("DOMContentLoaded", () => {
+  initTabs();
+
+  const pdfBtn = document.getElementById("exportPdfBtn");
+  if (pdfBtn) pdfBtn.addEventListener("click", exportPDF);
+
+  const fhirBtn = document.getElementById("exportFhirBtn");
+  if (fhirBtn) fhirBtn.addEventListener("click", exportFHIR);
+
+  const startBtn = document.getElementById("startVitals");
+  if (startBtn) startBtn.addEventListener("click", startVitalStream);
+
+  const stopBtn = document.getElementById("stopVitals");
+  if (stopBtn) stopBtn.addEventListener("click", stopVitalStream);
+});

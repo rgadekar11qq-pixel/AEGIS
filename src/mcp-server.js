@@ -119,7 +119,7 @@ app.get("/sse", async (req, res) => {
 
 app.post("/message", express.json(), async (req, res) => {
   // To handle multiple clients, ideally Prompt Opinion sends the session ID.
-  // If not, we fallback to the most recent/only transport for simpler hackathon setups.
+  // If not, we fallback to the most recent/only transport for single-client architectures.
   const sessionId = req.headers["x-session-id"];
   let transport = sessionId ? activeTransports.get(sessionId) : Array.from(activeTransports.values()).pop();
   

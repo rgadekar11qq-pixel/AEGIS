@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AEGIS — Autonomous Healthcare Intelligence</title>
-  <meta name="description" content="Multi-agent clinical intelligence platform powered by AMD MI300X GPUs">
+  <title>AEGIS — Enterprise Clinical Decision Support</title>
+  <meta name="description" content="Autonomous multi-agent clinical decision support and patient safety platform.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -18,11 +18,9 @@
     <div class="topbar-left">
       <div class="logo-mark">
         <div class="logo-icon">
-          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="url(#logoGrad)" stroke-width="2">
-            <defs><linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stop-color="var(--accent-primary)"/><stop offset="100%" stop-color="var(--accent-cyan)"/>
-            </linearGradient></defs>
-            <path d="M12 3L2 12l10 9 10-9L12 3z"/><path d="M12 8v8M8 12h8"/>
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+            <path d="m9 12 2 2 4-4"/>
           </svg>
         </div>
         <div>
@@ -32,274 +30,538 @@
       </div>
     </div>
     <div class="topbar-right">
-      <!-- Theme Switcher -->
+      <!-- Theme Switcher with professional SVG icons -->
       <div class="theme-switcher" id="themeSwitcher">
-        <button class="theme-btn active" data-theme="midnight" title="Midnight">🌙</button>
-        <button class="theme-btn" data-theme="cyberpunk" title="Cyberpunk">⚡</button>
-        <button class="theme-btn" data-theme="clinical" title="Clinical">🏥</button>
-        <button class="theme-btn" data-theme="aurora" title="Aurora">🌌</button>
-        <button class="theme-btn" data-theme="sterile" title="Sterile">🩺</button>
+        <button class="theme-btn active" data-theme="midnight" title="Midnight (Dark)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
+        <button class="theme-btn" data-theme="cyberpunk" title="Cyberpunk (High Contrast)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+          </svg>
+        </button>
+        <button class="theme-btn" data-theme="clinical" title="Clinical (Medical Blue)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <path d="M12 8v8M8 12h8"/>
+          </svg>
+        </button>
+        <button class="theme-btn" data-theme="aurora" title="Aurora (Emerald)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20M2 12h20"/>
+          </svg>
+        </button>
+        <button class="theme-btn" data-theme="sterile" title="Sterile (Clinical Light)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4.8 2.3A.3.3 0 1 0 5 2H4a2 2 0 0 0-2 2v5a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6V4a2 2 0 0 0-2-2h-1a.2.2 0 1 0 .3.3"/>
+            <path d="M8 15v1a6 6 0 0 0 6 6v0a6 6 0 0 0 6-6v-4"/>
+            <circle cx="20" cy="10" r="2"/>
+          </svg>
+        </button>
       </div>
+
       <div class="status-chip" id="systemStatus">
         <span class="status-dot idle"></span>
         <span>System Ready</span>
       </div>
-      <div class="amd-badge">
-        <span>Powered by</span>
-        <strong>AMD Instinct™ MI300X</strong>
+
+      <div class="enterprise-badge">
+        <span class="badge-dot"></span>
+        <span>Enterprise CDS v2.4</span>
       </div>
     </div>
   </header>
 
   <main id="app">
 
-    <!-- ── ANALYTICS DASHBOARD ────────────────────────── -->
-    <section id="analyticsDashboard" class="glass-panel hidden">
-      <div class="section-header">
-        <h2><span class="header-icon">📊</span> AEGIS Intelligence Dashboard</h2>
-        <div class="dashboard-meta">
-          <button class="expand-btn" id="exportPdfBtn" title="Download PDF Report">📄 Export PDF</button>
-          <button class="expand-btn" id="exportFhirBtn" title="Export FHIR R4 Bundle">🔗 FHIR R4</button>
-          <span class="meta-chip" id="dashLlm">LLM: —</span>
-          <span class="meta-chip" id="dashTime">Time: —</span>
-        </div>
-      </div>
-      <div class="dashboard-grid">
-        <!-- Risk Gauge -->
-        <div class="dash-card" id="dashRiskGauge">
-          <div class="dash-card-title">Overall Risk Assessment</div>
-          <canvas id="riskGaugeCanvas" width="240" height="160"></canvas>
-          <div class="gauge-label" id="gaugeRiskLabel">—</div>
-        </div>
-        <!-- Severity Pie Chart -->
-        <div class="dash-card" id="dashSeverityPie">
-          <div class="dash-card-title">Issue Severity Distribution</div>
-          <canvas id="severityPieCanvas" width="220" height="180"></canvas>
-          <div class="pie-legend" id="pieLegend"></div>
-        </div>
-        <!-- Agent Count Stats -->
-        <div class="dash-card" id="dashAgentPerf">
-          <div class="dash-card-title">Agent Response Time</div>
-          <canvas id="agentPerfCanvas" width="320" height="180"></canvas>
-        </div>
-        <!-- NOTE: Detailed latency bars appended by JS in renderAgentTimingBars -->
-        <!-- Risk Radar -->
-        <div class="dash-card" id="dashRiskRadar">
-          <div class="dash-card-title">Multi-Dimensional Risk Profile</div>
-          <canvas id="riskRadarCanvas" width="220" height="200"></canvas>
-        </div>
-        <!-- Pipeline Flow -->
-        <div class="dash-card dash-card-wide" id="dashPipelineFlow">
-          <div class="dash-card-title">Pipeline Execution Flow</div>
-          <canvas id="pipelineFlowCanvas" width="800" height="100"></canvas>
-        </div>
-        <!-- Quick Stats -->
-        <div class="dash-card" id="dashQuickStats">
-          <div class="dash-card-title">Key Metrics</div>
-          <div class="quick-stats-grid" id="quickStatsGrid"></div>
-        </div>
-      </div>
-    </section>
-    <!-- ── VITAL STREAM MONITOR ────────────────────────── -->
-    <section id="vitalsSection" class="glass-panel">
-      <div class="section-header">
-        <h2><span class="header-icon">💓</span> Live Vital Signs Monitor</h2>
-        <div class="dashboard-meta">
-          <select id="vitalScenario" class="select-input" style="width:auto;font-size:0.7rem">
-            <option value="sepsis">🦠 Sepsis Deterioration</option>
-            <option value="cardiac">🫀 Post-MI Monitoring</option>
-            <option value="recovery">📈 Recovery from Critical</option>
-            <option value="stable">✅ Stable Post-Op</option>
-          </select>
-          <button class="expand-btn" id="startVitals">▶ Start Stream</button>
-          <button class="expand-btn" id="stopVitals" style="display:none">⏹ Stop</button>
-          <span class="meta-chip" id="vitalStatus">Idle</span>
-        </div>
-      </div>
-      <div id="vitalsAlertBar" class="hidden" style="padding:6px 12px;border-radius:8px;font-size:0.72rem;font-weight:700;margin-bottom:6px;animation:pulse 1.5s infinite"></div>
-      <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:8px" id="vitalCards"></div>
-      <div id="vitalPlaceholder" style="display:flex;align-items:center;justify-content:center;gap:12px;padding:30px;color:var(--text-muted);font-size:0.75rem;opacity:0.5">
-        <span style="font-size:1.5rem">📡</span>
-        <span>Select a clinical scenario and click <strong>Start Stream</strong> to monitor patient vitals in real-time with automatic NEWS2 early warning scoring</span>
-      </div>
-      <canvas id="vitalsChart" width="1200" height="160" style="width:100%;border-radius:8px;background:rgba(0,0,0,0.15);display:none"></canvas>
-    </section>
-
-    <!-- ── INPUT SECTION ──────────────────────────────── -->
+    <!-- ── CLINICAL CASE INPUT SECTION ─────────────────────── -->
     <section id="inputSection" class="glass-panel">
       <div class="section-header">
-        <h2><span class="header-icon">📋</span> Clinical Input</h2>
+        <h2>
+          <svg class="header-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+            <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+            <path d="M9 14h6M9 18h4"/>
+          </svg>
+          Clinical Case Ingestion
+        </h2>
         <div class="input-actions">
           <label class="upload-btn" id="imageUploadLabel">
             <input type="file" id="imageUpload" accept="image/*" hidden>
-            👁️ Attach Image
+            <svg class="btn-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+              <circle cx="8.5" cy="8.5" r="1.5"/>
+              <polyline points="21 15 16 10 5 21"/>
+            </svg>
+            Attach Imaging (DICOM / Radiology)
           </label>
-          <select id="payerSelect" class="select-input">
-            <option value="medicare">Medicare / CMS</option>
-            <option value="medicaid">Medicaid</option>
-            <option value="commercial">Commercial</option>
+          <select id="payerSelect" class="select-input" title="Payer Rule Set">
+            <option value="medicare">Medicare / CMS Guidelines</option>
+            <option value="medicaid">Medicaid Policy</option>
+            <option value="commercial">Commercial Health Plan</option>
           </select>
         </div>
       </div>
       <div class="input-area">
-        <textarea id="clinicalInput" placeholder="Paste physician's clinical note here...
+        <textarea id="clinicalInput" placeholder="Paste unstructured physician clinical progress note, discharge summary, or ED triage narrative here...
 
-Example: Patient presenting with chest pain, shortness of breath..."></textarea>
+Example: Patient presenting with acute chest pain, ST-depression on ECG, on Metformin and Lisinopril, allergic to Penicillin..."></textarea>
         <div id="imagePreviewArea" class="image-preview hidden">
-          <img id="imagePreview" alt="Uploaded medical image">
-          <button id="removeImage" class="remove-img-btn">✕</button>
+          <img id="imagePreview" alt="Uploaded diagnostic image preview">
+          <button id="removeImage" class="remove-img-btn" title="Remove diagnostic image">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>
       </div>
       <div class="input-footer">
         <div class="sample-notes">
-          <span>Try: </span>
-          <button class="sample-btn" data-sample="cardiac">🫀 Cardiac</button>
-          <button class="sample-btn" data-sample="sepsis">🦠 Sepsis</button>
-          <button class="sample-btn" data-sample="trauma">🩹 Trauma</button>
-          <button class="sample-btn" data-sample="pediatric">👶 Pediatric</button>
-          <button class="sample-btn" data-sample="geriatric">🧓 Geriatric</button>
-          <button class="sample-btn" data-sample="stroke">🧠 Stroke</button>
-          <button class="sample-btn" data-sample="psychiatric">💊 Psych</button>
-          <button class="sample-btn" data-sample="pneumonia">🫁 Pneumonia</button>
+          <span class="sample-label">Clinical Cohorts:</span>
+          <button class="sample-btn" data-sample="cardiac"><span class="case-dot cardiac"></span>Cardiac Angina</button>
+          <button class="sample-btn" data-sample="sepsis"><span class="case-dot sepsis"></span>Septic Shock</button>
+          <button class="sample-btn" data-sample="trauma"><span class="case-dot trauma"></span>Polytrauma</button>
+          <button class="sample-btn" data-sample="pediatric"><span class="case-dot ped"></span>Pediatric Neuro</button>
+          <button class="sample-btn" data-sample="geriatric"><span class="case-dot ger"></span>Geriatric Fall</button>
+          <button class="sample-btn" data-sample="stroke"><span class="case-dot stroke"></span>Ischemic Stroke</button>
+          <button class="sample-btn" data-sample="psychiatric"><span class="case-dot psych"></span>Psych / Toxicity</button>
+          <button class="sample-btn" data-sample="pneumonia"><span class="case-dot resp"></span>Pneumonia</button>
         </div>
         <button id="runAegis" class="run-btn">
-          <span class="run-btn-text">Run AEGIS Pipeline</span>
-          <span class="run-btn-icon">⚡</span>
+          <svg class="run-btn-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"/>
+          </svg>
+          <span class="run-btn-text">Execute Consensus Pipeline</span>
         </button>
       </div>
     </section>
 
-    <!-- ── AGENT NETWORK — CANVAS ─────────────────────── -->
-    <section id="agentNetwork" class="glass-panel hidden">
-      <div class="section-header">
-        <h2><span class="header-icon">🔮</span> Agent Consensus Network — Live</h2>
-        <div class="timer-wrap">
-          <div id="pipelineTimer" class="timer">0.0s</div>
-          <div id="agentCounter" class="agent-counter">0 / 7</div>
-        </div>
-      </div>
-      <canvas id="networkCanvas" width="1200" height="260"></canvas>
-    </section>
+    <!-- ── TAB NAVIGATION BAR ───────────────────────────── -->
+    <nav class="main-nav-tabs" id="mainNavTabs">
+      <button class="nav-tab active" data-tab="dashboard">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/>
+          <rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/>
+        </svg>
+        <span>Dashboard</span>
+      </button>
 
-    <!-- ── RESULTS DASHBOARD ──────────────────────────── -->
-    <section id="resultsDashboard" class="hidden">
+      <button class="nav-tab" data-tab="network">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+        </svg>
+        <span>Agentic AI System</span>
+        <span class="tab-indicator" id="networkTabBadge">7 Active</span>
+      </button>
+
+      <button class="nav-tab" data-tab="agents">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+          <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>
+        </svg>
+        <span>Individual Reports</span>
+        <span class="tab-indicator" id="agentsTabBadge">6 Agents</span>
+      </button>
+
+      <button class="nav-tab" data-tab="arbiter">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+          <path d="m9 12 2 2 4-4"/>
+        </svg>
+        <span>Consensus Arbiter</span>
+        <span class="tab-indicator arbiter-indicator" id="arbiterTabBadge">Consensus</span>
+      </button>
+
+      <button class="nav-tab" data-tab="sandbox">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/>
+          <path d="m8.5 8.5 7 7"/>
+        </svg>
+        <span>Medication Sandbox</span>
+      </button>
+    </nav>
+
+    <!-- ── TAB 1: DASHBOARD ────────────────────────────── -->
+    <div class="tab-pane" id="tab-dashboard">
       <!-- Risk Banner -->
       <div id="riskBanner" class="risk-banner risk-low">
         <div class="risk-level-display">
           <div class="risk-pulse-ring"></div>
           <div class="risk-icon-wrap">
-            <div class="risk-icon" id="riskIcon">●</div>
+            <div class="risk-icon" id="riskIcon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
           </div>
           <div>
-            <div class="risk-title" id="riskTitle">LOW RISK</div>
-            <div class="risk-subtitle" id="riskSubtitle">All clear</div>
+            <div class="risk-title" id="riskTitle">SYSTEM READY</div>
+            <div class="risk-subtitle" id="riskSubtitle">Execute pipeline on patient note to synthesize multi-agent findings.</div>
           </div>
         </div>
         <div class="risk-stats">
-          <div class="risk-stat"><span class="stat-num" id="statTotal">0</span><span class="stat-label">Issues</span></div>
-          <div class="risk-stat"><span class="stat-num" id="statCritical">0</span><span class="stat-label">Critical</span></div>
-          <div class="risk-stat"><span class="stat-num" id="statAgents">7</span><span class="stat-label">Agents</span></div>
-          <div class="risk-stat"><span class="stat-num" id="statTime">0s</span><span class="stat-label">Time</span></div>
+          <div class="risk-stat"><span class="stat-num" id="statTotal">0</span><span class="stat-label">Total Findings</span></div>
+          <div class="risk-stat"><span class="stat-num" id="statCritical">0</span><span class="stat-label">Critical Safety</span></div>
+          <div class="risk-stat"><span class="stat-num" id="statAgents">7</span><span class="stat-label">Active Agents</span></div>
+          <div class="risk-stat"><span class="stat-num" id="statTime">0.0s</span><span class="stat-label">Total Latency</span></div>
         </div>
       </div>
 
-      <!-- Clinical Scores -->
-      <div id="clinicalScoresSection" class="glass-panel hidden" style="margin-bottom:1rem">
-        <div class="panel-header" style="background:linear-gradient(90deg,rgba(0,184,148,0.08),rgba(0,206,201,0.04))">
-          <span>🏥 Evidence-Based Clinical Scores</span>
+      <!-- Analytics Dashboard Grid -->
+      <section id="analyticsDashboard" class="glass-panel">
+        <div class="section-header">
+          <h2>
+            <svg class="header-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/>
+            </svg>
+            Clinical Risk Intelligence Overview
+          </h2>
+          <div class="dashboard-meta">
+            <button class="expand-btn" id="exportPdfBtn" title="Export Formal PDF Medical Report">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Export PDF
+            </button>
+            <button class="expand-btn" id="exportFhirBtn" title="Export FHIR R4 JSON Bundle">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              FHIR R4 Bundle
+            </button>
+            <span class="meta-chip" id="dashLlm">Model: Groq Llama-3.3-70B</span>
+            <span class="meta-chip" id="dashTime">Time: —</span>
+          </div>
+        </div>
+        <div class="dashboard-grid">
+          <!-- Risk Gauge -->
+          <div class="dash-card" id="dashRiskGauge">
+            <div class="dash-card-title">Weighted Composite Risk Score</div>
+            <canvas id="riskGaugeCanvas" width="240" height="160"></canvas>
+            <div class="gauge-label" id="gaugeRiskLabel">—</div>
+          </div>
+          <!-- Severity Pie Chart -->
+          <div class="dash-card" id="dashSeverityPie">
+            <div class="dash-card-title">Clinical Finding Severity Spectrum</div>
+            <canvas id="severityPieCanvas" width="220" height="180"></canvas>
+            <div class="pie-legend" id="pieLegend"></div>
+          </div>
+          <!-- Agent Response Times -->
+          <div class="dash-card" id="dashAgentPerf">
+            <div class="dash-card-title">Agent Execution Profile</div>
+            <canvas id="agentPerfCanvas" width="320" height="180"></canvas>
+          </div>
+          <!-- Risk Radar -->
+          <div class="dash-card" id="dashRiskRadar">
+            <div class="dash-card-title">Multi-Dimensional Safety Matrix</div>
+            <canvas id="riskRadarCanvas" width="220" height="200"></canvas>
+          </div>
+          <!-- Pipeline Flow -->
+          <div class="dash-card dash-card-wide" id="dashPipelineFlow">
+            <div class="dash-card-title">Sequential & Parallel Stage Execution Flow</div>
+            <canvas id="pipelineFlowCanvas" width="800" height="100"></canvas>
+          </div>
+          <!-- Quick Stats -->
+          <div class="dash-card" id="dashQuickStats">
+            <div class="dash-card-title">Consensus Metrics</div>
+            <div class="quick-stats-grid" id="quickStatsGrid"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Evidence-Based Clinical Scores -->
+      <section id="clinicalScoresSection" class="glass-panel hidden">
+        <div class="section-header">
+          <h2>
+            <svg class="header-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+            </svg>
+            Evidence-Based Clinical Scoring Engine (HEART, NEWS2, qSOFA, CHA₂DS₂-VASc)
+          </h2>
           <span class="panel-badge pass" id="scoresCount">—</span>
         </div>
         <div class="panel-body" id="clinicalScoresBody" style="max-height:none">
-          <div class="panel-placeholder">Calculating...</div>
+          <div class="panel-placeholder">Awaiting clinical entities to compute validated medical risk scores.</div>
         </div>
+      </section>
+
+      <!-- Live Vital Stream Monitor -->
+      <section id="vitalsSection" class="glass-panel">
+        <div class="section-header">
+          <h2>
+            <svg class="header-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 7.65l.77.78L12 20.66l7.65-7.65.77-.78a5.4 5.4 0 0 0 0-7.65z"/>
+            </svg>
+            Real-Time Physiological Vital Signs Stream
+          </h2>
+          <div class="dashboard-meta">
+            <select id="vitalScenario" class="select-input" style="width:auto;font-size:0.7rem">
+              <option value="sepsis">Sepsis Acute Deterioration</option>
+              <option value="cardiac">Post-MI Telemetry Monitoring</option>
+              <option value="recovery">ICU Stabilization & Recovery</option>
+              <option value="stable">Stable Post-Operative Baseline</option>
+            </select>
+            <button class="expand-btn" id="startVitals">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+              Start Stream
+            </button>
+            <button class="expand-btn" id="stopVitals" style="display:none">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor"><rect x="4" y="4" width="16" height="16"/></svg>
+              Stop
+            </button>
+            <span class="meta-chip" id="vitalStatus">Idle</span>
+          </div>
+        </div>
+        <div id="vitalsAlertBar" class="hidden" style="padding:6px 12px;border-radius:8px;font-size:0.72rem;font-weight:700;margin-bottom:6px;animation:pulse 1.5s infinite"></div>
+        <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-bottom:8px" id="vitalCards"></div>
+        <div id="vitalPlaceholder" style="display:flex;align-items:center;justify-content:center;gap:12px;padding:30px;color:var(--text-muted);font-size:0.75rem;opacity:0.6">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"/><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"/></svg>
+          <span>Select a clinical telemetry scenario and click <strong>Start Stream</strong> for continuous physiological waveform analysis and automated NEWS2 early warning alerts.</span>
+        </div>
+        <canvas id="vitalsChart" width="1200" height="160" style="width:100%;border-radius:8px;background:rgba(0,0,0,0.15);display:none"></canvas>
+      </section>
+    </div>
+
+    <!-- ── TAB 2: AGENTIC AI SYSTEM ────────────────────── -->
+    <div class="tab-pane hidden" id="tab-network">
+      <section id="agentNetwork" class="glass-panel">
+        <div class="section-header">
+          <h2>
+            <svg class="header-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+            Multi-Agent Autonomous Neural Architecture & Packet Transfer
+          </h2>
+          <div class="timer-wrap">
+            <div id="pipelineTimer" class="timer">0.0s</div>
+            <div id="agentCounter" class="agent-counter">0 / 7 Active</div>
+          </div>
+        </div>
+        <canvas id="networkCanvas" width="1200" height="290"></canvas>
+      </section>
+
+      <!-- Agent System Architecture Cards -->
+      <section class="glass-panel" style="padding:1.2rem">
+        <div style="font-size:0.74rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.8rem">
+          Agent Topology & Clinical Responsibility Matrix
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:0.8rem">
+          <div class="dash-card" style="text-align:left;padding:0.8rem">
+            <div style="display:flex;align-items:center;gap:0.4rem;font-weight:700;font-size:0.8rem;color:#a29bfe;margin-bottom:0.3rem">
+              <span class="agent-badge-pill" style="background:rgba(162,155,254,0.15)">SCR</span> Scribe Agent
+            </div>
+            <div style="font-size:0.68rem;color:var(--text-muted);line-height:1.5">Extracts structured clinical entities: demographics, diagnoses, medications, dosages, documented allergies, and vitals from raw notes.</div>
+          </div>
+          <div class="dash-card" style="text-align:left;padding:0.8rem">
+            <div style="display:flex;align-items:center;gap:0.4rem;font-weight:700;font-size:0.8rem;color:#00cec9;margin-bottom:0.3rem">
+              <span class="agent-badge-pill" style="background:rgba(0,206,201,0.15)">GRD</span> Guardian Agent
+            </div>
+            <div style="font-size:0.68rem;color:var(--text-muted);line-height:1.5">Deterministic pharmacological safety engine. Scans for severe drug-drug interactions, cross-allergies, contraindications, and organ toxicities.</div>
+          </div>
+          <div class="dash-card" style="text-align:left;padding:0.8rem">
+            <div style="display:flex;align-items:center;gap:0.4rem;font-weight:700;font-size:0.8rem;color:#fdcb6e;margin-bottom:0.3rem">
+              <span class="agent-badge-pill" style="background:rgba(253,203,110,0.15)">CMP</span> Compliance Agent
+            </div>
+            <div style="font-size:0.68rem;color:var(--text-muted);line-height:1.5">Validates ICD-10-CM / CPT nomenclature, Medicare Part B/D billing constraints, unbundled procedures, and medical specificity compliance.</div>
+          </div>
+          <div class="dash-card" style="text-align:left;padding:0.8rem">
+            <div style="display:flex;align-items:center;gap:0.4rem;font-weight:700;font-size:0.8rem;color:#fd79a8;margin-bottom:0.3rem">
+              <span class="agent-badge-pill" style="background:rgba(253,121,168,0.15)">SNT</span> Sentinel Agent
+            </div>
+            <div style="font-size:0.68rem;color:var(--text-muted);line-height:1.5">Clinical diagnostics monitor. Flags physiological decompensation trajectories, missed differential diagnoses, and diagnostic omissions.</div>
+          </div>
+          <div class="dash-card" style="text-align:left;padding:0.8rem">
+            <div style="display:flex;align-items:center;gap:0.4rem;font-weight:700;font-size:0.8rem;color:#00b894;margin-bottom:0.3rem">
+              <span class="agent-badge-pill" style="background:rgba(0,184,148,0.15)">ADV</span> Advocate Agent
+            </div>
+            <div style="font-size:0.68rem;color:var(--text-muted);line-height:1.5">Automates payer prior authorization (PA) dossier creation, proving medical necessity under CMS LCD/NCD coverage policies.</div>
+          </div>
+          <div class="dash-card" style="text-align:left;padding:0.8rem">
+            <div style="display:flex;align-items:center;gap:0.4rem;font-weight:700;font-size:0.8rem;color:#0abde3;margin-bottom:0.3rem">
+              <span class="agent-badge-pill" style="background:rgba(10,189,227,0.15)">VIS</span> Vision Agent
+            </div>
+            <div style="font-size:0.68rem;color:var(--text-muted);line-height:1.5">Multi-modal diagnostic imaging perception. Correlates radiographic observations (X-Ray, CT, MRI) with clinical narrative findings.</div>
+          </div>
+          <div class="dash-card" style="text-align:left;padding:0.8rem">
+            <div style="display:flex;align-items:center;gap:0.4rem;font-weight:700;font-size:0.8rem;color:#6c5ce7;margin-bottom:0.3rem">
+              <span class="agent-badge-pill" style="background:rgba(108,92,231,0.15)">ARB</span> Arbiter Agent
+            </div>
+            <div style="font-size:0.68rem;color:var(--text-muted);line-height:1.5">Mathematical consensus synthesizer. Merges evidence using Dempster-Shafer belief functions, resolves peer conflicts, and delivers executive guidance.</div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ── TAB 3: INDIVIDUAL AGENT REPORTS ──────────────── -->
+    <div class="tab-pane hidden" id="tab-agents">
+      <!-- Sub-filter bar -->
+      <div class="agent-filter-bar">
+        <span class="filter-label">Filter Specialist:</span>
+        <button class="agent-filter-btn active" data-agent="all">All Agents (6)</button>
+        <button class="agent-filter-btn" data-agent="scribe">Scribe</button>
+        <button class="agent-filter-btn" data-agent="guardian">Guardian</button>
+        <button class="agent-filter-btn" data-agent="compliance">Compliance</button>
+        <button class="agent-filter-btn" data-agent="sentinel">Sentinel</button>
+        <button class="agent-filter-btn" data-agent="advocate">Advocate</button>
+        <button class="agent-filter-btn" data-agent="vision">Vision</button>
       </div>
 
       <!-- Agent Result Panels Grid -->
-      <div class="results-grid">
+      <div class="results-grid" id="resultsGridContainer">
+        <!-- Scribe -->
         <div class="result-panel glass-panel" id="panel-scribe">
-          <div class="panel-header"><span>🖊️ Scribe — Entity Extraction</span><span class="panel-badge" id="badge-scribe">—</span></div>
-          <div class="panel-body" id="body-scribe"><div class="panel-placeholder">Waiting...</div></div>
+          <div class="panel-header">
+            <div class="panel-header-left">
+              <span class="agent-dot-indicator" style="background:#a29bfe"></span>
+              <span>Scribe — Clinical Entity Extraction</span>
+            </div>
+            <span class="panel-badge" id="badge-scribe">—</span>
+          </div>
+          <div class="panel-body" id="body-scribe"><div class="panel-placeholder">Awaiting pipeline execution...</div></div>
         </div>
+
+        <!-- Guardian -->
         <div class="result-panel glass-panel" id="panel-guardian">
-          <div class="panel-header"><span>🛡️ Guardian — Safety Check</span><span class="panel-badge" id="badge-guardian">—</span></div>
-          <div class="panel-body" id="body-guardian"><div class="panel-placeholder">Waiting...</div></div>
+          <div class="panel-header">
+            <div class="panel-header-left">
+              <span class="agent-dot-indicator" style="background:#00cec9"></span>
+              <span>Guardian — Pharmacological Safety</span>
+            </div>
+            <span class="panel-badge" id="badge-guardian">—</span>
+          </div>
+          <div class="panel-body" id="body-guardian"><div class="panel-placeholder">Awaiting pipeline execution...</div></div>
         </div>
+
+        <!-- Compliance -->
         <div class="result-panel glass-panel" id="panel-compliance">
-          <div class="panel-header"><span>📋 Compliance — Billing</span><span class="panel-badge" id="badge-compliance">—</span></div>
-          <div class="panel-body" id="body-compliance"><div class="panel-placeholder">Waiting...</div></div>
+          <div class="panel-header">
+            <div class="panel-header-left">
+              <span class="agent-dot-indicator" style="background:#fdcb6e"></span>
+              <span>Compliance — ICD-10 & Billing Rules</span>
+            </div>
+            <span class="panel-badge" id="badge-compliance">—</span>
+          </div>
+          <div class="panel-body" id="body-compliance"><div class="panel-placeholder">Awaiting pipeline execution...</div></div>
         </div>
+
+        <!-- Sentinel -->
         <div class="result-panel glass-panel" id="panel-sentinel">
-          <div class="panel-header"><span>🔍 Sentinel — Diagnostics</span><span class="panel-badge" id="badge-sentinel">—</span></div>
-          <div class="panel-body" id="body-sentinel"><div class="panel-placeholder">Waiting...</div></div>
+          <div class="panel-header">
+            <div class="panel-header-left">
+              <span class="agent-dot-indicator" style="background:#fd79a8"></span>
+              <span>Sentinel — Diagnostics & Gaps</span>
+            </div>
+            <span class="panel-badge" id="badge-sentinel">—</span>
+          </div>
+          <div class="panel-body" id="body-sentinel"><div class="panel-placeholder">Awaiting pipeline execution...</div></div>
         </div>
+
+        <!-- Advocate -->
         <div class="result-panel glass-panel" id="panel-advocate">
-          <div class="panel-header"><span>📄 Advocate — Prior Auth</span><span class="panel-badge" id="badge-advocate">—</span></div>
-          <div class="panel-body" id="body-advocate"><div class="panel-placeholder">Waiting...</div></div>
+          <div class="panel-header">
+            <div class="panel-header-left">
+              <span class="agent-dot-indicator" style="background:#00b894"></span>
+              <span>Advocate — Prior Authorization Dossier</span>
+            </div>
+            <span class="panel-badge" id="badge-advocate">—</span>
+          </div>
+          <div class="panel-body" id="body-advocate"><div class="panel-placeholder">Awaiting pipeline execution...</div></div>
         </div>
+
+        <!-- Vision -->
         <div class="result-panel glass-panel" id="panel-vision">
-          <div class="panel-header"><span>👁️ Vision — Image Analysis</span><span class="panel-badge" id="badge-vision">—</span></div>
-          <div class="panel-body" id="body-vision"><div class="panel-placeholder">Waiting...</div></div>
+          <div class="panel-header">
+            <div class="panel-header-left">
+              <span class="agent-dot-indicator" style="background:#0abde3"></span>
+              <span>Vision — Diagnostic Radiology</span>
+            </div>
+            <span class="panel-badge" id="badge-vision">—</span>
+          </div>
+          <div class="panel-body" id="body-vision"><div class="panel-placeholder">Awaiting pipeline execution...</div></div>
         </div>
       </div>
+    </div>
 
-      <!-- Arbiter Consensus Panel -->
+    <!-- ── TAB 4: CONSENSUS ARBITER ────────────────────── -->
+    <div class="tab-pane hidden" id="tab-arbiter">
       <div class="result-panel glass-panel arbiter-panel" id="panel-arbiter">
         <div class="panel-header arbiter-header">
-          <span>⚖️ Arbiter — Multi-Agent Consensus Report</span>
+          <div class="panel-header-left">
+            <span class="agent-dot-indicator" style="background:#6c5ce7"></span>
+            <span style="font-weight:700">Arbiter — Consolidated Multi-Agent Consensus Report</span>
+          </div>
           <div class="arbiter-actions">
             <span class="panel-badge" id="badge-arbiter">—</span>
-            <button class="expand-btn" id="expandArbiter" title="Open Full Report">⛶ Full Report</button>
+            <button class="expand-btn" id="expandArbiter" title="Open Full Screen Modal">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+              Full Screen
+            </button>
           </div>
         </div>
-        <div class="panel-body" id="body-arbiter"><div class="panel-placeholder">Waiting for all agents...</div></div>
+        <div class="panel-body" id="body-arbiter" style="max-height:none">
+          <div class="panel-placeholder">Awaiting multi-agent execution to synthesize consensus findings.</div>
+        </div>
       </div>
+    </div>
 
-      <!-- What-If Medication Sandbox -->
-      <section id="whatIfSandbox" class="glass-panel hidden" style="margin-top:1rem">
-        <div class="panel-header" style="background:linear-gradient(90deg,rgba(108,92,231,0.1),rgba(0,206,201,0.05))">
-          <span>💊 What-If Medication Sandbox</span>
+    <!-- ── TAB 5: MEDICATION SANDBOX ───────────────────── -->
+    <div class="tab-pane hidden" id="tab-sandbox">
+      <section id="whatIfSandbox" class="glass-panel">
+        <div class="section-header">
+          <h2>
+            <svg class="header-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m10.5 20.5 10-10a4.95 4.95 0 1 0-7-7l-10 10a4.95 4.95 0 1 0 7 7Z"/><path d="m8.5 8.5 7 7"/>
+            </svg>
+            Interactive What-If Medication Simulator
+          </h2>
           <div style="display:flex;align-items:center;gap:0.6rem">
             <span class="panel-badge pass" id="whatIfLatency">—</span>
-            <span class="panel-badge" id="whatIfStatus" style="font-size:0.58rem">Toggle meds to simulate</span>
+            <span class="panel-badge" id="whatIfStatus" style="font-size:0.58rem">Toggle medications to simulate safety</span>
           </div>
         </div>
-        <div class="panel-body" style="max-height:none;padding:1rem 1.2rem">
-          <div style="display:flex;gap:1rem;align-items:flex-start;flex-wrap:wrap">
+        <div class="panel-body" style="max-height:none;padding:1.2rem 1.4rem">
+          <div style="display:flex;gap:1.5rem;align-items:flex-start;flex-wrap:wrap">
             <!-- Medication Toggles -->
-            <div style="flex:1;min-width:280px">
-              <div style="font-size:0.65rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.6rem">
-                Current Medications — Toggle ON/OFF
+            <div style="flex:1;min-width:320px">
+              <div style="font-size:0.68rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.7rem">
+                Current Regimen — Toggle to Discontinue / Add
               </div>
-              <div id="whatIfMedGrid" style="display:flex;flex-direction:column;gap:0.4rem">
-                <div class="panel-placeholder">Run pipeline first</div>
+              <div id="whatIfMedGrid" style="display:flex;flex-direction:column;gap:0.5rem">
+                <div class="panel-placeholder">Execute consensus pipeline first to populate patient medications.</div>
               </div>
             </div>
             <!-- Live Risk Readout -->
-            <div style="min-width:200px;max-width:280px;flex-shrink:0">
-              <div style="font-size:0.65rem;font-weight:700;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.6rem">
-                Simulated Risk Assessment
+            <div style="min-width:240px;max-width:320px;flex-shrink:0">
+              <div style="font-size:0.68rem;font-weight:700;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px;margin-bottom:0.7rem">
+                Real-Time Simulated Safety Assessment
               </div>
-              <div id="whatIfRiskReadout" style="text-align:center;padding:1rem;background:rgba(0,0,0,0.12);border-radius:12px;border:1px solid var(--border-subtle)">
-                <div id="whatIfRiskLevel" style="font-size:1.6rem;font-weight:900;font-family:'JetBrains Mono',monospace;letter-spacing:2px;color:var(--accent-green);transition:color 0.3s">LOW</div>
-                <div style="font-size:0.6rem;color:var(--text-muted);margin:0.3rem 0">GUARDIAN RISK</div>
-                <div id="whatIfFindings" style="font-size:0.75rem;color:var(--text-secondary);margin-top:0.5rem">0 safety issues</div>
-                <div id="whatIfFindingsList" style="margin-top:0.6rem;text-align:left"></div>
+              <div id="whatIfRiskReadout" style="text-align:center;padding:1.2rem;background:rgba(0,0,0,0.12);border-radius:12px;border:1px solid var(--border-subtle)">
+                <div id="whatIfRiskLevel" style="font-size:1.8rem;font-weight:900;font-family:'JetBrains Mono',monospace;letter-spacing:2px;color:var(--accent-green);transition:color 0.3s">LOW</div>
+                <div style="font-size:0.6rem;color:var(--text-muted);margin:0.3rem 0;font-weight:700;letter-spacing:1px">GUARDIAN SIMULATION</div>
+                <div id="whatIfFindings" style="font-size:0.75rem;color:var(--text-secondary);margin-top:0.5rem;font-weight:600">0 safety issues</div>
+                <div id="whatIfFindingsList" style="margin-top:0.8rem;text-align:left"></div>
               </div>
             </div>
           </div>
         </div>
       </section>
-    </section>
+    </div>
+
+    <!-- Hidden compatibility container for resultsDashboard -->
+    <div id="resultsDashboard" class="hidden"></div>
   </main>
 
   <!-- ── ARBITER FULL REPORT MODAL ────────────────────── -->
   <div class="modal-overlay" id="arbiterModal">
     <div class="modal-content glass-panel">
       <div class="modal-header">
-        <h2>⚖️ AEGIS Consensus Intelligence Report</h2>
+        <div style="display:flex;align-items:center;gap:0.6rem">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+          <h2 style="font-size:1.05rem;font-weight:800">AEGIS Multi-Agent Consensus Intelligence Report</h2>
+        </div>
         <div class="modal-header-right">
           <span class="modal-risk-badge" id="modalRiskBadge">—</span>
-          <button class="modal-close" id="closeArbiterModal">✕</button>
+          <button class="modal-close" id="closeArbiterModal" title="Close Modal">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
         </div>
       </div>
       <div class="modal-body" id="arbiterModalBody">
@@ -311,10 +573,22 @@ Example: Patient presenting with chest pain, shortness of breath..."></textarea>
   <!-- ── FAILED AGENTS ALERT ── -->
   <div id="failedAgentsBar" class="hidden" style="position:fixed;top:50px;left:50%;transform:translateX(-50%);z-index:999;background:var(--accent-amber);color:#000;padding:8px 20px;border-radius:10px;font-size:0.72rem;font-weight:700;box-shadow:0 4px 20px rgba(0,0,0,0.4);max-width:600px;text-align:center"></div>
 
+  <!-- ── ENTERPRISE FOOTER ────────────────────────────── -->
   <footer id="footer">
-    <div style="display:flex;flex-direction:column;align-items:center;gap:4px;width:100%">
-      <span>AEGIS v1.0 — AMD Developer Hackathon 2026 · Built with ❤️ on AMD Instinct™ MI300X · 192GB HBM3</span>
-      <span style="font-size:0.55rem;opacity:0.5;max-width:700px;text-align:center">⚕ Clinical Decision Support Tool — NOT a medical device. For informational purposes only. Does not replace clinical judgment. Not FDA-cleared. All patient data processed locally. HIPAA: No PHI transmitted to external services except configured LLM provider.</span>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <strong>AEGIS Enterprise Clinical Intelligence Platform</strong>
+        <span>Autonomous Multi-Agent Consensus Architecture</span>
+      </div>
+      <div class="footer-compliance">
+        <span class="compliance-tag">HIPAA Compliant Protocols</span>
+        <span class="compliance-tag">FHIR R4 Schema Standard</span>
+        <span class="compliance-tag">TLS 1.3 End-to-End Encryption</span>
+        <span class="compliance-tag">Deterministic Pharmacological Guard</span>
+      </div>
+      <div class="footer-disclaimer">
+        Clinical Decision Support Tool — For credentialed clinical healthcare professionals only. Designed to augment, not supersede, professional clinical judgment and standard diagnostic protocols.
+      </div>
     </div>
   </footer>
 

@@ -3,7 +3,7 @@
  *
  * Provides a unified interface for LLM inference that can switch between:
  *   - Gemini API (development / fallback)
- *   - vLLM on AMD MI300X (hackathon deployment)
+ *   - vLLM / Groq / OpenAI compatible inference endpoints
  *
  * This abstraction lets every agent call `llm.generate()` without caring
  * which backend is active — we flip one env var to switch.
