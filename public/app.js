@@ -45,8 +45,39 @@ let lastArbiterData = null, lastPipelineResult = null;
 const $ = (sel) => document.querySelector(sel);
 
 // ═══════════════════════════════════════════════════════════════
-//  THEME SWITCHER
+//  THEME HELPERS & SWITCHER
 // ═══════════════════════════════════════════════════════════════
+function isLightTheme() {
+  const t = document.documentElement.getAttribute("data-theme") || "midnight";
+  return t === "clinical" || t === "sterile";
+}
+
+function getThemeColors() {
+  const light = isLightTheme();
+  return {
+    isLight: light,
+    textPrimary: light ? "#0f172a" : "#eaeaf4",
+    textSecondary: light ? "#334155" : "#9d9db8",
+    textMuted: light ? "#64748b" : "#71718a",
+    gridLine: light ? "rgba(15, 23, 42, 0.08)" : "rgba(255,255,255,0.06)",
+    axisLine: light ? "rgba(15, 23, 42, 0.15)" : "rgba(255,255,255,0.08)",
+    trackBg: light ? "rgba(15, 23, 42, 0.06)" : "rgba(255,255,255,0.04)",
+    pieCenterBg: light ? "#ffffff" : "rgba(7,7,13,0.92)",
+    pieCenterStroke: light ? "rgba(15, 23, 42, 0.1)" : "rgba(7,7,13,0.8)",
+    pieCenterText: light ? "#0f172a" : "#ffffff",
+    pieCenterMuted: light ? "#64748b" : "rgba(255,255,255,0.5)",
+    gaugeBgArc: light ? "rgba(15, 23, 42, 0.08)" : "rgba(255,255,255,0.06)",
+    gaugeScoreMax: light ? "#64748b" : "rgba(255,255,255,0.45)",
+    radarFill: light ? "rgba(225, 112, 85, 0.15)" : "rgba(255,107,107,0.12)",
+    radarStroke: light ? "#c2410c" : "rgba(255,107,107,0.7)",
+    flowArrow: light ? "rgba(15, 23, 42, 0.3)" : "rgba(255,255,255,0.15)",
+    netConnBase: light ? "rgba(15, 23, 42, 0.09)" : "rgba(108,92,231,0.08)",
+    netIdleLabel: light ? "#334155" : "#9d9db8",
+    netIdleStatus: light ? "#64748b" : "#55556e",
+    netAbbrev: light ? 0.75 : 0.5,
+  };
+}
+
 document.querySelectorAll(".theme-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     document.querySelectorAll(".theme-btn").forEach(b => b.classList.remove("active"));
@@ -58,6 +89,14 @@ document.querySelectorAll(".theme-btn").forEach(btn => {
     const pa = cs.getPropertyValue("--particle-a").trim();
     const pb = cs.getPropertyValue("--particle-b").trim();
     bgParticles.forEach(p => { p.color = Math.random() > 0.5 ? pa : pb; });
+    // Re-render charts and cards if results are already displayed
+    if (lastPipelineResult) {
+      renderDashboardCharts(lastPipelineResult);
+      renderAgentTimingBars(lastPipelineResult);
+      if (lastPipelineResult.clinicalScores) {
+        renderClinicalScores(lastPipelineResult.clinicalScores);
+      }
+    }
   });
 });
 // Load saved theme
@@ -183,6 +222,7 @@ function bezierPoint(ax,ay,cx,cy,bx,by,t){
 function drawNetwork(){
   const w=netCanvas.width/dpr, h=netCanvas.height/dpr;
   const now=Date.now();
+  const tc=getThemeColors();
   netCtx.clearRect(0,0,w,h);
 
   // ── 1. Draw Connections (curved lines with animated dashes) ──
@@ -197,10 +237,10 @@ function drawNetwork(){
     netCtx.moveTo(f.x,f.y);
     netCtx.quadraticCurveTo(cp.cx,cp.cy,t.x,t.y);
     netCtx.strokeStyle = active
-      ? `rgba(0,206,201,0.4)`
+      ? (tc.isLight ? `rgba(8,145,178,0.55)` : `rgba(0,206,201,0.4)`)
       : sending
-        ? `rgba(0,206,201,0.15)`
-        : `rgba(108,92,231,0.08)`;
+        ? (tc.isLight ? `rgba(8,145,178,0.25)` : `rgba(0,206,201,0.15)`)
+        : tc.netConnBase;
     netCtx.lineWidth = active ? 2.5 : 1;
     netCtx.stroke();
 
@@ -212,7 +252,7 @@ function drawNetwork(){
       netCtx.beginPath();
       netCtx.moveTo(f.x,f.y);
       netCtx.quadraticCurveTo(cp.cx,cp.cy,t.x,t.y);
-      netCtx.strokeStyle = `rgba(0,206,201,0.6)`;
+      netCtx.strokeStyle = tc.isLight ? `rgba(8,145,178,0.8)` : `rgba(0,206,201,0.6)`;
       netCtx.lineWidth = 1;
       netCtx.stroke();
       netCtx.setLineDash([]);
@@ -352,7 +392,7 @@ function drawNetwork(){
     // Short abbreviation inside node (below icon)
     const abbrevs={scribe:"SCR",guardian:"GRD",compliance:"CMP",sentinel:"SNT",advocate:"ADV",vision:"VIS",arbiter:"ARB"};
     netCtx.font=`800 ${isArb?8:7}px 'Inter',sans-serif`;
-    netCtx.fillStyle=hexToRgba(ag.color,ag.state==="idle"?0.5:0.85);
+    netCtx.fillStyle=hexToRgba(ag.color,ag.state==="idle"?tc.netAbbrev:0.9);
     netCtx.letterSpacing="1px";
     netCtx.fillText(abbrevs[ag.id]||"",ag.x,ag.y+r*0.55);
 
@@ -401,16 +441,16 @@ function drawNetwork(){
 
     // Label below node
     netCtx.font="700 11px 'Inter',sans-serif";
-    netCtx.fillStyle=ag.state==="complete"?"#00b894":ag.state==="running"?ag.color:ag.state==="error"?"#ff6b6b":"#9d9db8";
+    netCtx.fillStyle=ag.state==="complete"?(tc.isLight?"#15803d":"#00b894"):ag.state==="running"?ag.color:ag.state==="error"?(tc.isLight?"#b91c1c":"#ff6b6b"):tc.netIdleLabel;
     netCtx.fillText(ag.label,ag.x,ag.y+r+16);
 
     // Status text
-    netCtx.font="500 9px 'JetBrains Mono',monospace";
-    let st="Idle",stColor="#55556e";
-    if(ag.state==="running"){st="Processing...";stColor="#00cec9";}
-    else if(ag.state==="complete"){st=ag.time?`✓ ${(ag.time/1000).toFixed(1)}s`:"✓ Done";stColor="#00b894";}
-    else if(ag.state==="error"){st="✗ Error";stColor="#ff6b6b";}
-    else if(ag.state==="skipped"){st="— Skip";stColor="#55556e";}
+    netCtx.font="600 9px 'JetBrains Mono',monospace";
+    let st="Idle",stColor=tc.netIdleStatus;
+    if(ag.state==="running"){st="Processing...";stColor=tc.isLight?"#0891b2":"#00cec9";}
+    else if(ag.state==="complete"){st=ag.time?`✓ ${(ag.time/1000).toFixed(1)}s`:"✓ Done";stColor=tc.isLight?"#15803d":"#00b894";}
+    else if(ag.state==="error"){st="✗ Error";stColor=tc.isLight?"#b91c1c":"#ff6b6b";}
+    else if(ag.state==="skipped"){st="— Skip";stColor=tc.netIdleStatus;}
     netCtx.fillStyle=stColor;
     netCtx.fillText(st,ag.x,ag.y+r+28);
   }
@@ -491,14 +531,14 @@ function renderClinicalScores(scores) {
   for (const s of scores) {
     const pct = Math.round((s.score / s.maxScore) * 100);
     const riskColor = s.risk === "HIGH" ? "var(--accent-red)" : s.risk === "MODERATE" ? "var(--accent-amber)" : "var(--accent-green)";
-    h += `<div style="background:rgba(0,0,0,0.15);border:1px solid var(--border-subtle);border-radius:12px;padding:0.7rem;transition:all 0.3s" onmouseover="this.style.borderColor='var(--border-medium)'" onmouseout="this.style.borderColor='var(--border-subtle)'">`;
+    h += `<div class="dash-card score-card" style="text-align:left;padding:0.75rem;transition:all 0.3s">`;
     // Header
     h += `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.5rem">`;
-    h += `<div style="font-weight:700;font-size:0.82rem">${s.name}</div>`;
+    h += `<div style="font-weight:700;font-size:0.82rem;color:var(--text-primary)">${s.name}</div>`;
     h += `<span style="font-family:'JetBrains Mono',monospace;font-weight:800;font-size:1.1rem;color:${riskColor}">${s.score}/${s.maxScore}</span>`;
     h += `</div>`;
     // Progress bar
-    h += `<div style="height:6px;background:rgba(0,0,0,0.3);border-radius:3px;overflow:hidden;margin-bottom:0.4rem"><div style="width:${pct}%;height:100%;background:${riskColor};border-radius:3px;transition:width 0.5s"></div></div>`;
+    h += `<div class="score-card-progress" style="height:6px;border-radius:3px;overflow:hidden;margin-bottom:0.4rem"><div style="width:${pct}%;height:100%;background:${riskColor};border-radius:3px;transition:width 0.5s"></div></div>`;
     // Risk badge
     h += `<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:0.4rem">`;
     h += `<span class="panel-badge ${s.risk.toLowerCase()}">${s.risk} RISK</span>`;
@@ -511,7 +551,7 @@ function renderClinicalScores(scores) {
     }
     h += `</div>`;
     // Recommendation
-    h += `<div style="margin-top:0.4rem;font-size:0.68rem;color:var(--text-secondary);padding:0.35rem 0.5rem;background:rgba(0,0,0,0.1);border-radius:6px;border-left:3px solid ${riskColor}">${s.recommendation}</div>`;
+    h += `<div class="score-card-rec" style="margin-top:0.4rem;font-size:0.68rem;padding:0.35rem 0.5rem;border-radius:6px;border-left:3px solid ${riskColor}">${s.recommendation}</div>`;
     h += `</div>`;
   }
   h += '</div>';
@@ -519,13 +559,13 @@ function renderClinicalScores(scores) {
   const riskLevels = scores.map(s => s.risk);
   const hasConflict = new Set(riskLevels).size > 1;
   if (hasConflict) {
-    h += `<div style="margin-top:0.5rem;font-size:0.64rem;color:var(--text-muted);padding:6px 10px;background:rgba(99,110,204,0.06);border:1px solid var(--border-subtle);border-radius:8px;line-height:1.5">
+    h += `<div class="score-context-box" style="margin-top:0.5rem;font-size:0.64rem;padding:8px 12px;border:1px solid var(--border-subtle);border-radius:8px;line-height:1.5">
       <strong>ℹ️ Score Context:</strong> Different clinical scores measure different risks.
       ${scores.map(s => `<strong>${s.name}</strong> measures ${s.name.includes('HEART')?'30-day cardiac event risk':s.name.includes('NEWS')?'acute physiological deterioration':s.name.includes('qSOFA')?'sepsis-related organ dysfunction':s.name.includes('CHA')?'annual stroke risk':'clinical risk'}`).join('. ')}.
       Conflicting risk levels are expected when the patient has domain-specific conditions (e.g., high cardiac risk but stable vital signs).
     </div>`;
   }
-  h += '<div style="margin-top:0.5rem;font-size:0.58rem;color:var(--text-muted);opacity:0.6;padding:4px 8px;border-top:1px solid var(--border-subtle)">⚕ Clinical scores use published standardized thresholds (e.g. NEWS2 flags BP ≤90 or ≥220, not intermediate hypertension). Low scores do not exclude clinical concern — always correlate with full picture.</div>';
+  h += '<div style="margin-top:0.5rem;font-size:0.58rem;color:var(--text-muted);opacity:0.7;padding:4px 8px;border-top:1px solid var(--border-subtle)">⚕ Clinical scores use published standardized thresholds (e.g. NEWS2 flags BP ≤90 or ≥220, not intermediate hypertension). Low scores do not exclude clinical concern — always correlate with full picture.</div>';
   $("#clinicalScoresBody").innerHTML = h;
 }
 
@@ -553,7 +593,7 @@ function renderArbiter(body,badge,d){
   if(d.consensus?.executiveSummary)h+=`<div class="consensus-section"><div class="consensus-title">📊 Executive Summary</div><div class="consensus-text">${d.consensus.executiveSummary}</div></div>`;
   // Voting
   if(d.voting){h+=`<div class="consensus-section"><div class="consensus-title">🗳️ Weighted Majority Vote</div><div style="display:flex;gap:1.5rem;margin:0.5rem 0;flex-wrap:wrap">`;h+=`<div class="entity-group"><div class="entity-group-title">Risk Score</div><span class="entity-tag" style="font-size:1rem;font-weight:800;border-color:var(--accent-primary)">${d.voting.weightedRiskScore}/4.0</span></div>`;h+=`<div class="entity-group"><div class="entity-group-title">Confidence</div><span class="entity-tag" style="font-size:1rem;font-weight:800;border-color:${d.voting.confidence>=75?'var(--accent-green)':d.voting.confidence>=50?'var(--accent-amber)':'var(--accent-red)'}">${d.voting.confidence}%</span></div>`;h+=`<div class="entity-group"><div class="entity-group-title">Votes</div><span class="entity-tag" style="font-size:1rem;font-weight:800">${d.voting.voteCount}</span></div></div>`;
-  if(d.voting.votes?.length){h+=`<div style="margin-top:0.3rem">`;d.voting.votes.forEach(v=>{const pct=Math.round(v.riskScore/4*100),cl=v.riskScore>=3?'var(--accent-red)':v.riskScore>=2?'var(--accent-amber)':'var(--accent-green)';h+=`<div style="display:flex;align-items:center;gap:0.5rem;margin:2px 0;font-size:0.68rem"><span style="width:110px;color:var(--text-muted)">${v.agent}</span><div style="flex:1;height:6px;background:rgba(0,0,0,0.3);border-radius:3px;overflow:hidden"><div style="width:${pct}%;height:100%;background:${cl};border-radius:3px"></div></div><span style="width:40px;text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--text-secondary)">${v.riskScore}/4</span></div>`;});h+="</div>";}h+="</div>";}
+  if(d.voting.votes?.length){const tc=getThemeColors();h+=`<div style="margin-top:0.3rem">`;d.voting.votes.forEach(v=>{const pct=Math.round(v.riskScore/4*100),cl=v.riskScore>=3?'var(--accent-red)':v.riskScore>=2?'var(--accent-amber)':'var(--accent-green)';h+=`<div style="display:flex;align-items:center;gap:0.5rem;margin:2px 0;font-size:0.68rem"><span style="width:110px;color:var(--text-muted)">${v.agent}</span><div style="flex:1;height:6px;background:${tc.trackBg};border-radius:3px;overflow:hidden"><div style="width:${pct}%;height:100%;background:${cl};border-radius:3px"></div></div><span style="width:40px;text-align:right;font-family:'JetBrains Mono',monospace;font-weight:600;color:var(--text-secondary)">${v.riskScore}/4</span></div>`;});h+="</div>";}h+="</div>";}
   // Evidence
   if(d.scoredIssues?.length){h+=`<div class="consensus-section"><div class="consensus-title">🔬 Dempster-Shafer Evidence</div>`;d.scoredIssues.slice(0,6).forEach(is=>{const bp=Math.round(is.beliefMass*100),sc=is.severity?.toLowerCase()||"low";h+=`<div class="finding-item ${sc}"><div style="display:flex;justify-content:space-between"><div class="finding-type">${is.type} — ${is.severity}</div><span style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:0.7rem;color:${bp>=70?'var(--accent-green)':bp>=40?'var(--accent-amber)':'var(--text-muted)'}">${bp}%</span></div><div>${is.description}</div>${is.sources?.length>1?`<div style="margin-top:3px;font-size:0.6rem;color:var(--text-muted)">Sources: ${is.sources.join(" + ")}</div>`:""}</div>`;});h+="</div>";}
   if(d.consensus?.criticalAlerts?.length){h+=`<div class="consensus-section"><div class="consensus-title">🚨 Critical Alerts</div>`;d.consensus.criticalAlerts.forEach(a=>{h+=`<div class="finding-item critical"><div>${a}</div></div>`;});h+="</div>";}
@@ -626,20 +666,23 @@ async function saveRunHistory(result) {
 function drawRiskGauge(score, label) {
   const { ctx, w, h } = hdCanvas(document.getElementById("riskGaugeCanvas"));
   const cx = w/2, cy = h - 15, r = 75;
+  const tc = getThemeColors();
   ctx.clearRect(0,0,w,h);
   // Background arc
   ctx.beginPath(); ctx.arc(cx, cy, r, Math.PI, 0); ctx.lineWidth = 14;
-  ctx.strokeStyle = "rgba(255,255,255,0.06)"; ctx.lineCap = "round"; ctx.stroke();
+  ctx.strokeStyle = tc.gaugeBgArc; ctx.lineCap = "round"; ctx.stroke();
   // Value arc
   const pct = Math.min(score / 4, 1);
-  const colors = ["#00b894","#fdcb6e","#e17055","#ff6b6b"];
+  const colors = tc.isLight
+    ? ["#15803d","#b45309","#c2410c","#b91c1c"]
+    : ["#00b894","#fdcb6e","#e17055","#ff6b6b"];
   const ci = Math.min(Math.floor(pct * 4), 3);
   ctx.beginPath(); ctx.arc(cx, cy, r, Math.PI, Math.PI + Math.PI * pct); ctx.lineWidth = 14;
   ctx.strokeStyle = colors[ci]; ctx.lineCap = "round"; ctx.stroke();
   // Score text
   ctx.fillStyle = colors[ci]; ctx.font = "bold 26px 'JetBrains Mono',monospace";
   ctx.textAlign = "center"; ctx.fillText(score.toFixed(2), cx, cy - 18);
-  ctx.fillStyle = "rgba(255,255,255,0.4)"; ctx.font = "11px 'Inter',sans-serif";
+  ctx.fillStyle = tc.gaugeScoreMax; ctx.font = "600 11px 'Inter',sans-serif";
   ctx.fillText("/ 4.00", cx, cy - 2);
   $("#gaugeRiskLabel").textContent = label;
   $("#gaugeRiskLabel").style.color = colors[ci];
@@ -649,10 +692,13 @@ function drawRiskGauge(score, label) {
 function drawSeverityPie(issues) {
   const { ctx, w, h } = hdCanvas(document.getElementById("severityPieCanvas"));
   const cx = w/2, cy = h/2 - 5, r = 65;
+  const tc = getThemeColors();
   ctx.clearRect(0,0,w,h);
   const counts = { CRITICAL: 0, HIGH: 0, MODERATE: 0, LOW: 0 };
   issues.forEach(is => { counts[is.severity] = (counts[is.severity]||0) + 1; });
-  const colors = { CRITICAL: "#ff6b6b", HIGH: "#e17055", MODERATE: "#fdcb6e", LOW: "#00b894" };
+  const colors = tc.isLight
+    ? { CRITICAL: "#b91c1c", HIGH: "#c2410c", MODERATE: "#b45309", LOW: "#15803d" }
+    : { CRITICAL: "#ff6b6b", HIGH: "#e17055", MODERATE: "#fdcb6e", LOW: "#00b894" };
   const total = Object.values(counts).reduce((s,v) => s+v, 0) || 1;
   let startAngle = -Math.PI / 2;
   const legend = $("#pieLegend"); legend.innerHTML = "";
@@ -663,42 +709,45 @@ function drawSeverityPie(issues) {
     ctx.closePath(); ctx.fillStyle = colors[sev]; ctx.fill();
     // Gap
     ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, r, startAngle, startAngle + sliceAngle);
-    ctx.closePath(); ctx.strokeStyle = "rgba(7,7,13,0.8)"; ctx.lineWidth = 2; ctx.stroke();
+    ctx.closePath(); ctx.strokeStyle = tc.pieCenterStroke; ctx.lineWidth = 2; ctx.stroke();
     startAngle += sliceAngle;
     legend.innerHTML += `<div class="pie-legend-item"><div class="pie-legend-dot" style="background:${colors[sev]}"></div>${sev}: ${count}</div>`;
   }
   // Center hole
   ctx.beginPath(); ctx.arc(cx, cy, 35, 0, Math.PI*2);
-  ctx.fillStyle = "rgba(7,7,13,0.9)"; ctx.fill();
-  ctx.fillStyle = "rgba(255,255,255,0.7)"; ctx.font = "bold 18px 'JetBrains Mono',monospace";
+  ctx.fillStyle = tc.pieCenterBg; ctx.fill();
+  ctx.fillStyle = tc.pieCenterText; ctx.font = "bold 18px 'JetBrains Mono',monospace";
   ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(total, cx, cy - 4);
-  ctx.fillStyle = "rgba(255,255,255,0.3)"; ctx.font = "9px 'Inter',sans-serif"; ctx.fillText("issues", cx, cy + 12);
+  ctx.fillStyle = tc.pieCenterMuted; ctx.font = "600 9px 'Inter',sans-serif"; ctx.fillText("issues", cx, cy + 12);
 }
 
 // 3. Agent Performance Bars
 function drawAgentPerf(timings) {
   const { ctx, w, h } = hdCanvas(document.getElementById("agentPerfCanvas"));
+  const tc = getThemeColors();
   ctx.clearRect(0,0,w,h);
   const agents = ["scribe","guardian","compliance","sentinel","advocate","arbiter"];
-  const colors = ["#a29bfe","#00cec9","#fdcb6e","#fd79a8","#00b894","#6c5ce7"];
+  const colors = tc.isLight
+    ? ["#6366f1","#0891b2","#d97706","#db2777","#059669","#4f46e5"]
+    : ["#a29bfe","#00cec9","#fdcb6e","#fd79a8","#00b894","#6c5ce7"];
   const maxTime = Math.max(...agents.map(a => timings[a] || 0), 1);
-  const barH = 16, gap = 6, startY = 10, labelW = 70;
+  const barH = 16, gap = 6, startY = 10, labelW = 75;
   agents.forEach((a, i) => {
     const y = startY + i * (barH + gap);
     const t = timings[a] || 0;
     const barW = (t / maxTime) * (w - labelW - 60);
     // Label
-    ctx.fillStyle = "rgba(255,255,255,0.5)"; ctx.font = "500 10px 'Inter',sans-serif";
+    ctx.fillStyle = tc.textSecondary; ctx.font = "600 10px 'Inter',sans-serif";
     ctx.textAlign = "right"; ctx.textBaseline = "middle"; ctx.fillText(a, labelW - 8, y + barH/2);
     // Bar bg
-    ctx.fillStyle = "rgba(255,255,255,0.04)";
+    ctx.fillStyle = tc.trackBg;
     ctx.fillRect(labelW, y, w - labelW - 55, barH);
     // Bar
-    ctx.fillStyle = colors[i]; ctx.globalAlpha = 0.8;
+    ctx.fillStyle = colors[i]; ctx.globalAlpha = 0.85;
     ctx.fillRect(labelW, y, barW, barH);
     ctx.globalAlpha = 1;
     // Time label
-    ctx.fillStyle = "rgba(255,255,255,0.6)"; ctx.font = "600 9px 'JetBrains Mono',monospace";
+    ctx.fillStyle = tc.textPrimary; ctx.font = "600 9px 'JetBrains Mono',monospace";
     ctx.textAlign = "left"; ctx.fillText(`${(t/1000).toFixed(1)}s`, labelW + barW + 6, y + barH/2);
   });
 }
@@ -707,6 +756,7 @@ function drawAgentPerf(timings) {
 function drawRiskRadar(arb, result) {
   const { ctx, w, h } = hdCanvas(document.getElementById("riskRadarCanvas"));
   const cx = w/2, cy = h/2 + 5, r = 70;
+  const tc = getThemeColors();
   ctx.clearRect(0,0,w,h);
   const dims = [
     { label: "Safety", val: result.agents?.guardian?.output?.riskLevel },
@@ -725,17 +775,17 @@ function drawRiskRadar(arb, result) {
       const x = cx + Math.cos(angle) * r * lev, y = cy + Math.sin(angle) * r * lev;
       i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
     }
-    ctx.closePath(); ctx.strokeStyle = "rgba(255,255,255,0.06)"; ctx.lineWidth = 1; ctx.stroke();
+    ctx.closePath(); ctx.strokeStyle = tc.gridLine; ctx.lineWidth = 1; ctx.stroke();
   });
   // Axes
   for (let i = 0; i < n; i++) {
     const angle = i * (Math.PI * 2 / n) - Math.PI / 2;
     ctx.beginPath(); ctx.moveTo(cx, cy);
     ctx.lineTo(cx + Math.cos(angle) * r, cy + Math.sin(angle) * r);
-    ctx.strokeStyle = "rgba(255,255,255,0.08)"; ctx.stroke();
+    ctx.strokeStyle = tc.axisLine; ctx.stroke();
     // Labels
     const lx = cx + Math.cos(angle) * (r + 16), ly = cy + Math.sin(angle) * (r + 16);
-    ctx.fillStyle = "rgba(255,255,255,0.5)"; ctx.font = "500 9px 'Inter',sans-serif";
+    ctx.fillStyle = tc.textSecondary; ctx.font = "600 9px 'Inter',sans-serif";
     ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(dims[i].label, lx, ly);
   }
   // Data shape
@@ -746,28 +796,29 @@ function drawRiskRadar(arb, result) {
     const x = cx + Math.cos(angle) * r * val, y = cy + Math.sin(angle) * r * val;
     i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
   }
-  ctx.closePath(); ctx.fillStyle = "rgba(255,107,107,0.12)"; ctx.fill();
-  ctx.strokeStyle = "rgba(255,107,107,0.6)"; ctx.lineWidth = 2; ctx.stroke();
+  ctx.closePath(); ctx.fillStyle = tc.radarFill; ctx.fill();
+  ctx.strokeStyle = tc.radarStroke; ctx.lineWidth = 2; ctx.stroke();
   // Points
   for (let i = 0; i < n; i++) {
     const angle = i * (Math.PI * 2 / n) - Math.PI / 2;
     const val = riskToVal(dims[i].val);
-    ctx.beginPath(); ctx.arc(cx + Math.cos(angle) * r * val, cy + Math.sin(angle) * r * val, 3, 0, Math.PI*2);
-    ctx.fillStyle = "#ff6b6b"; ctx.fill();
+    ctx.beginPath(); ctx.arc(cx + Math.cos(angle) * r * val, cy + Math.sin(angle) * r * val, 3.5, 0, Math.PI*2);
+    ctx.fillStyle = tc.radarStroke; ctx.fill();
   }
 }
 
 // 5. Pipeline Flow
 function drawPipelineFlow(timings) {
   const { ctx, w, h } = hdCanvas(document.getElementById("pipelineFlowCanvas"));
+  const tc = getThemeColors();
   ctx.clearRect(0,0,w,h);
   const steps = [
-    { label: "Scribe", t: timings.scribe || 0, color: "#a29bfe" },
-    { label: "Guardian", t: timings.guardian || 0, color: "#00cec9" },
-    { label: "Compliance", t: timings.compliance || 0, color: "#fdcb6e" },
-    { label: "Sentinel", t: timings.sentinel || 0, color: "#fd79a8" },
-    { label: "Advocate", t: timings.advocate || 0, color: "#00b894" },
-    { label: "Arbiter", t: timings.arbiter || 0, color: "#6c5ce7" },
+    { label: "Scribe", t: timings.scribe || 0, color: tc.isLight ? "#6366f1" : "#a29bfe" },
+    { label: "Guardian", t: timings.guardian || 0, color: tc.isLight ? "#0891b2" : "#00cec9" },
+    { label: "Compliance", t: timings.compliance || 0, color: tc.isLight ? "#d97706" : "#fdcb6e" },
+    { label: "Sentinel", t: timings.sentinel || 0, color: tc.isLight ? "#db2777" : "#fd79a8" },
+    { label: "Advocate", t: timings.advocate || 0, color: tc.isLight ? "#059669" : "#00b894" },
+    { label: "Arbiter", t: timings.arbiter || 0, color: tc.isLight ? "#4f46e5" : "#6c5ce7" },
   ];
   const total = steps.reduce((s,st) => s + st.t, 0) || 1;
   let x = 30;
@@ -775,25 +826,25 @@ function drawPipelineFlow(timings) {
   const availW = w - 60;
   steps.forEach((st, i) => {
     const sw = Math.max((st.t / total) * availW, 20);
-    ctx.fillStyle = st.color; ctx.globalAlpha = 0.7;
+    ctx.fillStyle = st.color; ctx.globalAlpha = 0.85;
     ctx.beginPath();
     ctx.roundRect(x, barY, sw - 2, barH, 4);
     ctx.fill(); ctx.globalAlpha = 1;
     // Label
-    ctx.fillStyle = "rgba(255,255,255,0.6)"; ctx.font = "600 8px 'Inter',sans-serif";
+    ctx.fillStyle = tc.textPrimary; ctx.font = "700 8.5px 'Inter',sans-serif";
     ctx.textAlign = "center"; ctx.fillText(st.label, x + sw/2, barY - 6);
     // Time
-    ctx.fillStyle = "rgba(255,255,255,0.4)"; ctx.font = "500 7px 'JetBrains Mono',monospace";
+    ctx.fillStyle = tc.textSecondary; ctx.font = "600 7.5px 'JetBrains Mono',monospace";
     ctx.fillText(`${(st.t/1000).toFixed(1)}s`, x + sw/2, barY + barH + 12);
     // Arrow
     if (i < steps.length - 1) {
-      ctx.fillStyle = "rgba(255,255,255,0.15)"; ctx.font = "10px serif";
+      ctx.fillStyle = tc.flowArrow; ctx.font = "bold 11px serif";
       ctx.fillText("→", x + sw + 2, barY + barH/2 + 1);
     }
     x += sw;
   });
   // Title
-  ctx.fillStyle = "rgba(255,255,255,0.3)"; ctx.font = "500 9px 'Inter',sans-serif";
+  ctx.fillStyle = tc.textMuted; ctx.font = "600 9px 'Inter',sans-serif";
   ctx.textAlign = "left"; ctx.fillText("Sequential Pipeline Execution", 30, 18);
 }
 
@@ -1051,7 +1102,7 @@ function renderVitalCards(point) {
   ];
 
   $("#vitalCards").innerHTML = cards.map(c => `
-    <div style="background:rgba(0,0,0,0.2);border:1px solid var(--border-subtle);border-radius:10px;padding:8px;text-align:center;transition:all 0.3s">
+    <div class="vital-stat-card" style="border:1px solid var(--border-subtle);border-radius:10px;padding:8px;text-align:center;transition:all 0.3s">
       <div style="font-size:0.6rem;color:var(--text-muted)">${c.icon} ${c.label}</div>
       <div style="font-family:'JetBrains Mono',monospace;font-size:1.2rem;font-weight:800;color:${c.color};transition:color 0.5s">${c.value}</div>
       <div style="font-size:0.55rem;color:var(--text-muted)">${c.unit}</div>
@@ -1075,6 +1126,7 @@ function renderVitalChart() {
   canvas.style.height = "160px";
   const ctx = canvas.getContext("2d");
   const w = cssW, h = cssH;
+  const tc = getThemeColors();
   ctx.save();
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   ctx.clearRect(0, 0, w, h);
@@ -1086,7 +1138,7 @@ function renderVitalChart() {
   const cw = w - padL - padR, ch = h - padT - padB;
 
   // Draw grid
-  ctx.strokeStyle = "rgba(255,255,255,0.06)";
+  ctx.strokeStyle = tc.gridLine;
   ctx.lineWidth = 1;
   for (let i = 0; i <= 4; i++) {
     const y = padT + (ch / 4) * i;
@@ -1135,12 +1187,12 @@ function renderVitalChart() {
 
   // Legend
   const legends = [...lines, news2Line];
-  ctx.font = "10px 'Inter', sans-serif";
+  ctx.font = "600 10px 'Inter', sans-serif";
   let lx = padL + 5;
   for (const l of legends) {
     ctx.fillStyle = l.color;
     ctx.fillRect(lx, padT - 12, 12, 3);
-    ctx.fillStyle = "rgba(255,255,255,0.6)";
+    ctx.fillStyle = tc.textSecondary;
     ctx.fillText(l.label, lx + 16, padT - 7);
     lx += ctx.measureText(l.label).width + 32;
   }
@@ -1192,28 +1244,30 @@ function renderAgentTimingBars(result) {
 
   const total = timings.total || data.reduce((s, d) => s + d.ms, 0);
   const maxMs = Math.max(...data.map(d => d.ms));
+  const tc = getThemeColors();
 
   // Find or create timing container in dashboard
   let container = document.getElementById("agentTimingBars");
   if (!container) {
     container = document.createElement("div");
     container.id = "agentTimingBars";
-    container.style.cssText = "grid-column:1/-1;padding:10px;background:rgba(0,0,0,0.15);border-radius:12px;border:1px solid var(--border-subtle)";
+    container.className = "dash-card";
+    container.style.cssText = "grid-column:1/-1;padding:12px;border-radius:12px;text-align:left";
     const dashGrid = document.querySelector(".dashboard-grid");
     if (dashGrid) dashGrid.appendChild(container);
   }
 
-  const colors = {
-    scribe: "#a29bfe", guardian: "#00cec9", compliance: "#fdcb6e",
-    sentinel: "#fd79a8", advocate: "#00b894", arbiter: "#6c5ce7"
-  };
+  const colors = tc.isLight
+    ? { scribe: "#6366f1", guardian: "#0891b2", compliance: "#d97706", sentinel: "#db2777", advocate: "#059669", arbiter: "#4f46e5" }
+    : { scribe: "#a29bfe", guardian: "#00cec9", compliance: "#fdcb6e", sentinel: "#fd79a8", advocate: "#00b894", arbiter: "#6c5ce7" };
+
   const icons = {
     scribe: "🖊️", guardian: "🛡️", compliance: "📋",
     sentinel: "🔍", advocate: "📄", arbiter: "⚖️"
   };
 
   container.innerHTML = `
-    <div style="font-size:0.65rem;font-weight:700;color:var(--text-muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">
+    <div style="font-size:0.65rem;font-weight:700;color:var(--text-secondary);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">
       ⏱️ Agent Latency Breakdown — Total: ${(total/1000).toFixed(1)}s
     </div>
     ${data.map(d => {
@@ -1224,9 +1278,9 @@ function renderAgentTimingBars(result) {
       const barColor = d.ms > 8000 ? "var(--accent-red)" : d.ms > 4000 ? "var(--accent-amber)" : col;
       return `<div style="display:flex;align-items:center;gap:8px;margin:4px 0">
         <div style="width:80px;font-size:0.65rem;font-weight:600;color:${col};text-align:right">${icon} ${d.name}</div>
-        <div style="flex:1;height:16px;background:rgba(255,255,255,0.04);border-radius:8px;overflow:hidden;position:relative">
+        <div style="flex:1;height:16px;background:${tc.trackBg};border-radius:8px;overflow:hidden;position:relative">
           <div style="width:${pct}%;height:100%;background:${barColor};border-radius:8px;transition:width 0.6s ease;display:flex;align-items:center;justify-content:flex-end;padding-right:6px">
-            <span style="font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:rgba(0,0,0,0.8);font-weight:700">${sec}s</span>
+            <span style="font-family:'JetBrains Mono',monospace;font-size:0.55rem;color:#ffffff;text-shadow:0 1px 2px rgba(0,0,0,0.5);font-weight:700">${sec}s</span>
           </div>
         </div>
       </div>`;
