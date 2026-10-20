@@ -596,6 +596,7 @@ function spawnParticles(fromIdx,toIdx){
 function setAgentState(id,state,ms){
   const ag=AGENTS.find(a=>a.id===id);if(!ag)return;
   ag.state=state;if(ms)ag.time=ms;
+  if(window.aegisCore) window.aegisCore.updateAgent(id,state,ms);
   if(state==="complete"){
     completedAgents++;
     $("#agentCounter").textContent=`${completedAgents} / 7`;
@@ -1156,7 +1157,7 @@ function drawQuickStats(summary, arb) {
 // ═══════════════════════════════════════════════════════════════
 //  HELPERS
 // ═══════════════════════════════════════════════════════════════
-function resetAll(){AGENTS.forEach(a=>{a.state="idle";a.time=null;});netParticles=[];completedAgents=0;$("#agentCounter").textContent="0 / 7";["scribe","guardian","compliance","sentinel","advocate","vision","arbiter"].forEach(a=>{const b=$(`#body-${a}`),bg=$(`#badge-${a}`);if(b)b.innerHTML='<div class="panel-placeholder">Waiting...</div>';if(bg){bg.textContent="—";bg.className="panel-badge";}});$("#riskBanner").className="risk-banner risk-low";$("#riskTitle").textContent="ANALYZING...";$("#riskSubtitle").textContent="Pipeline running";}
+function resetAll(){AGENTS.forEach(a=>{a.state="idle";a.time=null;});window.aegisCore?.reset();netParticles=[];completedAgents=0;$("#agentCounter").textContent="0 / 7";["scribe","guardian","compliance","sentinel","advocate","vision","arbiter"].forEach(a=>{const b=$(`#body-${a}`),bg=$(`#badge-${a}`);if(b)b.innerHTML='<div class="panel-placeholder">Waiting...</div>';if(bg){bg.textContent="—";bg.className="panel-badge";}});$("#riskBanner").className="risk-banner risk-low";$("#riskTitle").textContent="ANALYZING...";$("#riskSubtitle").textContent="Pipeline running";}
 function setSystemStatus(state,text){const dot=$("#systemStatus").querySelector(".status-dot");dot.className=`status-dot ${state}`;$("#systemStatus").querySelector("span:last-child").textContent=text;}
 function startTimer(){startTime=Date.now();timerInterval=setInterval(()=>{$("#pipelineTimer").textContent=`${((Date.now()-startTime)/1000).toFixed(1)}s`;},100);}
 function stopTimer(){if(timerInterval)clearInterval(timerInterval);}

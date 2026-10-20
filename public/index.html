@@ -335,7 +335,30 @@ Example: Patient presenting with acute chest pain, ST-depression on ECG, on Metf
             <div id="agentCounter" class="agent-counter">0 / 7 Active</div>
           </div>
         </div>
-        <canvas id="networkCanvas" width="1200" height="290"></canvas>
+        <div id="intelligenceStage" class="intelligence-stage" aria-label="Patient Intelligence Core. Select a specialist node for its current analysis state." tabindex="0">
+          <div id="threeScene" class="three-scene" aria-hidden="true"></div>
+          <div class="scene-hud scene-hud-top">
+            <span class="scene-kicker">LIVE SYSTEM TOPOLOGY</span>
+            <span id="sceneStatus" class="scene-status"><span></span> Waiting for a case</span>
+          </div>
+          <div class="scene-hud scene-hud-bottom">
+            <div><strong>Patient Intelligence Core</strong><span>Operational model — not a physiological representation</span></div>
+            <div class="scene-controls" aria-label="3D scene controls">
+              <button id="sceneReset" type="button" title="Reset 3D view">Reset view</button>
+              <button id="sceneMotion" type="button" aria-pressed="false" title="Reduce 3D motion">Reduce motion</button>
+            </div>
+          </div>
+          <aside id="sceneDetail" class="scene-detail" aria-live="polite">
+            <span class="scene-detail-eyebrow">SELECT A SPECIALIST</span>
+            <strong>Seven-agent consensus</strong>
+            <p>Each node reflects the real-time pipeline state. Select a node to review its role and progress.</p>
+          </aside>
+          <div id="webglFallback" class="webgl-fallback hidden" role="status">
+            <strong>3D view unavailable</strong>
+            <span>The accessible agent topology remains available below.</span>
+          </div>
+          <canvas id="networkCanvas" width="1200" height="290" class="network-fallback" aria-label="Accessible two-dimensional agent network fallback"></canvas>
+        </div>
       </section>
 
       <!-- Agent System Architecture Cards -->
@@ -593,6 +616,8 @@ Example: Patient presenting with acute chest pain, ST-depression on ECG, on Metf
   </footer>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.2/html2pdf.bundle.min.js" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script src="/vendor/three.min.js"></script>
   <script src="app.js"></script>
+  <script src="core-scene.js"></script>
 </body>
 </html>

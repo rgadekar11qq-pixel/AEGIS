@@ -443,6 +443,43 @@ body {
   width: 100%; animation: tabFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 .tab-pane.hidden { display: none !important; }
+
+/* ── Patient Intelligence Core — WebGL instrument ─────────── */
+.intelligence-stage { position:relative; height:520px; overflow:hidden; border-radius:12px; background:radial-gradient(circle at 50% 45%,rgba(57,217,242,.09),transparent 30%),linear-gradient(135deg,#07111f,#0b1728 60%,#081521); border:1px solid rgba(57,217,242,.2); isolation:isolate; outline:none; }
+.intelligence-stage:focus-visible { box-shadow:0 0 0 3px rgba(57,217,242,.45); }
+.three-scene { position:absolute; inset:0; z-index:0; cursor:grab; }
+.three-scene:active { cursor:grabbing; }
+.three-scene canvas { display:block; width:100% !important; height:100% !important; }
+.scene-hud { position:absolute; z-index:2; display:flex; align-items:center; justify-content:space-between; gap:1rem; pointer-events:none; }
+.scene-hud-top { top:1rem; left:1rem; right:1rem; }
+.scene-hud-bottom { left:1rem; right:1rem; bottom:1rem; align-items:end; }
+.scene-kicker,.scene-detail-eyebrow { font:700 .59rem 'JetBrains Mono',monospace; letter-spacing:.12em; color:#9baec2; }
+.scene-status { display:inline-flex; align-items:center; gap:.45rem; padding:.34rem .58rem; border:1px solid rgba(57,217,242,.18); background:rgba(7,17,31,.65); border-radius:6px; color:#c9d8e8; font:600 .62rem 'JetBrains Mono',monospace; }
+.scene-status span { width:6px; height:6px; border-radius:50%; background:#6d8298; }
+.scene-status.running span { background:#39d9f2; box-shadow:0 0 9px #39d9f2; animation:core-status-pulse 1.1s infinite; }
+.scene-status.complete span { background:#35d6b0; box-shadow:0 0 9px #35d6b0; }
+.scene-status.error span { background:#f87171; box-shadow:0 0 9px #f87171; }
+@keyframes core-status-pulse { 50% { opacity:.35; transform:scale(1.8); } }
+.scene-hud-bottom > div:first-child { display:grid; gap:3px; color:#edf5fc; font-size:.76rem; text-shadow:0 1px 8px #07111f; }
+.scene-hud-bottom > div:first-child span { color:#9baec2; font-size:.61rem; }
+.scene-controls { display:flex; gap:.4rem; pointer-events:auto; }
+.scene-controls button { color:#c9d8e8; background:rgba(7,17,31,.74); border:1px solid rgba(57,217,242,.2); border-radius:6px; padding:.38rem .55rem; font:600 .61rem 'Inter',sans-serif; cursor:pointer; }
+.scene-controls button:hover,.scene-controls button:focus-visible { color:#fff; border-color:#39d9f2; background:rgba(16,31,50,.9); outline:none; }
+.scene-detail { position:absolute; z-index:2; right:1rem; top:3rem; width:min(250px,34%); padding:.75rem .85rem; border-radius:8px; border:1px solid rgba(155,174,194,.16); background:rgba(7,17,31,.72); backdrop-filter:blur(12px); display:grid; gap:.35rem; color:#edf5fc; pointer-events:none; }
+.scene-detail strong { font-size:.78rem; }
+.scene-detail p { margin:0; color:#9baec2; font-size:.65rem; line-height:1.5; }
+.scene-detail .node-state { display:inline-flex; align-items:center; gap:.35rem; color:#39d9f2; font:700 .58rem 'JetBrains Mono',monospace; letter-spacing:.06em; }
+.network-fallback { position:absolute; inset:0; width:100%; height:100%; display:none; z-index:1; }
+.webgl-fallback { position:absolute; inset:0; z-index:3; align-items:center; justify-content:center; flex-direction:column; gap:.45rem; color:#edf5fc; text-align:center; background:rgba(7,17,31,.93); }
+.webgl-fallback:not(.hidden) { display:flex; }
+.webgl-fallback span { color:#9baec2; font-size:.7rem; }
+.intelligence-stage.webgl-unavailable .network-fallback { display:block; }
+[data-theme="clinical"] .intelligence-stage,[data-theme="sterile"] .intelligence-stage { background:radial-gradient(circle at 50% 45%,rgba(8,145,178,.1),transparent 34%),linear-gradient(135deg,#eef7fb,#e6eff8); border-color:rgba(8,145,178,.25); }
+[data-theme="clinical"] .scene-hud-bottom > div:first-child,[data-theme="sterile"] .scene-hud-bottom > div:first-child { color:#0f172a; text-shadow:none; }
+[data-theme="clinical"] .scene-detail,[data-theme="sterile"] .scene-detail,[data-theme="clinical"] .scene-status,[data-theme="sterile"] .scene-status { background:rgba(255,255,255,.78); color:#0f172a; }
+[data-theme="clinical"] .scene-detail p,[data-theme="sterile"] .scene-detail p,[data-theme="clinical"] .scene-kicker,[data-theme="sterile"] .scene-kicker { color:#475569; }
+@media (max-width:700px) { .intelligence-stage { height:410px; } .scene-detail { top:auto; bottom:4.8rem; left:1rem; right:auto; width:calc(100% - 2rem); } .scene-hud-bottom { align-items:end; } .scene-hud-bottom > div:first-child span { max-width:175px; } }
+@media (prefers-reduced-motion: reduce) { .scene-status.running span { animation:none; } }
 @keyframes tabFadeIn {
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }

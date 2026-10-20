@@ -29,6 +29,16 @@ const { runAegisPipeline } = require("./orchestrator/pipeline");
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Serve the locally installed Three.js build. This keeps the clinical UI usable
+// in restricted networks where a third-party CDN is unavailable.
+try {
+  const threeEntry = require.resolve("three");
+  const threeBuild = path.join(path.dirname(threeEntry), "three.min.js");
+  app.get("/vendor/three.min.js", (req, res) => res.sendFile(threeBuild));
+} catch (error) {
+  console.warn("[AEGIS] Three.js is unavailable; the 2D topology fallback will be used.");
+}
+
 // ── Middleware ────────────────────────────────────────────────────────────────
 app.use(cors());
 
