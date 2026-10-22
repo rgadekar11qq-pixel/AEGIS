@@ -23,8 +23,10 @@ const router = express.Router();
 router.post("/login", rateLimitLogin, (req, res) => {
   const { username, password } = req.body || {};
   const ip = (req.headers && req.headers["x-forwarded-for"] ? req.headers["x-forwarded-for"].split(",")[0].trim() : null) || req.ip || "127.0.0.1";
+  const isFormSubmit = req.headers["content-type"] && req.headers["content-type"].includes("application/x-www-form-urlencoded");
 
   if (!username || !password || typeof username !== "string" || typeof password !== "string") {
+    if (isFormSubmit) return res.redirect("/login?error=missing");
     return res.status(400).json({
       success: false,
       error: "Medical Personnel ID and Security Passphrase are both required.",
@@ -36,7 +38,7 @@ router.post("/login", rateLimitLogin, (req, res) => {
   if (!user) {
     recordFailedLogin(ip);
     logSecurityEvent("LOGIN_FAILED", username, ip, "Invalid credentials provided");
-    // Generic error message to prevent username enumeration
+    if (isFormSubmit) return res.redirect("/login?error=invalid");
     return res.status(401).json({
       success: false,
       error: "Access Denied: Invalid identifier or security passphrase.",
@@ -57,6 +59,10 @@ router.post("/login", rateLimitLogin, (req, res) => {
     path: "/"
   });
 
+  if (isFormSubmit) {
+    return res.redirect("/");
+  }
+
   res.json({
     success: true,
     authenticated: true,
@@ -76,6 +82,11 @@ router.post("/logout", (req, res) => {
   const ip = (req.headers && req.headers["x-forwarded-for"] ? req.headers["x-forwarded-for"].split(",")[0].trim() : null) || req.ip || "127.0.0.1";
   logSecurityEvent("LOGOUT", req.user ? req.user.id : "UNKNOWN", ip);
   res.clearCookie("aegis_session", { path: "/" });
+  
+  if (req.headers["content-type"] && req.headers["content-type"].includes("application/x-www-form-urlencoded")) {
+    return res.redirect("/login");
+  }
+
   res.json({
     success: true,
     message: "Session ended successfully."

@@ -8,6 +8,32 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  
+  <script>
+    // Defined in <head> so it is guaranteed available before any DOM interaction
+    function togglePasswordVisibility(e) {
+      if (e) {
+        e.preventDefault();
+        e.stopPropagation();
+      }
+      var pwd = document.getElementById("password");
+      var eye = document.getElementById("eyeIcon");
+      var eyeOff = document.getElementById("eyeOffIcon");
+      if (!pwd) return;
+
+      if (pwd.type === "password") {
+        pwd.type = "text";
+        if (eye) eye.style.display = "none";
+        if (eyeOff) eyeOff.style.display = "block";
+      } else {
+        pwd.type = "password";
+        if (eye) eye.style.display = "block";
+        if (eyeOff) eyeOff.style.display = "none";
+      }
+      pwd.focus();
+    }
+  </script>
+
   <style>
     :root {
       --bg-primary: #07070d;
@@ -44,7 +70,6 @@
       overflow-x: hidden;
     }
 
-    /* Ambient background glow */
     body::before {
       content: "";
       position: absolute;
@@ -79,7 +104,7 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 26px;
     }
 
     .brand-icon-wrapper {
@@ -138,7 +163,7 @@
 
     .error-alert {
       display: none;
-      align-items: center;
+      align-items: flex-start;
       gap: 10px;
       background: rgba(255, 107, 107, 0.12);
       border: 1px solid rgba(255, 107, 107, 0.35);
@@ -199,7 +224,7 @@
       outline: none;
     }
 
-    /* Completely suppress Edge / IE native password eye icon */
+    /* Suppress browser native reveal icons */
     input[type="password"]::-ms-reveal,
     input[type="password"]::-ms-clear,
     input[type="text"]::-ms-reveal,
@@ -348,7 +373,7 @@
       </div>
 
       <div id="errorAlert" class="error-alert" role="alert">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0; margin-top:2px;">
           <circle cx="12" cy="12" r="10"/>
           <line x1="12" y1="8" x2="12" y2="12"/>
           <line x1="12" y1="16" x2="12.01" y2="16"/>
@@ -356,7 +381,7 @@
         <span id="errorMessage">Invalid credentials.</span>
       </div>
 
-      <form id="loginForm" autocomplete="on">
+      <form id="loginForm" method="POST" action="/auth/login" autocomplete="on">
         <div class="form-group">
           <label class="form-label" for="username">Personnel Identifier</label>
           <div class="input-wrapper">
@@ -402,7 +427,7 @@
               id="togglePasswordBtn" 
               class="password-toggle-btn" 
               aria-label="Toggle password visibility" 
-              title="Show or hide passphrase"
+              title="Toggle password visibility"
               onclick="togglePasswordVisibility(event)"
             >
               <!-- Eye open icon -->
@@ -434,44 +459,13 @@
   </div>
 
   <script>
-    // Global toggle function
-    function togglePasswordVisibility(e) {
-      if (e) {
-        e.preventDefault();
-        e.stopPropagation();
-      }
-      var pwd = document.getElementById("password");
-      var eye = document.getElementById("eyeIcon");
-      var eyeOff = document.getElementById("eyeOffIcon");
-      if (!pwd) return;
-
-      if (pwd.type === "password") {
-        pwd.type = "text";
-        if (eye) eye.style.display = "none";
-        if (eyeOff) eyeOff.style.display = "block";
-      } else {
-        pwd.type = "password";
-        if (eye) eye.style.display = "block";
-        if (eyeOff) eyeOff.style.display = "none";
-      }
-      pwd.focus();
-    }
-
     (function() {
       const loginForm = document.getElementById("loginForm");
       const usernameInput = document.getElementById("username");
       const passwordInput = document.getElementById("password");
-      const toggleBtn = document.getElementById("togglePasswordBtn");
       const submitBtn = document.getElementById("submitBtn");
       const errorAlert = document.getElementById("errorAlert");
       const errorMessage = document.getElementById("errorMessage");
-
-      if (toggleBtn) {
-        toggleBtn.addEventListener("click", togglePasswordVisibility);
-        toggleBtn.addEventListener("mousedown", function(e) {
-          e.preventDefault();
-        });
-      }
 
       function showError(msg) {
         errorMessage.textContent = msg || "Access Denied: Invalid credentials.";
@@ -484,10 +478,30 @@
         errorAlert.classList.remove("active");
       }
 
+      // Check URL parameters for server-side redirects
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get("error") === "invalid") {
+        showError("Access Denied: Invalid identifier or security passphrase.");
+      } else if (urlParams.get("error") === "missing") {
+        showError("Please enter both Medical Personnel ID and Passphrase.");
+      }
+
+      // Detect if user opened file directly via file:// protocol
+      if (window.location.protocol === "file:") {
+        showError("File Protocol Detected: AEGIS requires an active server. Please access via http://localhost:3000 or your deployment URL, not by opening the file directly.");
+      }
+
       usernameInput.addEventListener("input", clearError);
       passwordInput.addEventListener("input", clearError);
 
       loginForm.addEventListener("submit", async function(e) {
+        // If file protocol, allow native form or display error
+        if (window.location.protocol === "file:") {
+          e.preventDefault();
+          showError("Please launch the Node server ('npm start') and visit http://localhost:3000.");
+          return;
+        }
+
         e.preventDefault();
         clearError();
 
@@ -522,7 +536,8 @@
             showError(data.error || "Access Denied: Invalid identifier or security passphrase.");
           }
         } catch (err) {
-          showError("Network or server connection error. Please try again.");
+          // If fetch failed (e.g. strict security or network restriction), fall back to native HTML form post
+          loginForm.submit();
         }
       });
     })();

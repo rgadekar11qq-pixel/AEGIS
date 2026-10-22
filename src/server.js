@@ -149,7 +149,8 @@ app.post("/message", requireAuthApi, async (req, res) => {
 });
 
 // JSON parsing for standard API endpoints
-app.use(express.json({ limit: "50mb" })); // Large limit for image uploads
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" })); // Large limit for image uploads
 
 // ── Rate Limiting (no external deps) ─────────────────────────────────────────
 const _rateBuckets = new Map();
