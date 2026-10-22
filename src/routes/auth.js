@@ -22,7 +22,7 @@ const router = express.Router();
 // ── POST /auth/login ─────────────────────────────────────────────────────────
 router.post("/login", rateLimitLogin, (req, res) => {
   const { username, password } = req.body || {};
-  const ip = req.ip || (req.connection && req.connection.remoteAddress) || "unknown";
+  const ip = (req.headers && req.headers["x-forwarded-for"] ? req.headers["x-forwarded-for"].split(",")[0].trim() : null) || req.ip || "127.0.0.1";
 
   if (!username || !password || typeof username !== "string" || typeof password !== "string") {
     return res.status(400).json({
@@ -48,10 +48,10 @@ router.post("/login", rateLimitLogin, (req, res) => {
   const token = generateSessionToken(user, 24);
   logSecurityEvent("LOGIN_SUCCESS", user.id, ip, `Role: ${user.role}`);
 
-  const isProd = process.env.NODE_ENV === "production" || !!process.env.VERCEL;
+  const isHttps = req.secure || req.headers["x-forwarded-proto"] === "https";
   res.cookie("aegis_session", token, {
     httpOnly: true,
-    secure: isProd,
+    secure: isHttps,
     sameSite: "Lax",
     maxAge: 24 * 60 * 60 * 1000,
     path: "/"
@@ -60,6 +60,7 @@ router.post("/login", rateLimitLogin, (req, res) => {
   res.json({
     success: true,
     authenticated: true,
+    token: token,
     user: {
       id: user.id,
       name: user.name,
@@ -72,7 +73,7 @@ router.post("/login", rateLimitLogin, (req, res) => {
 
 // ── POST /auth/logout ────────────────────────────────────────────────────────
 router.post("/logout", (req, res) => {
-  const ip = req.ip || (req.connection && req.connection.remoteAddress) || "unknown";
+  const ip = (req.headers && req.headers["x-forwarded-for"] ? req.headers["x-forwarded-for"].split(",")[0].trim() : null) || req.ip || "127.0.0.1";
   logSecurityEvent("LOGOUT", req.user ? req.user.id : "UNKNOWN", ip);
   res.clearCookie("aegis_session", { path: "/" });
   res.json({

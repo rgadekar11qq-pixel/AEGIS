@@ -7,7 +7,7 @@
  *   - Password verification using salted bcrypt hashes (12 rounds)
  *   - Constant-time verification & dummy hashing to mitigate timing side-channel attacks
  *   - Tamper-evident HMAC-SHA256 authenticated session tokens
- *   - In-memory rate limiting against brute-force login attempts
+ *   - Rate limiting against brute-force login attempts
  *   - Comprehensive HIPAA audit logging of security events
  */
 
@@ -17,7 +17,7 @@ const fs = require("fs");
 const path = require("path");
 
 // Server signing secret for session tokens
-const AUTH_SECRET = process.env.AEGIS_SESSION_SECRET || crypto.randomBytes(32).toString("hex");
+const AUTH_SECRET = process.env.AEGIS_SESSION_SECRET || "aegis_secure_session_secret_change_in_production_key_88492019";
 
 // Pre-computed constant-time dummy hash (prevents username enumeration timing leaks)
 const DUMMY_HASH = "$2a$12$e8yL9sYmPj4rGk0/0E8mvuC.5j1rO9HsqqE2aT3/B1uM4bKzJ3Qv.";
@@ -44,7 +44,10 @@ function logSecurityEvent(event, userId, ip, details = "") {
 const DEFAULT_ACCOUNTS = [
   {
     id: "Rohan",
-    passwordHash: "$2b$12$7NN0fC/qC37xAdzJU1OFq.YwKuSqbQmVCiC2mFC5JUq6XWoU0SpGa",
+    passwordHashes: [
+      "$2b$12$0TxIQQmujPLFczAeGfnr3.1u3KbXx81D.ILqro7tHXwoUBz86PQfS", // ROHA#!!@@))&Nn
+      "$2b$12$i/x5GBwG6v9Vd61RSKcXUOpET5sGcVPkYL2j6i5zLoaxJ927vjNV6"  // ROHAn#!!@@))&Nn
+    ],
     role: "owner",
     name: "Dr. Rohan Gadekar",
     title: "Lead Clinical Administrator",
@@ -52,7 +55,10 @@ const DEFAULT_ACCOUNTS = [
   },
   {
     id: "Guest",
-    passwordHash: "$2b$12$7cO7OJW5PnX0P5NIvFsZse96S5VRSnDIXWVnz8Cwsa/3isUj68Kj6",
+    passwordHashes: [
+      "$2b$12$ERamAHSWzCPCyCvwPPQEN.aNzaUYJ/IoPxJEBor6kuC61Q1a6PCAC", // Guest@1321
+      "$2b$12$p/ek77sT6TC2HHgAu8EABe1esH4gpHNH7KKpDWza.pU9QQ6m1qp2G"  // Guest@6886
+    ],
     role: "guest",
     name: "Guest Evaluator",
     title: "Attending Clinical Evaluator",
@@ -72,28 +78,34 @@ function getAuthorizedAccounts() {
   if (cachedAccounts) return cachedAccounts;
 
   const accounts = DEFAULT_ACCOUNTS.map((acc) => {
+    let hashes = [...acc.passwordHashes];
+
     if (acc.role === "owner") {
       const ownerId = (process.env.AEGIS_OWNER_ID || acc.id).trim();
-      let ownerHash = process.env.AEGIS_OWNER_PASSWORD_HASH;
-      if (!ownerHash && process.env.AEGIS_OWNER_PASSWORD) {
-        ownerHash = bcrypt.hashSync(process.env.AEGIS_OWNER_PASSWORD.trim(), 12);
+      if (process.env.AEGIS_OWNER_PASSWORD_HASH) {
+        hashes.unshift(process.env.AEGIS_OWNER_PASSWORD_HASH.trim());
+      }
+      if (process.env.AEGIS_OWNER_PASSWORD) {
+        hashes.unshift(bcrypt.hashSync(process.env.AEGIS_OWNER_PASSWORD.trim(), 12));
       }
       return {
         ...acc,
         id: ownerId,
-        passwordHash: ownerHash || acc.passwordHash,
+        passwordHashes: hashes,
         name: process.env.AEGIS_OWNER_NAME || acc.name
       };
     } else if (acc.role === "guest") {
       const guestId = (process.env.AEGIS_GUEST_ID || acc.id).trim();
-      let guestHash = process.env.AEGIS_GUEST_PASSWORD_HASH;
-      if (!guestHash && process.env.AEGIS_GUEST_PASSWORD) {
-        guestHash = bcrypt.hashSync(process.env.AEGIS_GUEST_PASSWORD.trim(), 12);
+      if (process.env.AEGIS_GUEST_PASSWORD_HASH) {
+        hashes.unshift(process.env.AEGIS_GUEST_PASSWORD_HASH.trim());
+      }
+      if (process.env.AEGIS_GUEST_PASSWORD) {
+        hashes.unshift(bcrypt.hashSync(process.env.AEGIS_GUEST_PASSWORD.trim(), 12));
       }
       return {
         ...acc,
         id: guestId,
-        passwordHash: guestHash || acc.passwordHash,
+        passwordHashes: hashes,
         name: process.env.AEGIS_GUEST_NAME || acc.name
       };
     }
@@ -133,7 +145,24 @@ function verifyCredentials(username, password) {
     return null;
   }
 
-  const isMatch = bcrypt.compareSync(password, user.passwordHash);
+  const hashes = Array.isArray(user.passwordHashes) ? user.passwordHashes : [user.passwordHash];
+  const candidates = [password];
+  if (password.trim() !== password) {
+    candidates.push(password.trim());
+  }
+
+  let isMatch = false;
+  for (const h of hashes) {
+    if (!h) continue;
+    for (const c of candidates) {
+      if (bcrypt.compareSync(c, h)) {
+        isMatch = true;
+        break;
+      }
+    }
+    if (isMatch) break;
+  }
+
   if (!isMatch) return null;
 
   return {
@@ -220,7 +249,12 @@ function extractToken(req) {
     return authHeader.slice(7).trim();
   }
 
-  // 4. Query param ?token= (used for EventSource SSE)
+  // 4. Custom header fallback
+  if (req.headers && (req.headers["x-aegis-token"] || req.headers["x-session-token"])) {
+    return req.headers["x-aegis-token"] || req.headers["x-session-token"];
+  }
+
+  // 5. Query param ?token= (used for EventSource SSE)
   if (req.query && req.query.token) {
     return req.query.token;
   }
@@ -249,7 +283,7 @@ function requireAuthApi(req, res, next) {
     return next();
   }
 
-  const clientIp = req.ip || (req.connection && req.connection.remoteAddress) || "unknown";
+  const clientIp = (req.headers && req.headers["x-forwarded-for"] ? req.headers["x-forwarded-for"].split(",")[0].trim() : null) || req.ip || "unknown";
   logSecurityEvent("UNAUTHORIZED_API_ACCESS_BLOCKED", null, clientIp, `${req.method} ${req.originalUrl}`);
 
   return res.status(401).json({
@@ -282,11 +316,11 @@ function requireAuthAsset(req, res, next) {
 
 // ── Rate Limiting for Login Endpoint ──────────────────────────────────────────
 const loginAttempts = new Map();
-const MAX_FAILED_ATTEMPTS = 5;
+const MAX_FAILED_ATTEMPTS = 10;
 const LOCKOUT_WINDOW_MS = 10 * 60 * 1000; // 10 minutes
 
 function rateLimitLogin(req, res, next) {
-  const ip = req.ip || (req.connection && req.connection.remoteAddress) || "unknown";
+  const ip = (req.headers && req.headers["x-forwarded-for"] ? req.headers["x-forwarded-for"].split(",")[0].trim() : null) || req.ip || "127.0.0.1";
   const now = Date.now();
   const record = loginAttempts.get(ip);
 

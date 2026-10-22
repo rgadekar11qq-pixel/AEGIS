@@ -234,10 +234,10 @@ app.use((req, res, next) => {
 });
 
 // ── Authentication Routes ────────────────────────────────────────────────────
-app.use("/auth", authRoutes);
+app.use(["/auth", "/api/auth", "/api/index.js/auth"], authRoutes);
 
 // ── Login page ──────────────────────────────────────────────────────────────
-app.get("/login", (req, res) => {
+app.get(["/login", "/api/login", "/api/index.js/login"], (req, res) => {
   if (isAuthenticated(req)) {
     return res.redirect("/");
   }
@@ -245,7 +245,7 @@ app.get("/login", (req, res) => {
 });
 
 // ── Protected Application UI & Scripts ───────────────────────────────────────
-app.get(["/", "/index.html"], requireAuthPage, (req, res) => {
+app.get(["/", "/index.html", "/api/index.js"], requireAuthPage, (req, res) => {
   res.sendFile(path.join(__dirname, "..", "protected", "index.html"));
 });
 

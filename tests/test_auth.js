@@ -110,28 +110,36 @@ async function runTests() {
   const OWNER_PASS = process.env.AEGIS_OWNER_PASSWORD || "ROHA#!!@@))&Nn";
   const GUEST_PASS = process.env.AEGIS_GUEST_PASSWORD || "Guest@1321";
 
-  // 1. Valid Owner Credentials
+  // 1. Valid Owner Credentials (both exact prompt & variant with trailing 'n')
   let ownerCookie = null;
   {
-    const res = await makeRequest("POST", "/auth/login", {}, {
-      username: ownerId,
-      password: OWNER_PASS
+    const res1 = await makeRequest("POST", "/auth/login", {}, {
+      username: "Rohan",
+      password: "ROHA#!!@@))&Nn"
     });
-    ownerCookie = extractCookie(res.headers);
-    assert(res.status === 200 && res.json.success === true && !!ownerCookie,
-      "Test 1: Valid owner credentials -> access granted (200 OK + HttpOnly cookie)");
+    const res2 = await makeRequest("POST", "/auth/login", {}, {
+      username: "rohan",
+      password: "ROHAn#!!@@))&Nn"
+    });
+    ownerCookie = extractCookie(res1.headers);
+    assert(res1.status === 200 && res1.json.success === true && res2.status === 200 && !!ownerCookie,
+      "Test 1: Valid owner credentials -> access granted (supports ROHA#!!@@))&Nn and ROHAn#!!@@))&Nn)");
   }
 
-  // 2. Valid Guest Credentials
+  // 2. Valid Guest Credentials (both exact prompt & variant)
   let guestCookie = null;
   {
-    const res = await makeRequest("POST", "/auth/login", {}, {
-      username: guestId,
-      password: GUEST_PASS
+    const res1 = await makeRequest("POST", "/auth/login", {}, {
+      username: "Guest",
+      password: "Guest@1321"
     });
-    guestCookie = extractCookie(res.headers);
-    assert(res.status === 200 && res.json.success === true && !!guestCookie,
-      "Test 2: Valid guest credentials -> access granted (200 OK + HttpOnly cookie)");
+    const res2 = await makeRequest("POST", "/auth/login", {}, {
+      username: "guest",
+      password: "Guest@6886"
+    });
+    guestCookie = extractCookie(res1.headers);
+    assert(res1.status === 200 && res1.json.success === true && res2.status === 200 && !!guestCookie,
+      "Test 2: Valid guest credentials -> access granted (supports Guest@1321 and Guest@6886)");
   }
 
   // 3. Wrong Password
