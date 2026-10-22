@@ -1,3 +1,16 @@
+
+// ── Global 401 Interceptor & Auth Session Guard ──
+(function() {
+  const _origFetch = window.fetch;
+  window.fetch = async function(...args) {
+    const response = await _origFetch.apply(this, args);
+    const url = typeof args[0] === 'string' ? args[0] : (args[0] && args[0].url ? args[0].url : '');
+    if (response.status === 401 && !url.includes('/auth/')) {
+      window.location.href = '/login';
+    }
+    return response;
+  };
+})();
 /* ═══════════════════════════════════════════════════════════════
    AEGIS — Mission Control Frontend v3
    Themes, Dashboard Charts, Arbiter Modal, Canvas Network
@@ -1802,4 +1815,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const stopBtn = document.getElementById("stopVitals");
   if (stopBtn) stopBtn.addEventListener("click", stopVitalStream);
+
+  // ── Enterprise Session Check & Profile ──
+  (async function() {
+    try {
+      const res = await fetch('/auth/session');
+      const data = await res.json();
+      if (data && data.authenticated && data.user) {
+        const nameEl = document.getElementById('authUserName');
+        if (nameEl) {
+          nameEl.textContent = data.user.name || data.user.id;
+        }
+      } else {
+        window.location.href = '/login';
+      }
+    } catch (e) {
+      console.warn('Session verification error', e);
+    }
+  })();
+
+  const logoutBtn = document.getElementById('logoutBtn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', async () => {
+      try {
+        await fetch('/auth/logout', { method: 'POST' });
+      } catch (e) {}
+      window.location.href = '/login';
+    });
+  }
+
 });

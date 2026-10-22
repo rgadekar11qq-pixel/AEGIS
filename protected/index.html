@@ -72,6 +72,19 @@
         <span class="badge-dot"></span>
         <span>Enterprise CDS v2.4</span>
       </div>
+
+      <!-- Authenticated Session Indicator & Sign Out -->
+      <div class="auth-user-pill" id="authUserPill" style="display:inline-flex; align-items:center; gap:8px; padding:4px 10px; border-radius:20px; background:rgba(108,92,231,0.12); border:1px solid rgba(108,92,231,0.25); font-size:0.75rem;">
+        <span class="auth-status-dot" style="width:6px; height:6px; border-radius:50%; background:#00cec9;"></span>
+        <span id="authUserName" style="font-weight:600; color:var(--text-primary);">Personnel</span>
+        <button id="logoutBtn" title="Sign Out" aria-label="Sign Out" style="background:transparent; border:none; color:var(--text-muted); cursor:pointer; padding:2px 4px; display:inline-flex; align-items:center; border-radius:4px; transition:color 0.15s ease;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+        </button>
+      </div>
     </div>
   </header>
 

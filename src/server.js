@@ -18,6 +18,9 @@ require("dotenv").config();
 
 const path = require("path");
 const express = require("express");
+const cookieParser = require("cookie-parser");
+const authRoutes = require("./routes/auth");
+const { requireAuthApi, requireAuthPage, requireAuthAsset, isAuthenticated } = require("./utils/auth");
 const cors = require("cors");
 const agentRoutes = require("./routes/agents");
 const { getLLM, PROVIDER } = require("./llm/provider");
@@ -31,12 +34,13 @@ const PORT = process.env.PORT || 3000;
 
 // ── Middleware ────────────────────────────────────────────────────────────────
 app.use(cors());
+app.use(cookieParser());
 
 const activeTransports = new Map();
 const activeServers = new Map();
 
 // ── MCP Server Setup (Model Context Protocol) ──────────────────────────────
-app.get("/sse", async (req, res) => {
+app.get("/sse", requireAuthApi, async (req, res) => {
   console.log("[MCP] New SSE connection established");
   
   // Create a fresh server instance per connection to avoid "Already connected" errors
@@ -132,7 +136,7 @@ Summary: ${arb.summary || result.summary?.executiveSummary || "N/A"}
   });
 });
 
-app.post("/message", async (req, res) => {
+app.post("/message", requireAuthApi, async (req, res) => {
   // Prompt Opinion might not send x-session-id. We fallback to query param or latest transport.
   const sessionId = req.headers["x-session-id"] || req.query.sessionId;
   let transport = sessionId ? activeTransports.get(sessionId) : Array.from(activeTransports.values()).pop();
@@ -229,10 +233,30 @@ app.use((req, res, next) => {
   next();
 });
 
-// Serve frontend
+// ── Authentication Routes ────────────────────────────────────────────────────
+app.use("/auth", authRoutes);
+
+// ── Login page ──────────────────────────────────────────────────────────────
+app.get("/login", (req, res) => {
+  if (isAuthenticated(req)) {
+    return res.redirect("/");
+  }
+  res.sendFile(path.join(__dirname, "..", "public", "login.html"));
+});
+
+// ── Protected Application UI & Scripts ───────────────────────────────────────
+app.get(["/", "/index.html"], requireAuthPage, (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "protected", "index.html"));
+});
+
+app.get("/app.js", requireAuthAsset, (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "protected", "app.js"));
+});
+
+// Serve public static assets (styles.css, images, logos, login.html)
 app.use(express.static(path.join(__dirname, "..", "public")));
 
-// ── Health check ─────────────────────────────────────────────────────────────
+// ── Health check (public system status) ─────────────────────────────────────
 app.get("/health", (_req, res) => {
   let llmInfo;
   try {
@@ -252,10 +276,10 @@ app.get("/health", (_req, res) => {
   });
 });
 
-// ── Agent routes ─────────────────────────────────────────────────────────────
+// ── Protected Clinical Agent & Stream Routes ─────────────────────────────────
+app.use(["/aegis", "/scribe", "/guardian", "/compliance", "/sentinel", "/advocate", "/vision", "/scores", "/vitals"], requireAuthApi);
 app.use(agentRoutes);
 
-// ── Vitals stream routes ─────────────────────────────────────────────────────
 const vitalsRoutes = require("./routes/vitals");
 app.use(vitalsRoutes);
 
@@ -281,7 +305,7 @@ app.use((err, _req, res, _next) => {
 });
 
 // ── Start ────────────────────────────────────────────────────────────────────
-if (require.main === module || !process.env.VERCEL) {
+if (require.main === module) {
   app.listen(PORT, () => {
     console.log(`
 ╔══════════════════════════════════════════════════════════════════╗
