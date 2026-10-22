@@ -1,10 +1,10 @@
 const app = require("../src/server");
 
 module.exports = (req, res) => {
-  // Normalize req.url if Vercel serverless rewrote the path
-  const matchedPath = req.headers["x-matched-path"] || req.headers["x-invoke-path"];
-  if (matchedPath && matchedPath !== "/api/index.js" && !req.url.startsWith("/auth") && !req.url.startsWith("/aegis") && !req.url.startsWith("/login")) {
-    req.url = matchedPath;
+  // If Vercel serverless rewrote the URL to /api/index.js, restore the original request path
+  if (req.url === "/api/index.js" || req.url === "/api" || req.url.startsWith("/api/index.js?")) {
+    const original = req.headers["x-matched-path"] || req.headers["x-invoke-path"] || "/";
+    req.url = original;
   }
   return app(req, res);
 };

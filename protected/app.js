@@ -1,11 +1,42 @@
 
-// ── Global 401 Interceptor & Auth Session Guard ──
+// ── Global Auth Session Guard & Authorization Interceptor ──
 (function() {
+  // Capture ?token= parameter from URL if redirected from login gateway
+  try {
+    const urlParams = new URLSearchParams(window.location.search);
+    const queryToken = urlParams.get('token');
+    if (queryToken) {
+      sessionStorage.setItem('aegis_session_token', queryToken);
+      // Clean URL query string without reloading
+      const cleanUrl = window.location.pathname + (window.location.hash || '');
+      window.history.replaceState(null, document.title, cleanUrl);
+    }
+  } catch (e) {}
+
   const _origFetch = window.fetch;
-  window.fetch = async function(...args) {
-    const response = await _origFetch.apply(this, args);
-    const url = typeof args[0] === 'string' ? args[0] : (args[0] && args[0].url ? args[0].url : '');
-    if (response.status === 401 && !url.includes('/auth/')) {
+  window.fetch = async function(resource, init = {}) {
+    init = init || {};
+    init.headers = init.headers || {};
+    
+    // Inject Authorization header if token exists in session
+    const token = sessionStorage.getItem('aegis_session_token');
+    if (token) {
+      if (init.headers instanceof Headers) {
+        if (!init.headers.has('Authorization')) init.headers.set('Authorization', 'Bearer ' + token);
+        if (!init.headers.has('X-Aegis-Token')) init.headers.set('X-Aegis-Token', token);
+      } else if (Array.isArray(init.headers)) {
+        init.headers.push(['Authorization', 'Bearer ' + token]);
+        init.headers.push(['X-Aegis-Token', token]);
+      } else {
+        if (!init.headers['Authorization']) init.headers['Authorization'] = 'Bearer ' + token;
+        if (!init.headers['X-Aegis-Token']) init.headers['X-Aegis-Token'] = token;
+      }
+    }
+
+    const response = await _origFetch.call(this, resource, init);
+    const url = typeof resource === 'string' ? resource : (resource && resource.url ? resource.url : '');
+    if (response.status === 401 && !url.includes('/auth/login')) {
+      try { sessionStorage.removeItem('aegis_session_token'); } catch (e) {}
       window.location.href = '/login';
     }
     return response;

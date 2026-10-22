@@ -60,7 +60,7 @@ router.post("/login", rateLimitLogin, (req, res) => {
   });
 
   if (isFormSubmit) {
-    return res.redirect("/");
+    return res.redirect(token ? ("/?token=" + encodeURIComponent(token)) : "/");
   }
 
   res.json({

@@ -234,6 +234,20 @@ app.use((req, res, next) => {
   next();
 });
 
+// Helper to safely locate protected & public files across local & Vercel environments
+function resolveFilePath(folder, fileName) {
+  const candidates = [
+    path.join(__dirname, "..", folder, fileName),
+    path.join(process.cwd(), folder, fileName),
+    path.join(__dirname, folder, fileName),
+    path.resolve(folder, fileName)
+  ];
+  for (const c of candidates) {
+    if (fs.existsSync(c)) return c;
+  }
+  return candidates[0];
+}
+
 // ── Authentication Routes ────────────────────────────────────────────────────
 app.use(["/auth", "/api/auth", "/api/index.js/auth"], authRoutes);
 
@@ -242,20 +256,31 @@ app.get(["/login", "/api/login", "/api/index.js/login"], (req, res) => {
   if (isAuthenticated(req)) {
     return res.redirect("/");
   }
-  res.sendFile(path.join(__dirname, "..", "public", "login.html"));
+  res.sendFile(resolveFilePath("public", "login.html"));
 });
 
 // ── Protected Application UI & Scripts ───────────────────────────────────────
 app.get(["/", "/index.html", "/api/index.js"], requireAuthPage, (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "protected", "index.html"));
+  // If authenticated via ?token= query parameter, persist it to cookie as well
+  if (req.query && req.query.token && req.user) {
+    const isHttps = req.secure || req.headers["x-forwarded-proto"] === "https";
+    res.cookie("aegis_session", req.query.token, {
+      httpOnly: true,
+      secure: isHttps,
+      sameSite: "Lax",
+      maxAge: 24 * 60 * 60 * 1000,
+      path: "/"
+    });
+  }
+  res.sendFile(resolveFilePath("protected", "index.html"));
 });
 
 app.get("/app.js", requireAuthAsset, (req, res) => {
-  res.sendFile(path.join(__dirname, "..", "protected", "app.js"));
+  res.sendFile(resolveFilePath("protected", "app.js"));
 });
 
 // Serve public static assets (styles.css, images, logos, login.html)
-app.use(express.static(path.join(__dirname, "..", "public")));
+app.use(express.static(resolveFilePath("public", "")));
 
 // ── Health check (public system status) ─────────────────────────────────────
 app.get("/health", (_req, res) => {

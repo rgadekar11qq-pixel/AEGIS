@@ -3,38 +3,13 @@
   "functions": {
     "api/index.js": {
       "maxDuration": 60,
-      "includeFiles": "{public/**,protected/**,src/**,data/**}"
+      "includeFiles": "protected/**"
     }
   },
-  "builds": [
+  "rewrites": [
     {
-      "src": "api/index.js",
-      "use": "@vercel/node",
-      "config": {
-        "includeFiles": ["public/**", "protected/**", "src/**", "data/**"],
-        "maxDuration": 60
-      }
+      "source": "/(.*)",
+      "destination": "/api/index.js"
     }
-  ],
-  "routes": [
-    { "src": "/health", "dest": "api/index.js" },
-    { "src": "/auth/(.*)", "dest": "api/index.js" },
-    { "src": "/auth", "dest": "api/index.js" },
-    { "src": "/login", "dest": "api/index.js" },
-    { "src": "/aegis/(.*)", "dest": "api/index.js" },
-    { "src": "/aegis", "dest": "api/index.js" },
-    { "src": "/scribe", "dest": "api/index.js" },
-    { "src": "/guardian", "dest": "api/index.js" },
-    { "src": "/compliance", "dest": "api/index.js" },
-    { "src": "/sentinel", "dest": "api/index.js" },
-    { "src": "/advocate", "dest": "api/index.js" },
-    { "src": "/vision", "dest": "api/index.js" },
-    { "src": "/scores", "dest": "api/index.js" },
-    { "src": "/message", "dest": "api/index.js" },
-    { "src": "/sse", "dest": "api/index.js" },
-    { "src": "/vitals/(.*)", "dest": "api/index.js" },
-    { "src": "/vitals", "dest": "api/index.js" },
-    { "handle": "filesystem" },
-    { "src": "/(.*)", "dest": "api/index.js" }
   ]
 }
