@@ -100,20 +100,6 @@ async function runTests() {
     });
   });
 
-  // Configure synthetic test credentials for automated verification
-  // (Ensures zero exposure of production credentials in repository code)
-  const bcrypt = require("bcryptjs");
-  const { invalidateAccountCache } = require("../src/utils/auth");
-
-  const TEST_OWNER_PASS = "TestClinicalAuth_Owner_SecurePass_9921!";
-  const TEST_GUEST_PASS = "TestClinicalAuth_Guest_SecurePass_3341!";
-
-  process.env.AEGIS_OWNER_ID = process.env.AEGIS_OWNER_ID || "Rohan";
-  process.env.AEGIS_OWNER_PASSWORD_HASH = bcrypt.hashSync(TEST_OWNER_PASS, 12);
-  process.env.AEGIS_GUEST_ID = process.env.AEGIS_GUEST_ID || "Guest";
-  process.env.AEGIS_GUEST_PASSWORD_HASH = bcrypt.hashSync(TEST_GUEST_PASS, 12);
-  invalidateAccountCache();
-
   const accounts = getAuthorizedAccounts();
   const ownerAccount = accounts.find(a => a.role === "owner");
   const guestAccount = accounts.find(a => a.role === "guest");
@@ -121,12 +107,15 @@ async function runTests() {
   const ownerId = ownerAccount ? ownerAccount.id : "Rohan";
   const guestId = guestAccount ? guestAccount.id : "Guest";
 
+  const OWNER_PASS = process.env.AEGIS_OWNER_PASSWORD || "ROHA#!!@@))&Nn";
+  const GUEST_PASS = process.env.AEGIS_GUEST_PASSWORD || "Guest@1321";
+
   // 1. Valid Owner Credentials
   let ownerCookie = null;
   {
     const res = await makeRequest("POST", "/auth/login", {}, {
       username: ownerId,
-      password: TEST_OWNER_PASS
+      password: OWNER_PASS
     });
     ownerCookie = extractCookie(res.headers);
     assert(res.status === 200 && res.json.success === true && !!ownerCookie,
@@ -138,7 +127,7 @@ async function runTests() {
   {
     const res = await makeRequest("POST", "/auth/login", {}, {
       username: guestId,
-      password: TEST_GUEST_PASS
+      password: GUEST_PASS
     });
     guestCookie = extractCookie(res.headers);
     assert(res.status === 200 && res.json.success === true && !!guestCookie,

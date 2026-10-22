@@ -39,53 +39,66 @@ function logSecurityEvent(event, userId, ip, details = "") {
   } catch (e) {}
 }
 
+// Predefined Salted Bcrypt Hashes (12 rounds) for Authorized Clinical Accounts
+// Only these two predefined accounts can authenticate. No public registration exists.
+const DEFAULT_ACCOUNTS = [
+  {
+    id: "Rohan",
+    passwordHash: "$2b$12$7NN0fC/qC37xAdzJU1OFq.YwKuSqbQmVCiC2mFC5JUq6XWoU0SpGa",
+    role: "owner",
+    name: "Dr. Rohan Gadekar",
+    title: "Lead Clinical Administrator",
+    department: "Executive Medical Informatics"
+  },
+  {
+    id: "Guest",
+    passwordHash: "$2b$12$7cO7OJW5PnX0P5NIvFsZse96S5VRSnDIXWVnz8Cwsa/3isUj68Kj6",
+    role: "guest",
+    name: "Guest Evaluator",
+    title: "Attending Clinical Evaluator",
+    department: "External Peer Review"
+  }
+];
+
 // In-memory cache for hashed credentials derived from plain env vars
 let cachedAccounts = null;
 
 /**
- * Loads the two predefined accounts (Owner and Guest) from environment variables.
+ * Loads the two predefined accounts (Owner and Guest).
+ * Allows environment variable overrides if provided.
  * No public registration or user creation is permitted.
  */
 function getAuthorizedAccounts() {
   if (cachedAccounts) return cachedAccounts;
 
-  const accounts = [];
-
-  // 1. Owner account
-  const ownerId = (process.env.AEGIS_OWNER_ID || "owner").trim();
-  let ownerHash = process.env.AEGIS_OWNER_PASSWORD_HASH;
-  if (!ownerHash && process.env.AEGIS_OWNER_PASSWORD) {
-    ownerHash = bcrypt.hashSync(process.env.AEGIS_OWNER_PASSWORD.trim(), 12);
-  }
-
-  if (ownerHash) {
-    accounts.push({
-      id: ownerId,
-      passwordHash: ownerHash,
-      role: "owner",
-      name: process.env.AEGIS_OWNER_NAME || "System Administrator",
-      title: "Lead Clinical Administrator",
-      department: "Executive Medical Informatics"
-    });
-  }
-
-  // 2. Guest account
-  const guestId = (process.env.AEGIS_GUEST_ID || "guest").trim();
-  let guestHash = process.env.AEGIS_GUEST_PASSWORD_HASH;
-  if (!guestHash && process.env.AEGIS_GUEST_PASSWORD) {
-    guestHash = bcrypt.hashSync(process.env.AEGIS_GUEST_PASSWORD.trim(), 12);
-  }
-
-  if (guestHash) {
-    accounts.push({
-      id: guestId,
-      passwordHash: guestHash,
-      role: "guest",
-      name: process.env.AEGIS_GUEST_NAME || "Clinical Evaluator",
-      title: "Attending Clinical Evaluator",
-      department: "External Peer Review"
-    });
-  }
+  const accounts = DEFAULT_ACCOUNTS.map((acc) => {
+    if (acc.role === "owner") {
+      const ownerId = (process.env.AEGIS_OWNER_ID || acc.id).trim();
+      let ownerHash = process.env.AEGIS_OWNER_PASSWORD_HASH;
+      if (!ownerHash && process.env.AEGIS_OWNER_PASSWORD) {
+        ownerHash = bcrypt.hashSync(process.env.AEGIS_OWNER_PASSWORD.trim(), 12);
+      }
+      return {
+        ...acc,
+        id: ownerId,
+        passwordHash: ownerHash || acc.passwordHash,
+        name: process.env.AEGIS_OWNER_NAME || acc.name
+      };
+    } else if (acc.role === "guest") {
+      const guestId = (process.env.AEGIS_GUEST_ID || acc.id).trim();
+      let guestHash = process.env.AEGIS_GUEST_PASSWORD_HASH;
+      if (!guestHash && process.env.AEGIS_GUEST_PASSWORD) {
+        guestHash = bcrypt.hashSync(process.env.AEGIS_GUEST_PASSWORD.trim(), 12);
+      }
+      return {
+        ...acc,
+        id: guestId,
+        passwordHash: guestHash || acc.passwordHash,
+        name: process.env.AEGIS_GUEST_NAME || acc.name
+      };
+    }
+    return acc;
+  });
 
   cachedAccounts = accounts;
   return accounts;
