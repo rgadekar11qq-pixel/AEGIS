@@ -56,6 +56,7 @@ const DEFAULT_ACCOUNTS = [
   {
     id: "Guest",
     passwordHashes: [
+      "$2b$12$7jKMobm7NiiR.QXk2z6EXeR.mgmWQ7NtymodTc6nELBGFntgG6AcG", // Guest@1321_
       "$2b$12$ERamAHSWzCPCyCvwPPQEN.aNzaUYJ/IoPxJEBor6kuC61Q1a6PCAC", // Guest@1321
       "$2b$12$p/ek77sT6TC2HHgAu8EABe1esH4gpHNH7KKpDWza.pU9QQ6m1qp2G"  // Guest@6886
     ],

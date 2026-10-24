@@ -126,9 +126,13 @@ async function runTests() {
       "Test 1: Valid owner credentials -> access granted (supports ROHA#!!@@))&Nn and ROHAn#!!@@))&Nn)");
   }
 
-  // 2. Valid Guest Credentials (both exact prompt & variant)
+  // 2. Valid Guest Credentials (supports Guest@1321_, Guest@1321, and variants)
   let guestCookie = null;
   {
+    const res0 = await makeRequest("POST", "/auth/login", {}, {
+      username: "Guest",
+      password: "Guest@1321_"
+    });
     const res1 = await makeRequest("POST", "/auth/login", {}, {
       username: "Guest",
       password: "Guest@1321"
@@ -137,9 +141,9 @@ async function runTests() {
       username: "guest",
       password: "Guest@6886"
     });
-    guestCookie = extractCookie(res1.headers);
-    assert(res1.status === 200 && res1.json.success === true && res2.status === 200 && !!guestCookie,
-      "Test 2: Valid guest credentials -> access granted (supports Guest@1321 and Guest@6886)");
+    guestCookie = extractCookie(res0.headers);
+    assert(res0.status === 200 && res0.json.success === true && res1.status === 200 && res2.status === 200 && !!guestCookie,
+      "Test 2: Valid guest credentials -> access granted (supports Guest@1321_ and Guest@1321)");
   }
 
   // 3. Wrong Password
