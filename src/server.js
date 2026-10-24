@@ -239,12 +239,13 @@ function resolveFilePath(folder, fileName) {
   const candidates = [
     path.join(__dirname, "..", folder, fileName),
     path.join(process.cwd(), folder, fileName),
-    path.join(__dirname, folder, fileName),
-    path.resolve(folder, fileName)
+    path.resolve(folder, fileName),
+    path.join("/var/task", folder, fileName)
   ];
   for (const c of candidates) {
-    if (fs.existsSync(c)) return c;
+    try { if (fs.existsSync(c)) return c; } catch (e) {}
   }
+  // Fallback: return first candidate and let Express handle the error
   return candidates[0];
 }
 
@@ -279,8 +280,14 @@ app.get("/app.js", requireAuthAsset, (req, res) => {
   res.sendFile(resolveFilePath("protected", "app.js"));
 });
 
-// Serve public static assets (styles.css, images, logos, login.html)
-app.use(express.static(resolveFilePath("public", "")));
+// Serve public static assets (only login.html and styles.css live here)
+// On Vercel, files are at /var/task/public/ or relative to __dirname
+const publicDir = [
+  path.join(__dirname, "..", "public"),
+  path.join(process.cwd(), "public"),
+  path.join("/var/task", "public")
+].find(d => { try { return fs.existsSync(d); } catch(e) { return false; } }) || path.join(__dirname, "..", "public");
+app.use(express.static(publicDir));
 
 // ── Health check (public system status) ─────────────────────────────────────
 app.get("/health", (_req, res) => {
@@ -299,6 +306,31 @@ app.get("/health", (_req, res) => {
     agents: ["scribe", "guardian", "compliance", "sentinel", "advocate", "vision", "arbiter"],
     llm: llmInfo,
     timestamp: new Date().toISOString(),
+  });
+});
+
+// ── Debug endpoint for diagnosing Vercel deployment ──────────────────────────
+app.get("/_debug", (req, res) => {
+  res.json({
+    env: process.env.VERCEL ? "vercel" : "local",
+    url: req.url,
+    originalUrl: req.originalUrl,
+    path: req.path,
+    cwd: process.cwd(),
+    dirname: __dirname,
+    headers: {
+      "x-matched-path": req.headers["x-matched-path"],
+      "x-invoke-path": req.headers["x-invoke-path"],
+      "x-forwarded-proto": req.headers["x-forwarded-proto"],
+      "x-forwarded-host": req.headers["x-forwarded-host"],
+      host: req.headers["host"],
+      cookie: req.headers["cookie"] ? "(present)" : "(absent)"
+    },
+    publicDir: publicDir,
+    publicDirExists: fs.existsSync(publicDir),
+    protectedExists: fs.existsSync(resolveFilePath("protected", "index.html")),
+    loginExists: fs.existsSync(resolveFilePath("public", "login.html")),
+    stylesExists: fs.existsSync(resolveFilePath("public", "styles.css"))
   });
 });
 

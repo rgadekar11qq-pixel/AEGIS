@@ -3,13 +3,10 @@
   "functions": {
     "api/index.js": {
       "maxDuration": 60,
-      "includeFiles": "protected/**"
+      "includeFiles": "{public/**,protected/**,src/**,data/**}"
     }
   },
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/api/index.js"
-    }
+  "routes": [
+    { "src": "/(.*)", "dest": "/api/index.js" }
   ]
 }
